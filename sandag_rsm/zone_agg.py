@@ -2,6 +2,7 @@ import logging
 
 import networkx as nx
 import numpy as np
+import pandas as pd
 import pyproj
 from statistics import mode
 from sklearn.cluster import AgglomerativeClustering, KMeans
@@ -46,9 +47,23 @@ def aggregate_zones(
     -------
     GeoDataFrame
     """
+
+    
+
     if cluster_factors is None:
         cluster_factors = {}
-    mgra_gdf = mgra_gdf.copy()
+
+
+    if not explicit_agg:
+        mgra_gdf = mgra_gdf.copy()
+        n_zones_upd = n_zones
+
+    else:
+        mgra_gdf = mgra_gdf.loc[~mgra_gdf['mgra'].isin(explicit_agg)]
+        mgra_gdf_explicit = mgra_gdf.loc[mgra_gdf['mgra'].isin(explicit_agg)]
+        n_zones_upd = n_zones - len(mgra_gdf_explicit)
+
+
     if use_xy:
         geometry = mgra_gdf.centroid
         X = list(geometry.apply(lambda p: p.x))
@@ -74,12 +89,12 @@ def aggregate_zones(
         data = np.array(factors).T
 
     if method == "kmeans":
-        kmeans = KMeans(n_clusters=n_zones, random_state=random_state)
+        kmeans = KMeans(n_clusters=n_zones_upd, random_state=random_state)
         kmeans.fit(data)
         cluster_id = kmeans.labels_
     elif method == "agglom":
         agglom = AgglomerativeClustering(
-            n_clusters=n_zones, affinity="euclidean", linkage="ward"
+            n_clusters=n_zones_upd, affinity="euclidean", linkage="ward"
         )
         agglom.fit_predict(data)
         cluster_id = agglom.labels_
@@ -89,7 +104,7 @@ def aggregate_zones(
         w_rook = Rook.from_dataframe(mgra_gdf)
         adj_mat = nx.adjacency_matrix(w_rook.to_networkx())
         agglom = AgglomerativeClustering(
-            n_clusters=n_zones,
+            n_clusters=n_zones_upd,
             affinity="euclidean",
             linkage="ward",
             connectivity=adj_mat,
@@ -235,6 +250,11 @@ def aggregate_zones(
     dissolved['dudenbin'] = 1
     dissolved.loc[(dissolved['dudenbin'] >=5 ) & (dissolved['dudenbin'] < 10), 'dudenbin'] = 2
     dissolved.loc[(dissolved['dudenbin'] >= 10), 'dudebin'] = 3
+
+    
+    dissolved["cluster_id"] = list(range(n_zones_upd, n_zones, 1))
+    dissolved = pd.concat([dissolved, mgra_gdf_explicit], ignore_index = False)
+    dissolved = dissolved.reset_index(drop=True)
 
     return dissolved
 
