@@ -3,6 +3,7 @@ import logging
 import networkx as nx
 import numpy as np
 import pyproj
+from statistics import mode
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.preprocessing import OneHotEncoder
 
@@ -101,13 +102,140 @@ def aggregate_zones(
     if agg_instruction is None:
         # TODO: fill out the aggregation data system
         # Define a lambda function to compute the weighted mean:
-        wgt_avg = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].area)
+        
+        wgt_avg_hh = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].hh) if mgra_gdf.loc[x.index].hh.sum()> 0 else 0
+        wgt_avg_hpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].hstallssam) if mgra_gdf.loc[x.index].hstallssam.sum()>0 else 0
+        wgt_avg_dpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].dstallssam) if mgra_gdf.loc[x.index].dstallssam.sum()>0 else 0
+        wgt_avg_mpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].mstallssam) if mgra_gdf.loc[x.index].mstallssam.sum()>0 else 0
+        wgt_avg_mtc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index,  'pop']) if mgra_gdf.loc[x.index, 'pop'].sum()>0 else 0
+        wgt_avg_mat = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'pop']) if mgra_gdf.loc[x.index, 'pop'].sum()>0 else 0
+        wgt_avg_dud = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'hh']) if mgra_gdf.loc[x.index, 'hh'].sum()>0 else 0
+        wgt_avg_empden = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'emp_total']) if mgra_gdf.loc[x.index, 'emp_total'].sum()>0 else 0
+        wgt_avg_rtempden = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'emp_total']) if mgra_gdf.loc[x.index, 'emp_retail'].sum()>0 else 0
+        wgt_avg_peden = lambda x: np.average(x, weights=(mgra_gdf.loc[x.index, 'emp_total'] + mgra_gdf.loc[x.index, 'pop'])) if (mgra_gdf.loc[x.index, 'emp_total'].sum()+mgra_gdf.loc[x.index, 'pop'].sum())>0 else 0
+        get_mode = lambda x: mode(x)
         agg_instruction = {
+            "hs": "sum",
+            "hs_sf": "sum",
+            "hs_mf": "sum",
+            "hs_mh": "sum",
+            "hh": "sum",
+            "hh_sf": "sum",
+            "hh_mf": "sum",
+            "hh_mh": "sum",
+            "gq_civ": "sum",
+            "gq_mil": "sum",
+            "i1": "sum",
+            "i2": "sum",
+            "i3": "sum",
+            "i4": "sum",
+            "i5": "sum",
+            "i6": "sum",
+            "i7": "sum",
+            "i8": "sum",
+            "i9": "sum",
+            "i10": "sum",
+            "hhs": wgt_avg_hh,
             "pop": "sum",
-            "popden": wgt_avg,
+            "hhp": "sum",
+            "emp_ag": "sum",
+            "emp_const_non_bldg_prod": "sum",
+            "emp_const_non_bldg_office": "sum",
+            "emp_utilities_prod": "sum",
+            "emp_utilities_office": "sum",
+            "emp_const_bldg_prod": "sum",
+            "emp_const_bldg_office": "sum",
+            "emp_mfg_prod": "sum",
+            "emp_mfg_office": "sum",
+            "emp_whsle_whs": "sum",
+            "emp_trans": "sum",
+            "emp_retail": "sum",
+            "emp_prof_bus_svcs": "sum",
+            "emp_prof_bus_svcs_bldg_maint": "sum",
+            "emp_pvt_ed_k12": "sum",
+            "emp_pvt_ed_post_k12_oth": "sum",
+            "emp_health": "sum",
+            "emp_personal_svcs_office": "sum",
+            "emp_amusement": "sum",
+            "emp_hotel": "sum",
+            "emp_restaurant_bar": "sum",
+            "emp_personal_svcs_retail": "sum",
+            "emp_religious": "sum",
+            "emp_pvt_hh": "sum",
+            "emp_state_local_gov_ent": "sum",
+            "emp_fed_non_mil": "sum",
+            "emp_fed_mil": "sum",
+            "emp_state_local_gov_blue": "sum",
+            "emp_state_local_gov_white": "sum",
+            "emp_public_ed": "sum",
+            "emp_own_occ_dwell_mgmt": "sum",
+            "emp_fed_gov_accts": "sum",
+            "emp_st_lcl_gov_accts": "sum",
+            "emp_cap_accts": "sum",
+            "emp_total": "sum",
+            "enrollgradekto8": "sum",
+            "enrollgrade9to12": "sum",
+            "collegeenroll": "sum",
+            "othercollegeenroll": "sum",
+            "adultschenrl": "sum",
+            "ech_dist": get_mode,
+            "hch_dist": get_mode,
+            "parkarea": "max",
+            "hstallsoth": "sum",
+            "hstallssam": "sum",
+            "hparkcost": wgt_avg_hpc,
+            "numfreehrs": wgt_avg_hpc,
+            "dstallsoth": "sum",
+            "dstallssam": "sum",
+            "dparkcost": wgt_avg_dpc,
+            "mstallsoth": "sum",
+            "mstallssam": "sum",
+            "mparkcost": wgt_avg_mpc,
+            "parkactive": "sum",
+            "openspaceparkpreserve": "sum",
+            "beachactive": "sum",
+            "budgetroom": "sum",
+            "economyroom": "sum",
+            "luxuryroom": "sum",
+            "midpriceroom": "sum",
+            "upscaleroom": "sum",
+            "hotelroomtotal": "sum",
+            #"luz_id": "sum",
+            "truckregiontype": "sum",
+            #"district27": "sum",
+            "milestocoast": wgt_avg_mtc,
+            #"acres": "sum",
+            #"effective_acres": "sum",
+            #"land_acres": "sum",
+            "MicroAccessTime": wgt_avg_mat,
+            "remoteAVParking": "max",
+            "refueling_stations": "sum",
+            "totint": "sum",
+            "duden": wgt_avg_dud,
+            "empden": wgt_avg_empden,
+            #"popden": "sum",
+            "retempden": wgt_avg_rtempden,
+            #"totintbin": "sum", #bins in original data 0, 80, 130 
+            #"empdenbin": "sum", #bins in original data 0, 10, 30
+            #"dudenbin": "sum", #bins in original data  0, 5, 10
+            "PopEmpDenPerMi": wgt_avg_peden
         }
     dissolved = mgra_gdf[["cluster_id", "geometry"]].dissolve(by="cluster_id")
     dissolved = dissolved.join(mgra_gdf.groupby("cluster_id").agg(agg_instruction))
+
+    #adding bins
+    dissolved['totintbin'] = 1
+    dissolved.loc[(dissolved['totintbin'] >= 80) & (dissolved['totintbin'] < 130), 'totintbin'] = 2
+    dissolved.loc[(dissolved['totintbin'] >= 130), 'totintbin'] = 3
+
+    dissolved['empdenbin'] = 1
+    dissolved.loc[(dissolved['empdenbin'] >= 10) & (dissolved['empdenbin'] < 30), 'empdenbin'] = 2
+    dissolved.loc[(dissolved['empdenbin'] >= 30), 'empdenbin'] = 3
+
+    dissolved['dudenbin'] = 1
+    dissolved.loc[(dissolved['dudenbin'] >=5 ) & (dissolved['dudenbin'] < 10), 'dudenbin'] = 2
+    dissolved.loc[(dissolved['dudenbin'] >= 10), 'dudebin'] = 3
+
     return dissolved
 
 
