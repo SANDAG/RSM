@@ -103,11 +103,11 @@ def aggregate_zones(
         # TODO: fill out the aggregation data system
         # Define a lambda function to compute the weighted mean:
         
-        wgt_avg_hh = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].hh) if mgra_gdf.loc[x.index].hh.sum()> 0 else 0
-        wgt_avg_hpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].hstallssam) if mgra_gdf.loc[x.index].hstallssam.sum()>0 else 0
-        wgt_avg_dpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].dstallssam) if mgra_gdf.loc[x.index].dstallssam.sum()>0 else 0
-        wgt_avg_mpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index].mstallssam) if mgra_gdf.loc[x.index].mstallssam.sum()>0 else 0
-        wgt_avg_mtc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index,  'pop']) if mgra_gdf.loc[x.index, 'pop'].sum()>0 else 0
+        wgt_avg_hh = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'hh']) if mgra_gdf.loc[x.index, 'hh'].sum()> 0 else 0
+        wgt_avg_hpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'hstallssam']) if mgra_gdf.loc[x.index,'hstallssam'].sum()>0 else 0
+        wgt_avg_dpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index,'dstallssam']) if mgra_gdf.loc[x.index,'dstallssam'].sum()>0 else 0
+        wgt_avg_mpc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'mstallssam']) if mgra_gdf.loc[x.index,'mstallssam'].sum()>0 else 0
+        wgt_avg_mtc = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'pop']) if mgra_gdf.loc[x.index, 'pop'].sum()>0 else 0
         wgt_avg_mat = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'pop']) if mgra_gdf.loc[x.index, 'pop'].sum()>0 else 0
         wgt_avg_dud = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'hh']) if mgra_gdf.loc[x.index, 'hh'].sum()>0 else 0
         wgt_avg_empden = lambda x: np.average(x, weights=mgra_gdf.loc[x.index, 'emp_total']) if mgra_gdf.loc[x.index, 'emp_total'].sum()>0 else 0
