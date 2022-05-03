@@ -1,6 +1,11 @@
+import itertools
+from pathlib import Path
+
 import pandas as pd
 import pyproj
 import shapely.geometry.point
+
+from .data_load.skims import open_skims
 
 # lat-lon of certain points
 points_of_interest = dict(
@@ -25,19 +30,47 @@ def poi_taz_mgra(gdf):
 
 
 def attach_poi_taz_skims(
-    gdf,
-    skims_omx,
-    names,
-    poi=None,
+    gdf, skims_omx, names, poi=None, data_dir=None, taz_col="taz", cluster_factors=None
 ):
+    """
+    Attach TAZ-based skim values to rows of a geodataframe.
+
+    Parameters
+    ----------
+    gdf : GeoDataFrame
+        The skimmed values will be added as columns to this [geo]dataframe.
+        If the POI's are given explicitly, this could be a regular pandas
+        DataFrame, otherwise the geometry is used to find the TAZ's of the
+        points of interest.
+    skims_omx : path-like or openmatrix.File
+    names : str or Mapping
+        Keys give the names of matrix tables to load out of the skims file.
+        Values give the relative weight for each table (used later in
+        clustering).
+    poi : Mapping
+        Maps named points of interest to the 'taz' id of each.  If not given,
+        these will be computed based on the `gdf`.
+    data_dir : path-like, optional
+        Directory where the `skims_omx` file can be found, if not the current
+        working directory.
+    cluster_factors : Mapping, optional
+        Existing cluster_factors, to which the new factors are added.
+
+    Returns
+    -------
+    gdf : GeoDataFrame
+    cluster_factors : Mapping
+    """
     if poi is None:
         poi = poi_taz_mgra(gdf)
     if isinstance(names, str):
-        names = [names]
+        names = {names: 1.0}
+    if isinstance(skims_omx, (str, Path)):
+        skims_omx = open_skims(skims_omx, data_dir=data_dir)
     zone_nums = skims_omx.root.lookup.zone_number
     cols = {}
     for k in poi:
-        ktaz = poi[k]["taz"]
+        ktaz = poi[k][taz_col]
         for name in names:
             cols[f"{k}_{name}"] = pd.Series(
                 skims_omx.root.data[name][ktaz - 1],
@@ -45,5 +78,10 @@ def attach_poi_taz_skims(
             )
     add_to_gdf = {}
     for c in cols:
-        add_to_gdf[c] = gdf["taz"].map(cols[c])
-    return gdf.assign(**add_to_gdf)
+        add_to_gdf[c] = gdf[taz_col].map(cols[c])
+    if cluster_factors is None:
+        cluster_factors = {}
+    new_cluster_factors = {
+        f"{i}_{j}": names[j] for i, j in itertools.product(poi.keys(), names.keys())
+    }
+    return gdf.assign(**add_to_gdf), cluster_factors | new_cluster_factors

@@ -1,7 +1,14 @@
 # RSM
 Rapid Strategic Model for the San Diego Association of Governments
 
+## Installing
 
+To install, activate the python or conda environment you want to use,
+the cd into the repository directory and run:
+
+```shell
+python -m pip install -e .
+```
 
 ## Code Formatting
 
