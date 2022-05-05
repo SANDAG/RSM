@@ -30,3 +30,24 @@ pre-commit install
 
 from the root of the repository. You can skip the pre-commit checks
 with `git commit --no-verify`.
+
+
+## Developing with Docker
+
+To build the docker container, change into the repository root and run:
+
+```shell
+docker build --tag sandag_rsm .
+````
+
+### Jupyter Notebook for Development
+
+On the host machine, run:
+
+```shell
+docker run -v $(pwd):/home/mambauser/sandag_rsm -p 8899:8899 \
+  -it sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root \
+  --port 8899 --notebook-dir=/home/mambauser
+```
+
+Then visit `http://127.0.0.1:8899/tree` in your browser.
