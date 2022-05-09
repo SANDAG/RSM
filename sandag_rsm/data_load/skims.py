@@ -17,7 +17,7 @@ def open_skims(
 
     try:
         s = openmatrix.open_file(
-            os.path.join(data_dir, skims_filename),
+            skims_filename,
             mode="r",
         )
         return s

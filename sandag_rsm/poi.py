@@ -77,8 +77,14 @@ def attach_poi_taz_skims(
                 index=zone_nums[:],
             )
     add_to_gdf = {}
+    if taz_col in gdf:
+        gdf_taz_col = gdf[taz_col]
+    elif gdf.index.name == taz_col:
+        gdf_taz_col = pd.Series(data=gdf.index, index=gdf.index)
+    else:
+        raise KeyError(taz_col)
     for c in cols:
-        add_to_gdf[c] = gdf[taz_col].map(cols[c])
+        add_to_gdf[c] = gdf_taz_col.map(cols[c])
     if cluster_factors is None:
         cluster_factors = {}
     new_cluster_factors = {

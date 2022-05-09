@@ -46,7 +46,7 @@ On the host machine, run:
 
 ```shell
 docker run -v $(pwd):/home/mambauser/sandag_rsm -p 8899:8899 \
-  -it sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root \
+  -it --rm sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root \
   --port 8899 --notebook-dir=/home/mambauser
 ```
 

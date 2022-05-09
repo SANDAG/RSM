@@ -60,7 +60,7 @@ def simplify_shapefile(
 
 def load_mgra_data(
     shapefilename="MGRASHAPE.zip",
-    supplemental_features="mgra13_based_input2016.csv",
+    supplemental_features="mgra13_based_input2016.csv.gz",
     data_dir=None,
     simplify_tolerance=1,
     prequantize=False,
