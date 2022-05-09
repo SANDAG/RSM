@@ -18,6 +18,7 @@ dependencies:
   - openmatrix
   - pandas
   - plotly
+  - pyarrow
   - pyproj
   - requests=2.25.1
   - scikit-learn

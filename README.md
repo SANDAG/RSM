@@ -42,12 +42,21 @@ docker build --tag sandag_rsm .
 
 ### Jupyter Notebook for Development
 
-On the host machine, run:
+On the host machine, on linux or macOS run:
 
 ```shell
 docker run -v $(pwd):/home/mambauser/sandag_rsm -p 8899:8899 \
   -it --rm sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root \
   --port 8899 --notebook-dir=/home/mambauser
 ```
+
+or in `cwd` on Windows, run:
+
+```shell
+docker run -v %cd%:/home/mambauser/sandag_rsm -p 8899:8899 ^
+  -it --rm sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root ^
+  --port 8899 --notebook-dir=/home/mambauser
+```
+
 
 Then visit `http://127.0.0.1:8899/tree` in your browser.
