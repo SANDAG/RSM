@@ -10,6 +10,7 @@ dependencies:
   - numpy>=1.19
   - geopandas
   - git
+  - git-lfs
   - jupyter
   - libpysal
   - networkx
