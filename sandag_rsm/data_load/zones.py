@@ -22,10 +22,15 @@ def simplify_shapefile(
     prequantize=False,
     layername="MGRA",
     topo=True,
+    output_filename=None,
 ):
-    gpkg_filename = (
-        os.path.splitext(shapefilename)[0] + f"_simplified_{simplify_tolerance}.gpkg"
-    )
+    if output_filename is not None:
+        gpkg_filename = output_filename
+    else:
+        gpkg_filename = (
+            os.path.splitext(shapefilename)[0]
+            + f"_simplified_{simplify_tolerance}.gpkg"
+        )
     if os.path.exists(gpkg_filename):
         gdf = gpd.read_file(gpkg_filename)
         return geometry_cleanup(gdf)
