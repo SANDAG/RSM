@@ -1,4 +1,0 @@
-*.omx filter=lfs diff=lfs merge=lfs -text
-*.csv.gz filter=lfs diff=lfs merge=lfs -text
-*.gpkg filter=lfs diff=lfs merge=lfs -text
-*.pq filter=lfs diff=lfs merge=lfs -text

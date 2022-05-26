@@ -4,3 +4,5 @@ sandag_rsm/__pycache__
 .ipynb_checkpoints
 sandag_rsm.egg-info
 _version.py
+.DS_Store
+test/data/*
