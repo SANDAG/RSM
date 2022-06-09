@@ -10,12 +10,15 @@ dependencies:
   - numpy>=1.19
   - geopandas
   - git
+  - git-lfs
   - jupyter
   - libpysal
   - networkx
   - notebook
+  - openmatrix
   - pandas
   - plotly
+  - pyarrow
   - pyproj
   - requests=2.25.1
   - scikit-learn

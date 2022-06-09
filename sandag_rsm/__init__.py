@@ -1,1 +1,3 @@
-#!/usr/bin/env python3
+from .logging import logging_start
+
+logging_start(20)
