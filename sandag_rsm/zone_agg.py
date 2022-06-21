@@ -3,6 +3,7 @@ from functools import partial
 from numbers import Number
 from statistics import mode
 
+import geopandas as gpd
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -407,6 +408,36 @@ def aggregate_zones_within_districts(
             )
         )
     return pd.concat(out).reset_index(drop=True)
+
+
+def make_crosswalk(new_zones, old_zones, new_index="cluster_id", old_index=None):
+    if new_index is not None and (
+        new_index in new_zones.columns or not isinstance(new_index, str)
+    ):
+        new_zones = new_zones.set_index(new_index)
+    if old_index is not None and (
+        old_index in old_zones.columns or not isinstance(old_index, str)
+    ):
+        old_zones = old_zones.set_index(old_index)
+    crosswalk = new_zones[["geometry"]].sjoin(
+        gpd.GeoDataFrame(
+            geometry=old_zones.representative_point(),
+            index=old_zones.index,
+        ).to_crs(new_zones.crs),
+        how="right",
+        predicate="contains",
+    )
+    crosswalk = crosswalk["index_left"].astype(int).rename(new_index).to_frame()
+    if old_zones.index.name:
+        crosswalk = crosswalk.rename_axis(index=old_zones.index.name)
+    return crosswalk.reset_index()
+
+
+def mark_centroids(gdf, crs="NAD 1983 StatePlane California VI FIPS 0406 Feet"):
+    c = gdf.to_crs("NAD 1983 StatePlane California VI FIPS 0406 Feet").centroid
+    gdf["centroid_x"] = c.x.astype(int)
+    gdf["centroid_y"] = c.y.astype(int)
+    return gdf
 
 
 def viewer(
