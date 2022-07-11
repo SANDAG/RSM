@@ -21,7 +21,6 @@ def merge_zone_data(
     cluster_id="cluster_id",
 ):
     if agg_instruction is None:
-        # TODO: fill out the aggregation data system
         # make a sliver of area series as a backstop for weighted avg on other things
         # we add this small value to each weighting, so that if the desired weighting values
         # are all zero for any weighted average, the geographic area becomes the backup
@@ -201,6 +200,7 @@ def aggregate_zones(
     explicit_agg=(),
     explicit_col="mgra",
     agg_instruction=None,
+    start_cluster_ids=13,
 ):
     """
     Aggregate zones.
@@ -225,6 +225,10 @@ def aggregate_zones(
         'mgra' or 'taz'
     agg_instruction : dict
         Dictionary passed to pandas `agg` that says how to aggregate data columns.
+    start_cluster_ids : int, default 13
+        Cluster id's start at this value.  Can be 1, but typically SANDAG has the
+        smallest id's reserved for external zones, so starting at a greater value
+        is typical.
 
     Returns
     -------
@@ -234,7 +238,7 @@ def aggregate_zones(
     if cluster_factors is None:
         cluster_factors = {}
 
-    n = 1
+    n = start_cluster_ids
     if explicit_agg:
         explicit_agg_ids = {}
         for i in explicit_agg:
@@ -434,7 +438,7 @@ def make_crosswalk(new_zones, old_zones, new_index="cluster_id", old_index=None)
 
 
 def mark_centroids(gdf, crs="NAD 1983 StatePlane California VI FIPS 0406 Feet"):
-    c = gdf.to_crs("NAD 1983 StatePlane California VI FIPS 0406 Feet").centroid
+    c = gdf.to_crs(crs).centroid
     gdf["centroid_x"] = c.x.astype(int)
     gdf["centroid_y"] = c.y.astype(int)
     return gdf
