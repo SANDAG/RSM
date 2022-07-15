@@ -294,6 +294,10 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         visualizer_build_label = props["visualizer.build.label"]
         mgraInputFile = props["mgra.socec.file"]
 
+        #for zone restructing in network files 
+        taz_cwk_file = props["taz.to.cluster.crosswalk.file"]
+        cluster_zone_file = props["cluster.zone.centroid.file"]
+
         period_ids = list(enumerate(periods, start=int(scenario_id) + 1))
 
         useLocalDrive = props["RunModel.useLocalDrive"]
@@ -417,6 +421,16 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                                 modify_network.run(base_scenario)
                         except ImportError as e:
                             pass
+
+                    hwy_network = self.update_centroid_connectors(
+                                                        input_dir, 
+                                                        base_scenario, 
+                                                        main_emmebank, 
+                                                        external_zones, 
+                                                        taz_cwk_file, 
+                                                        cluster_zone_file)
+                    
+                    base_scenario.publish_network(hwy_network)
 
                     if not skipInputChecker:
                         input_checker(path=self._path)
@@ -1133,6 +1147,10 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
     def get_link_attributes(self):
         export_utils = _m.Modeller().module("inro.emme.utility.export_utilities")
         return export_utils.get_link_attributes(_m.Modeller().scenario)
+
+    def update_centroid_connectors(self, source, base_scenario, emmebank, external_zone, taz_cwk_file, cluster_zone_file):
+        adjust_network = _m.Modeller().module("inro.import.adjust_network_links")
+        return adjust_network.adjust_network_links(source, base_scenario, emmebank, external_zone, taz_cwk_file, cluster_zone_file)
 
     def sql_select_scenario(self, year, iteration, sample, path, dbtime):  # YMA, 1/24/2019
         """Return scenario_id from [dimension].[scenario] given path"""
