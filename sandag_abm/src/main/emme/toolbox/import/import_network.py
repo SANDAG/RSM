@@ -494,7 +494,6 @@ class ImportNetwork(_m.Tool(), gen_utils.Snapshot):
                         transit_scenario.publish_network(transit_network, resolve_attributes=True)
                     if self.merged_scenario_id:
                         self.add_transit_to_traffic(traffic_network, transit_network)
-                        self.adjust_network(traffic_network)
         finally:
             if self.merged_scenario_id:
                 scenario.publish_network(traffic_network, resolve_attributes=True)
@@ -1823,105 +1822,7 @@ class ImportNetwork(_m.Tool(), gen_utils.Snapshot):
             for attr in cost_attrs:
                 link[attr] = 0.5 * link[attr]
 
-    def adjust_network(self, hwy_network):
-        
-        load_properties = _m.Modeller().tool('sandag.utilities.properties')
-        props = load_properties(_join(_dir(self.source), "conf", "sandag_abm.properties"))
-        taz_cwk = pd.read_csv(_join(self.source, props["taz.to.cluster.crosswalk.file"]), index_col = 0)
-        taz_cwk = taz_cwk['cluster_id'].to_dict()
-
-        centroid_nodes = []
-        exclude_nodes = []
-
-        for node in range(1,13,1):
-            exclude_nodes.append(hwy_network.node(node))
-
-        for node in hwy_network.centroids():
-            if not node in exclude_nodes:
-                centroid_nodes.append(node)
-
-        i_nodes = []
-        j_nodes = []
-        data1 = []
-        length = []
-        links = []
-
-        for link in hwy_network.links():
-            if link.i_node in centroid_nodes:
-                links.append(link)
-                i_nodes.append(int(link.i_node))
-                j_nodes.append(int(link.j_node))
-                data1.append(link.data1)
-                length.append(link.length)
-
-        df = pd.DataFrame({'links' : links, 'i_nodes' : i_nodes, 'j_nodes': j_nodes, 'ul1_org': data1, 'length_org':length})
-        df['i_nodes_new'] = df['i_nodes'].map(taz_cwk)
-
-        j_nodes_list = df['j_nodes'].unique()
-        j_nodes_list = [hwy_network.node(x) for x in j_nodes_list]
-
-        j_nodes = []
-        j_x = []
-        j_y = []
-        for nodes in hwy_network.nodes():
-            if nodes in j_nodes_list:
-                j_nodes.append(nodes)
-                j_x.append(nodes.x)
-                j_y.append(nodes.y)
-
-        j_nodes_XY = pd.DataFrame({'j_nodes' : j_nodes, 'j_x' : j_x, 'j_y': j_y})
-        j_nodes_XY['j_nodes'] = [int(x) for x in j_nodes_XY['j_nodes']]
-        df = pd.merge(df, j_nodes_XY, on = 'j_nodes', how = 'left')
-
-        agg_node_coords = pd.read_csv(_join(self.source, props["cluster.zone.centroid.file"]))
-        df = pd.merge(df, agg_node_coords, left_on = 'i_nodes_new', right_on = 'cluster_id', how = 'left')
-        df = df.drop(columns = 'cluster_id')
-        df = df.rename(columns = {'centroid_x' : 'i_new_x', 'centroid_y' : 'i_new_y'})
-
-        i_coords = zip(df['j_x'], df['j_y'])
-        j_coords = zip(df['i_new_x'], df['i_new_y'])
-
-        df['length'] = [distance.euclidean(i, j)/5280.0 for i,j in zip(i_coords, j_coords)]
-
-        #delete all the existing centroid nodes
-        for index,row in df.iterrows():
-            if hwy_network.node(row['i_nodes']):
-                hwy_network.delete_node(row['i_nodes'], True)  
-
-        # create new nodes (centroids of clusters)
-        for index,row in agg_node_coords.iterrows():
-            new_node = hwy_network.create_node(row['cluster_id'], is_centroid = True)
-            new_node.x = int(row['centroid_x'])
-            new_node.y = int(row['centroid_y'])
-
-        df['type'] = 10
-        df['num_lanes'] = 1.0
-        df['vdf'] = 11
-        df['ul3'] = 999999
-
-        # create new links
-        for index,row in df.iterrows():
-            try:
-                link_ij = hwy_network.create_link(row['i_nodes_new'], row['j_nodes'], 
-                                    modes = ["d", "h", "H", "i","I","s", "S", "v", "V", "m", "M", "t", "T"])
-                link_ij.length = row['length']
-                link_ij.type = row['type']
-                link_ij.num_lanes = row['num_lanes']
-                link_ij.volume_delay_func = row['vdf']
-                link_ij.data3 = row['ul3']
-                
-                link_ji = hwy_network.create_link(row['j_nodes'], row['i_nodes_new'], 
-                                    modes = ["d", "h", "H", "i","I","s", "S", "v", "V", "m", "M", "t", "T"])
-                link_ji.length = row['length']
-                link_ji.type = row['type']
-                link_ji.num_lanes = row['num_lanes']
-                link_ji.volume_delay_func = row['vdf']
-                link_ji.data3 = row['ul3']
-                   
-            except:
-                continue 
-
-
+  
     @_m.logbook_trace("Set database functions (VDF, TPF and TTF)")
     def set_functions(self, scenario):
         create_function = _m.Modeller().tool(
