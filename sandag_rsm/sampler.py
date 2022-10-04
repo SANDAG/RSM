@@ -74,9 +74,9 @@ def rsm_household_sampler(
     def _resolve_df(x, directory, must_exist=True, make_index=None):
         if isinstance(x, (str, Path)):
             # read in the file to a pandas DataFrame
-            x = Path(x)
+            x = Path(x).expanduser()
             if not x.is_absolute():
-                x = Path(directory or ".").joinpath(x)
+                x = Path(directory or ".").expanduser().joinpath(x)
             try:
                 result = pd.read_csv(x)
             except FileNotFoundError:
@@ -99,9 +99,9 @@ def rsm_household_sampler(
         return result
 
     def _resolve_out_filename(x):
-        x = Path(x)
+        x = Path(x).expanduser()
         if not x.is_absolute():
-            x = Path(output_dir).joinpath(x)
+            x = Path(output_dir).expanduser().joinpath(x)
         x.parent.mkdir(parents=True, exist_ok=True)
         return x
 
@@ -176,7 +176,7 @@ def rsm_household_sampler(
         )
 
         sample_households = []
-        sample_rate_df = compare_results[["sampling_rate"]]
+        sample_rate_df = compare_results[["sampling_rate"]].copy()
         if study_area is not None:
             sample_rate_df.loc[
                 sample_rate_df.index.isin(study_area), "sampling_rate"
