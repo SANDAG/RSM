@@ -1,14 +1,17 @@
+import logging
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+
 
 def rsm_household_sampler(
     input_dir=".",
     output_dir=".",
-    prev_iter_access="accessibilities.csv",
-    curr_iter_access="accessibilities_iter.csv",
+    prev_iter_access=None,
+    curr_iter_access=None,
     study_area=None,
     input_household="households.csv",
     input_person="persons.csv",
@@ -71,6 +74,10 @@ def rsm_household_sampler(
     input_dir = Path(input_dir or ".")
     output_dir = Path(output_dir or ".")
 
+    logger.debug("CALL rsm_household_sampler")
+    logger.debug(f"  {input_dir=}")
+    logger.debug(f"  {output_dir=}")
+
     def _resolve_df(x, directory, must_exist=True, make_index=None):
         if isinstance(x, (str, Path)):
             # read in the file to a pandas DataFrame
@@ -124,6 +131,10 @@ def rsm_household_sampler(
 
     if curr_iter_access_df is None or prev_iter_access_df is None:
 
+        if curr_iter_access_df is None:
+            logger.warning(f"missing curr_iter_access_df from {curr_iter_access}")
+        if prev_iter_access_df is None:
+            logger.warning(f"missing prev_iter_access_df from {prev_iter_access}")
         # true for first iteraion
         # sample 100% of households from study region
         # sample 25% of the households from rest of the region
