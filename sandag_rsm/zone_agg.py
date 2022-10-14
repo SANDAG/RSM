@@ -142,7 +142,7 @@ def merge_zone_data(
             "midpriceroom": "sum",
             "upscaleroom": "sum",
             "hotelroomtotal": "sum",
-            # "luz_id": "sum",
+            "luz_id": "max",
             "truckregiontype": "sum",
             "district27": get_mode,
             "milestocoast": wgt_avg_by_pop,
