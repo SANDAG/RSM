@@ -24,4 +24,5 @@ def open_skims(
 
     finally:
         # change back to original cwd
-        os.chdir(cwd)
+        if cwd is not None:
+            os.chdir(cwd)
