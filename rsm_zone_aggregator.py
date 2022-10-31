@@ -12,6 +12,7 @@
 # ```
 #
 
+import sys
 from sandag_rsm.data_load.zones import load_mgra_data
 from sandag_rsm.logging import logging_start
 from sandag_rsm.poi import attach_poi_taz_skims, poi_taz_mgra
@@ -28,19 +29,21 @@ from sandag_rsm.zone_agg import (
 #   All these files should be relative to and within in the current working dir
 #
 
-FULL_ABM_MGRA = r"/input/mgra13_based_input2016.csv.gz"
-FULL_ABM_MGRA_SHAPEFILE = r"/input/MGRASHAPE.zip"
-FULL_ABM_AM_HIGHWAY_SKIM = r"/input/traffic_skims_AM.omx"
-FULL_ABM_TRIP_LIST = r"/data/trips_sample.pq"
-FULL_ABM_SYNTH_HOUSHOLDS = r"/input/hh.csv"
-FULL_ABM_SYNTH_PERSONS = r"/input/person.csv"
+input_dir = sys.argv[2]
+
+FULL_ABM_MGRA = os.path.join(input_dir, "mgra13_based_input2016.csv")
+FULL_ABM_MGRA_SHAPEFILE = os.path.join(input_dir, "MGRASHAPE.zip")
+FULL_ABM_AM_HIGHWAY_SKIM = os.path.join(input_dir, "traffic_skims_AM.omx")
+FULL_ABM_TRIP_LIST = os.path.join(input_dir, "trips_sample.pq")
+FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(input_dir, "hh.csv")
+FULL_ABM_SYNTH_PERSONS = os.path.join(input_dir, "person.csv")
 EXPLICIT_ZONE_AGG = []
 
-OUTPUT_MGRA_CROSSWALK = r"/input/mgra_crosswalk.csv"
-OUTPUT_TAZ_CROSSWALK = r"/input/taz_crosswalk.csv"
-OUTPUT_RSM_ZONE_FILE = "/input/cluster_zones.csv"
-OUTPUT_RSM_SAMPLED_HOUSHOLDS = "/input/sampled_households_1.csv"
-OUTPUT_RSM_SAMPLED_PERSONS = "/input/sampled_person_1.csv"
+OUTPUT_MGRA_CROSSWALK = os.path.join(input_dir, "mgra_crosswalk.csv")
+OUTPUT_TAZ_CROSSWALK = os.path.join(input_dir, "taz_crosswalk.csv")
+OUTPUT_RSM_ZONE_FILE = os.path.join(input_dir, "cluster_zones.csv")
+OUTPUT_RSM_SAMPLED_HOUSHOLDS = os.path.join(input_dir, "sampled_households_1.csv")
+OUTPUT_RSM_SAMPLED_PERSONS = os.path.join(input_dir, "sampled_person_1.csv")
 
 logging_start()
 
@@ -68,7 +71,7 @@ tazs, cluster_factors = attach_poi_taz_skims(
     cluster_factors=cluster_factors,
 )
 
-
+"""
 agglom3full = aggregate_zones(
     tazs,
     cluster_factors=cluster_factors,
@@ -78,12 +81,24 @@ agglom3full = aggregate_zones(
     explicit_agg=EXPLICIT_ZONE_AGG,
     explicit_col="taz",
 )
+"""
 
-
+"""
 taz_crosswalk = make_crosswalk(agglom3full, tazs, old_index="taz").sort_values("taz")
 mgra_crosswalk = make_crosswalk(agglom3full, mgra, old_index="MGRA").sort_values("MGRA")
 agglom3full = mark_centroids(agglom3full)
 mgra_crosswalk.to_csv(OUTPUT_MGRA_CROSSWALK, index=False)
 taz_crosswalk.to_csv(OUTPUT_TAZ_CROSSWALK, index=False)
 agglom3full.to_csv(OUTPUT_RSM_ZONE_FILE, index=False)
+"""
 
+
+rsm_household_sampler(
+    # input_dir="./notebooks/data-dl",
+    # output_dir=tempdir.name,
+    input_household=FULL_ABM_SYNTH_HOUSHOLDS,
+    input_person=FULL_ABM_SYNTH_PERSONS,
+    taz_crosswalk=OUTPUT_TAZ_CROSSWALK,
+    output_household=OUTPUT_RSM_SAMPLED_HOUSHOLDS,
+    output_person=OUTPUT_RSM_SAMPLED_PERSONS,
+)

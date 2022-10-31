@@ -404,6 +404,11 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 mgraFile = 'mgra13_based_input' + str(scenarioYear) + '.csv'
                 self.complete_work(scenarioYear, input_dir, output_dir, mgraFile, "walkMgraEquivMinutes.csv")
 
+                self.run_proc("runRSMZoneAggregator.cmd", [input_dir, output_dir],
+                          "Zone Aggregator")
+
+                self.run_proc("runRSMInputAggregator.cmd", [org_model_directory, main_directory], "Input files Aggregator")
+
                 if not skipBuildNetwork:
                     base_scenario = import_network(
                         source=input_dir,
