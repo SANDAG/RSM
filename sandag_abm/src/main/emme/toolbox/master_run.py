@@ -226,10 +226,13 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         if not os.path.exists(VIRUTALENV_PATH):
             raise Exception("Python virtual environment not installed at expected location %s" % VIRUTALENV_PATH)
         venv_path = os.environ.get("PYTHON_VIRTUALENV")
+        rsm_venv_path = os.environ.get("RSM_VIRTUALENV")
         if not venv_path:
             raise Exception("Environment variable PYTHON_VIRTUALENV not set, start Emme from 'start_emme_with_virtualenv.bat'")
         if not venv_path == VIRUTALENV_PATH:
             raise Exception("PYTHON_VIRTUALENV is not the expected value (%s instead of %s)" % (venv_path, VIRUTALENV_PATH))
+        if not rsm_venv_path:
+            raise Exception("Environment variable RSM_VIRTUALENV not set, start Emme from 'start_emme_with_virtualenv.bat")
         venv_path_found = False
         for path in sys.path:
             if VIRUTALENV_PATH in path:
@@ -404,10 +407,10 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 mgraFile = 'mgra13_based_input' + str(scenarioYear) + '.csv'
                 self.complete_work(scenarioYear, input_dir, output_dir, mgraFile, "walkMgraEquivMinutes.csv")
 
-                self.run_proc("runRSMZoneAggregator.cmd", [input_dir, output_dir],
+                self.run_proc("runRSMZoneAggregator.cmd", [input_dir, output_dir, rsm_venv_path],
                           "Zone Aggregator")
 
-                self.run_proc("runRSMInputAggregator.cmd", [org_model_directory, main_directory], "Input files Aggregator")
+                self.run_proc("runRSMInputAggregator.cmd", [org_model_directory, main_directory, rsm_venv_path], "Input files Aggregator")
 
                 if not skipBuildNetwork:
                     base_scenario = import_network(
