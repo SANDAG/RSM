@@ -6,3 +6,6 @@ sandag_rsm.egg-info
 _version.py
 .DS_Store
 test/data/*
+notebooks/**/*.omx
+visualizer/SimWrapper/data/external
+visualizer/SimWrapper/data/processed/pipeline.log

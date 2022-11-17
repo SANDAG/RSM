@@ -1,0 +1,38 @@
+header:
+  tab: "Charts"
+  title: "SANDAG RSM VISUALIZATION"
+  description: "RSM Visualization Dashboard"
+
+layout:      
+    mode_summary:  
+    - type: "bar"
+      title: "Mode Share"
+      description: "Share of Trips by Mode"
+      props:
+        dataset: "data/processed/trip_mode_summary.csv"
+        x: "tripMode"
+        columns: ["share"]
+        xAxisName: "Mode"
+        yAxisName: "Percent of Trips"
+
+    trip_summary:  
+    - type: "bar"
+      title: "Trips TOD"
+      description: "Share of Trips by Time of Day and Purpose"
+      props:
+        dataset: "data/processed/trip_tod_purpose_summary.csv"
+        x: "tripPurposeDestination"
+        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
+        xAxisName: "Purpose"
+        yAxisName: "Percent of Trips"
+        
+    transit_boardings:
+    - type: "bar"
+      title: "Transit Boardings"
+      description: "Transit Boardings by Mode and Period"
+      props:
+        dataset: "data/processed/transit_summary.csv"
+        x: ["MODE"]
+        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
+        yAxisTitle: "Percent of Trips"
+        xAxisTitle: "Transit Mode"
