@@ -1,4 +1,5 @@
 
+import os
 import sys
 from pathlib import Path
 
@@ -6,59 +7,76 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
+# to convert dataframe to fixed width column format
+def to_fwf(df, 
+    fname
+    ):
+    content = tabulate(df.values.tolist(), tablefmt="plain")
+    open(fname, "w").write(content)
+
+pd.DataFrame.to_fwf = to_fwf
+
 # aggregating input/uec files
 def agg_input_files(
     model_dir = ".", 
     rsm_dir = ".",
     taz_cwk_file = "taz_crosswalk.csv",
     mgra_cwk_file = "mgra_crosswalk.csv",
-    mgra_zone_file = "mgra13_based_input2016.csv",
+    agg_zones=2000,
+    ext_zones=12,
     input_files = ["microMgraEquivMinutes.csv", "microMgraTapEquivMinutes.csv", 
     "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
     "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
     "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
-    "households.csv", "ShadowPricingOutput_school_9.csv", "ShadowPricingOutput_work_9.csv"]
+    "households.csv", "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts"]
     ):
-"""
-    Parameters
-    ----------
-    model_dir : path to full model run, default "."
-    rsm_dir : path to RSM, default "."
-    taz_cwk_file : csv file, default taz_crosswalk.csv
-        taz to aggregated zones file. Should be located in RSM input folder
-    mgra_cwk_file : csv file, default mgra_crosswalk.csv
-        mgra to aggregated zones file. Should be located in RSM input folder
-    mgra_zone_file : csv file, deafult mgra13_based_input2016.csv.csv
-    input_files : list of input files to be aggregated. 
-        Should include the following files
-            "microMgraEquivMinutes.csv", "microMgraTapEquivMinutes.csv", 
-            "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
-            "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
-            "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
-            "households.csv", "ShadowPricingOutput_school_9.csv", "ShadowPricingOutput_work_9.csv"
     
-    Returns
-    -------
-    Aggregated files in the RSM input/uec directory
-"""
+    """
+        Parameters
+        ----------
+        model_dir : path to full model run, default "."
+        rsm_dir : path to RSM, default "."
+        taz_cwk_file : csv file, default taz_crosswalk.csv
+            taz to aggregated zones file. Should be located in RSM input folder
+        mgra_cwk_file : csv file, default mgra_crosswalk.csv
+            mgra to aggregated zones file. Should be located in RSM input folder
+        mgra_zone_file : csv file, deafult mgra13_based_input2016.csv.csv
+        input_files : list of input files to be aggregated. 
+            Should include the following files
+                "microMgraEquivMinutes.csv", "microMgraTapEquivMinutes.csv", 
+                "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
+                "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
+                "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
+                "households.csv", "ShadowPricingOutput_school_9.csv", "ShadowPricingOutput_work_9.csv",
+                "TourDcSoaDistanceAlts"
+        
+        Returns
+        -------
+        Aggregated files in the RSM input/uec directory
+    """
 
     df_clusters = pd.read_csv(os.path.join(rsm_dir, "input", taz_cwk_file))
+    df_clusters.columns= df_clusters.columns.str.strip().str.lower()
     dict_clusters = dict(zip(df_clusters['taz'], df_clusters['cluster_id']))
 
     mgra_cwk = pd.read_csv(os.path.join(rsm_dir, "input", mgra_cwk_file))
+    mgra_cwk.columns= mgra_cwk.columns.str.strip().str.lower()
     mgra_cwk = dict(zip(mgra_cwk['mgra'], mgra_cwk['cluster_id']))
+    
+    taz_zones = int(agg_zones) + int(ext_zones)
+    mgra_zones = int(agg_zones)
 
     # aggregating microMgraEquivMinutes.csv
     if "microMgraEquivMinutes.csv" in input_files: 
-        df_mm_eqmin = pd.read_csv(os.path.join(model_dir, "input", "microMgraEquivMinutes.csv"))
+        df_mm_eqmin = pd.read_csv(os.path.join(model_dir, "output", "microMgraEquivMinutes.csv"))
         df_mm_eqmin['i_new'] = df_mm_eqmin['i'].map(mgra_cwk)
         df_mm_eqmin['j_new'] = df_mm_eqmin['j'].map(mgra_cwk)
 
         df_mm_eqmin_agg = df_mm_eqmin.groupby(['i_new', 'j_new'])['walkTime', 'dist', 'mmTime', 'mmCost', 'mtTime', 'mtCost',
        'mmGenTime', 'mtGenTime', 'minTime'].mean().reset_index()
 
-        df_mm_eqmin_agg = df_mm_agg.rename(columns = {'i_new' : 'i', 'j_new' : 'j'})
-        df_mm_eqmin_agg.to_csv(os.path.join(rsm_dir, "input", "microMgraEquivMinutes_agg.csv"), index = False)
+        df_mm_eqmin_agg = df_mm_eqmin_agg.rename(columns = {'i_new' : 'i', 'j_new' : 'j'})
+        df_mm_eqmin_agg.to_csv(os.path.join(rsm_dir, "input", "microMgraEquivMinutes.csv"), index = False)
 
     else:
         raise FileNotFoundError("microMgraEquivMinutes.csv")
@@ -66,7 +84,7 @@ def agg_input_files(
 
     # aggregating microMgraTapEquivMinutes.csv"   
     if "microMgraTapEquivMinutes.csv" in input_files:
-        df_mm_tap = pd.read_csv(os.path.join(model_dir, "input", "microMgraTapEquivMinutes.csv"))
+        df_mm_tap = pd.read_csv(os.path.join(model_dir, "output", "microMgraTapEquivMinutes.csv"))
         df_mm_tap['mgra'] = df_mm_tap['mgra'].map(mgra_cwk)
 
         df_mm_tap_agg = df_mm_tap.groupby(['mgra', 'tap'])['walkTime', 'dist', 'mmTime', 'mmCost', 'mtTime',
@@ -79,7 +97,7 @@ def agg_input_files(
 
     # aggregating walkMgraTapEquivMinutes.csv
     if "walkMgraTapEquivMinutes.csv" in input_files: 
-        df_wlk_mgra_tap = pd.read_csv(os.path.join(model_dir, "input", "walkMgraTapEquivMinutes.csv")
+        df_wlk_mgra_tap = pd.read_csv(os.path.join(model_dir, "output", "walkMgraTapEquivMinutes.csv"))
         df_wlk_mgra_tap["mgra"] = df_wlk_mgra_tap["mgra"].map(mgra_cwk)
 
         df_wlk_mgra_agg = df_wlk_mgra_tap.groupby(["mgra", "tap"])["boardingPerceived", "boardingActual","alightingPerceived","alightingActual","boardingGain","alightingGain"].mean().reset_index()
@@ -90,7 +108,7 @@ def agg_input_files(
 
     # aggregating walkMgraEquivMinutes.csv
     if "walkMgraEquivMinutes.csv" in input_files:
-        df_wlk_min = pd.read_csv(os.path.join(model_dir, "input", "walkMgraEquivMinutes.csv"))
+        df_wlk_min = pd.read_csv(os.path.join(model_dir, "output", "walkMgraEquivMinutes.csv"))
         df_wlk_min["i"] = df_wlk_min["i"].map(mgra_cwk)
         df_wlk_min["j"] = df_wlk_min["j"].map(mgra_cwk)
 
@@ -103,7 +121,7 @@ def agg_input_files(
 
     # aggregating biketazlogsum
     if "bikeTazLogsum.csv" in input_files:
-        bike_taz = pd.read_csv(os.path.join(model_dir, "input", "bikeTazLogsum.csv"))
+        bike_taz = pd.read_csv(os.path.join(model_dir, "output", "bikeTazLogsum.csv"))
 
         bike_taz["i"] = bike_taz["i"].map(dict_clusters)
         bike_taz["j"] = bike_taz["j"].map(dict_clusters)
@@ -116,7 +134,7 @@ def agg_input_files(
 
     # aggregating bikeMgraLogsum.csv
     if "bikeMgraLogsum.csv" in input_files:
-        bike_mgra = pd.read_csv(os.path.join(model_dir, "input", "bikeMgraLogsum.csv"))
+        bike_mgra = pd.read_csv(os.path.join(model_dir, "output", "bikeMgraLogsum.csv"))
         bike_mgra["i"] = bike_mgra["i"].map(mgra_cwk)
         bike_mgra["j"] = bike_mgra["j"].map(mgra_cwk)
 
@@ -131,7 +149,7 @@ def agg_input_files(
         df_zone_term.columns = ["taz", "terminal_time"]
 
         df_agg = pd.merge(df_zone_term, df_clusters, on = "taz", how = 'left')
-        df_zones_agg = df.groupby(["cluster_id"])['terminal_time'].max().reset_index()
+        df_zones_agg = df_agg.groupby(["cluster_id"])['terminal_time'].max().reset_index()
 
         df_zones_agg.columns = ["taz", "terminal_time"]
         df_zones_agg.to_fwf(os.path.join(rsm_dir, "input", "zone.term"))
@@ -145,7 +163,7 @@ def agg_input_files(
         df_zones_park.columns = ["taz", "park_zones"]
 
         df_zones_park_agg = pd.merge(df_zones_park, df_clusters, on = "taz", how = 'left')
-        df_zones_park_agg = df.groupby(["cluster_id"])['park_zones'].max().reset_index()
+        df_zones_park_agg = df_zones_park_agg.groupby(["cluster_id"])['park_zones'].max().reset_index()
         df_zones_park_agg.columns = ["taz", "park_zones"]
         df_zones_park_agg.to_fwf(os.path.join(rsm_dir, "input", "zone.park"))
 
@@ -176,7 +194,7 @@ def agg_input_files(
         df_acc_agg = df_acc.groupby(['TAZ', 'TAP', 'MODE'])['TIME', 'DISTANCE'].mean().reset_index()
         df_acc_agg = df_acc_agg[["TAZ", "TAP", "TIME", "DISTANCE", "MODE"]]
 
-        df_acc_agg.to_csv(os.path.join(rsm_dir, "input", "accessam.csv"), index = False)
+        df_acc_agg.to_csv(os.path.join(rsm_dir, "input", "accessam.csv"), index = False, header =False)
     else:
         raise FileNotFoundError("accessam.csv")
 
@@ -188,7 +206,7 @@ def agg_input_files(
         df_park_agg['a'] = [i+1 for i in range(len(df_park_agg))]
 
         df_park_agg.columns = ["a", "mgra", "parkarea"]
-        df_park_agg.to_csv(os.path.join(rsm_dir, "uec", "ParkLocationAlts_agg.csv"), index = False)
+        df_park_agg.to_csv(os.path.join(rsm_dir, "uec", "ParkLocationAlts.csv"), index = False)
 
     else:
         FileNotFoundError("ParkLocationAlts.csv")
@@ -219,7 +237,7 @@ def agg_input_files(
         df_hh["mgra"] = df_hh["mgra"].map(mgra_cwk)
         df_hh["taz"] = df_hh["taz"].map(dict_clusters)
 
-        df_hh.to_csv(os.path.join(rsm_dir, "input", "households_agg.csv"), index = False)
+        df_hh.to_csv(os.path.join(rsm_dir, "input", "households.csv"), index = False)
 
     else:
         FileNotFoundError("households.csv")
@@ -285,12 +303,18 @@ def agg_input_files(
 
     else:
         FileNotFoundError("ShadowPricingOutput_work_9.csv")
+        
+    if "TourDcSoaDistanceAlts.csv" in input_files:
+        df_TourDcSoaDistanceAlts = pd.DataFrame({"a" : range(1,taz_zones+1), "dest" : range(1, taz_zones+1)})
+        df_TourDcSoaDistanceAlts.to_csv(os.path.join(rsm_dir, "uec", "TourDcSoaDistanceAlts.csv"), index=False)
+        
+    if "DestinationChoiceAlternatives.csv" in input_files:
+        df_DestinationChoiceAlternatives = pd.DataFrame({"a" : range(1,mgra_zones+1), "mgra" : range(1, mgra_zones+1)})
+        df_DestinationChoiceAlternatives.to_csv(os.path.join(rsm_dir, "uec", "DestinationChoiceAlternatives.csv"), index=False)
+        
+    if "SoaTazDistAlts.csv" in input_files:
+        df_SoaTazDistAlts = pd.DataFrame({"a" : range(1,taz_zones+1), "dest" : range(1, taz_zones+1)})
+        df_SoaTazDistAlts.to_csv(os.path.join(rsm_dir, "uec", "SoaTazDistAlts.csv"), index=False)
+               
+                
 
-    
-
-# to convert dataframe to fixed width column format
-def to_fwf(df, 
-    fname
-    ):
-    content = tabulate(df.values.tolist(), tablefmt="plain")
-    open(fname, "w").write(content)
