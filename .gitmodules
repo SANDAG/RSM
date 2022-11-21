@@ -1,3 +1,4 @@
 [submodule "visualizer/Data-Pipeline-Tool"]
 	path = visualizer/Data-Pipeline-Tool
 	url = https://github.com/SANDAG/Data-Pipeline-Tool.git
+        branch = rsm-visualizer
