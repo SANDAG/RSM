@@ -1,10 +1,11 @@
 import os
-import logging
+#import logging
 import pandas as pd
 from pathlib import Path
 import openmatrix as omx
+import shutil
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
  
 def _aggregate_matrix(input_mtx, aggregate_mapping_dict):
@@ -47,29 +48,17 @@ def translate_demand(
     
     """
     
-    input_dir = Path(input_dir or ".")
-    output_dir = Path(output_dir or ".")
+    #input_dir = Path(input_dir or ".")
+    #output_dir = Path(output_dir or ".")
 
-    def _resolve_df(x):
-        if isinstance(x, (str, Path)):
-            # read in the file to a pandas DataFrame
-            x = Path(x).expanduser()
-            if not x.is_absolute():
-                x = x.absolute()
-            try:
-                result = pd.read_csv(x)
-            except FileNotFoundError:
-                raise
-        elif isinstance(x, pd.DataFrame):
-            result = x
-        else:
-            raise TypeError(x + " must be path-like or DataFrame")
+    #print(input_dir)
+    #print(output_dir)
 
-        return result
-
-    agg_zone_mapping_df = _resolve_df(agg_zone_mapping)
+    #agg_zone_mapping_df = _resolve_df(agg_zone_mapping)
+    agg_zone_mapping_df = pd.read_csv(os.path.join(agg_zone_mapping))
     agg_zone_mapping_df = agg_zone_mapping_df.sort_values('taz')
-  
+
+    agg_zone_mapping_df.columns= agg_zone_mapping_df.columns.str.strip().str.lower()
     zone_mapping = dict(zip(agg_zone_mapping_df['taz'], agg_zone_mapping_df['cluster_id']))
     agg_zones = sorted(agg_zone_mapping_df['cluster_id'].unique())
 
@@ -77,10 +66,11 @@ def translate_demand(
         if '.omx' not in mat_name:
             mat_name = mat_name + ".omx"
         
-        logger.info("Aggregating Matrix: " + mat_name + " ...")
+        #logger.info("Aggregating Matrix: " + mat_name + " ...")
 
-        input_skim_file = Path(input_dir).expanduser().joinpath(mat_name)
-        output_skim_file = Path(output_dir).expanduser().joinpath(mat_name)
+        input_skim_file = os.path.join(input_dir, mat_name) #Path(input_dir).expanduser().joinpath(mat_name)
+        print(input_skim_file)
+        output_skim_file = os.path.join(output_dir, mat_name) #Path(output_dir).expanduser().joinpath(mat_name)
 
         assert os.path.isfile(input_skim_file)
 
@@ -99,3 +89,36 @@ def translate_demand(
 
         input_matrix.close()
         output_matrix.close()
+
+
+def copy_transit_demand(
+    matrix_names,
+    input_dir=".",
+    output_dir="."
+):
+    """
+    copies the omx transit demand matrix to rsm directory
+    
+    Parameters
+    ----------
+    matrix_names : list
+        omx matrix filenames to aggregate
+    input_dir : Path-like, default "."
+    output_dir : Path-like, default "."
+    
+    Returns
+    -------
+    
+    """
+
+
+    for mat_name in matrix_names:
+        if '.omx' not in mat_name:
+            mat_name = mat_name + ".omx"
+
+        input_file_dir = os.path.join(input_dir, mat_name)
+        output_file_dir = os.path.join(output_dir, mat_name)
+
+        shutil.copy(input_file_dir, output_file_dir)
+
+    

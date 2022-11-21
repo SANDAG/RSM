@@ -27,15 +27,15 @@ from sandag_rsm.input_agg import agg_input_files
 #   CONFIG HERE
 #   All these files should be relative to and within in the current working dir
 #
-
-org_model_dir = sys.argv[2]
-rsm_main_dir = sys.argv[2]
-
 logging_start()
 
+rsm_main_dir = sys.argv[1]
+org_model_dir = sys.argv[2]
+agg_zones = sys.argv[3]
+ext_zones = sys.argv[4]
 
 #
-#   Zone Aggregation
+#   Input Aggregation
 #
 
 agg_input_files(
@@ -43,10 +43,11 @@ agg_input_files(
     rsm_dir = rsm_main_dir,
     taz_cwk_file = "taz_crosswalk.csv",
     mgra_cwk_file = "mgra_crosswalk.csv",
-    mgra_zone_file = "mgra13_based_input2016.csv",
+    agg_zones = agg_zones,
+    ext_zones = ext_zones,
     input_files = ["microMgraEquivMinutes.csv", "microMgraTapEquivMinutes.csv", 
     "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
     "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
     "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
-    "households.csv", "ShadowPricingOutput_school_9.csv", "ShadowPricingOutput_work_9.csv"]
-)
+    "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts"],
+	)
