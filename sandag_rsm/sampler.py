@@ -16,6 +16,7 @@ def rsm_household_sampler(
     input_household="households.csv",
     input_person="persons.csv",
     taz_crosswalk="taz_crosswalk.csv",
+    mgra_crosswalk="mgra_crosswalk.csv",
     compare_access_columns=(
         "NONMAN_AUTO",
         "NONMAN_TRANSIT",
@@ -121,10 +122,15 @@ def rsm_household_sampler(
     rsm_zones = _resolve_df(taz_crosswalk, input_dir)
     dict_clusters = dict(zip(rsm_zones["taz"], rsm_zones["cluster_id"]))
 
+    
+    rsm_mgra_zones = _resolve_df(mgra_crosswalk, input_dir)
+    rsm_mgra_zones.columns = rsm_mgra_zones.columns.str.strip().str.lower()
+    dict_clusters_mgra = dict(zip(rsm_mgra_zones["mgra"], rsm_mgra_zones["cluster_id"]))
+
     # changing the taz and mgra to new cluster ids
     input_household_df = _resolve_df(input_household, input_dir)
     input_household_df["taz"] = input_household_df["taz"].map(dict_clusters)
-    input_household_df["mgra"] = input_household_df["taz"]
+    input_household_df["mgra"] = input_household_df["mgra"].map(dict_clusters_mgra)
     input_household_df["count"] = 1
 
     taz_hh = input_household_df.groupby(["taz"]).size().rename("n_hh").to_frame()
@@ -202,6 +208,7 @@ def rsm_household_sampler(
         # combine study are and non-study area households into single dataframe
         sample_households_df = pd.concat(sample_households)
 
+    sample_households_df = sample_households_df.sort_values(by=["hhid"])
     sample_households_df.to_csv(_resolve_out_filename(output_household), index=False)
 
     # select persons belonging to sampled households
