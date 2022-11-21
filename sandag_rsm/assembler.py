@@ -29,6 +29,7 @@ def rsm_assemble(
     rsm_indiv,
     rsm_joint,
     households,
+    mgra_crosswalk=None,
 ):
     """
     Assemble and evaluate RSM trip making.
@@ -50,6 +51,10 @@ def rsm_assemble(
         same sampled households as in `rsm_indiv`).
     households : path-like
         Synthetic household file, used to get home zones for households.
+    mgra_crosswalk : path-like, optional
+        Crosswalk from original MGRA to clustered zone ids.  Provide this crosswalk
+        if the `orig_indiv` and `orig_joint` files reference the original MGRA system
+        and those id's need to be converted to aggregated values before merging.
 
     Returns
     -------
@@ -59,6 +64,8 @@ def rsm_assemble(
     combined_trips_by_zone : pd.DataFrame
         Summary table of changes in trips by mode, by household home zone.
         Used to check whether undersampled zones have stable travel behavior.
+    final_ind, final_jnt
+        Separate tables for individual and joint trips, as required by java.
     """
     orig_indiv = Path(orig_indiv).expanduser()
     orig_joint = Path(orig_joint).expanduser()
@@ -72,11 +79,23 @@ def rsm_assemble(
     assert os.path.isfile(rsm_joint)
     assert os.path.isfile(households)
 
+    if mgra_crosswalk is not None:
+        mgra_crosswalk = Path(mgra_crosswalk).expanduser()
+        assert os.path.isfile(mgra_crosswalk)
+
     # load trip data - full simulation of residual/source model
     logger.info("reading ind_trips_full")
     ind_trips_full = pd.read_csv(orig_indiv)
     logger.info("reading jnt_trips_full")
     jnt_trips_full = pd.read_csv(orig_joint)
+
+    if mgra_crosswalk is not None:
+        logger.info("applying mgra_crosswalk to original data")
+        mgra_crosswalk = pd.read_csv(mgra_crosswalk).set_index("MGRA")["cluster_id"]
+        for col in [c for c in ind_trips_full.columns if c.lower().endswith("_mgra")]:
+            ind_trips_full[col] = ind_trips_full[col].map(mgra_crosswalk)
+        for col in [c for c in jnt_trips_full.columns if c.lower().endswith("_mgra")]:
+            jnt_trips_full[col] = jnt_trips_full[col].map(mgra_crosswalk)
 
     # load trip data - partial simulation of RSM model
     logger.info("reading ind_trips_rsm")
@@ -96,10 +115,22 @@ def rsm_assemble(
     original_trips_not_resimulated = original_trips.loc[
         ~original_trips["hh_id"].isin(hh_ids_rsm)
     ]
+    original_ind_trips_not_resimulated = ind_trips_full[
+        ~ind_trips_full["hh_id"].isin(hh_ids_rsm)
+    ]
+    original_jnt_trips_not_resimulated = jnt_trips_full[
+        ~jnt_trips_full["hh_id"].isin(hh_ids_rsm)
+    ]
 
-    logger.info("concatenate trips from rsm and orginal model")
+    logger.info("concatenate trips from rsm and original model")
     final_trips_rsm = pd.concat(
         [rsm_trips, original_trips_not_resimulated], ignore_index=True
+    ).reset_index(drop=True)
+    final_ind_trips = pd.concat(
+        [ind_trips_rsm, original_ind_trips_not_resimulated], ignore_index=True
+    ).reset_index(drop=True)
+    final_jnt_trips = pd.concat(
+        [jnt_trips_rsm, original_jnt_trips_not_resimulated], ignore_index=True
     ).reset_index(drop=True)
 
     # Get percentage change in total trips by mode for each home zone
@@ -161,4 +192,4 @@ def rsm_assemble(
     )
     combined_trips_by_zone = combined_trips_by_zone.drop(columns="max_trips")
 
-    return final_trips_rsm, combined_trips_by_zone
+    return final_trips_rsm, combined_trips_by_zone, final_ind_trips, final_jnt_trips

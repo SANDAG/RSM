@@ -17,6 +17,10 @@ class ElapsedTimeFormatter(logging.Formatter):
 
 
 def logging_start(level=None):
+    for h in logging.getLogger().handlers:
+        if isinstance(h, logging.StreamHandler):
+            if h.stream == sys.stdout:
+                return  # don't dupe
     formatter = ElapsedTimeFormatter(
         fmt="[{elapsedTime}] {levelname:s}: {message:s}",
         style="{",
