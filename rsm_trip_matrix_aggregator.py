@@ -15,7 +15,7 @@
 import os
 import sys
 import openmatrix as omx
-from translate import (
+from sandag_rsm.translate import (
     translate_demand, 
     copy_transit_demand,
 )
@@ -29,13 +29,13 @@ rsm_output_dir = os.path.join(sys.argv[1], "output")
 org_model_output_dir = os.path.join(sys.argv[2], "output")
 
 
-#matrix_names = ['trip_EA.omx', 'trip_AM.omx', 'trip_MD.omx', 'trip_PM.omx', 'trip_EV.omx']
-#translate_demand(
-#    matrix_names,
-#    agg_zone_mapping,
-#    org_model_input_dir,
-#    rsm_input_dir
-#)
+matrix_names = ['trip_EA.omx', 'trip_AM.omx', 'trip_MD.omx', 'trip_PM.omx', 'trip_EV.omx']
+translate_demand(
+    matrix_names,
+    agg_zone_mapping,
+    org_model_input_dir,
+    rsm_input_dir
+)
 
 #Aggregating the trips based on new zone structure
 matrix_names = ['autoAirportTrips.CBX_AM_high.omx', 'autoAirportTrips.CBX_AM_med.omx', 'autoAirportTrips.CBX_AM_low.omx',
