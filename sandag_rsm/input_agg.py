@@ -319,8 +319,8 @@ def agg_input_files(
 
     if "TripMatrices.csv" in input_files:
         trips = pd.read_csv(os.path.join(model_dir,"output", "TripMatrices.csv"))
-        trips['i'] = trips['i'].map(taz_crosswalk)
-        trips['j'] = trips['j'].map(taz_crosswalk)
+        trips['i'] = trips['i'].map(dict_clusters)
+        trips['j'] = trips['j'].map(dict_clusters)
 
         cols = trips.columns
         cols.remove("i")
