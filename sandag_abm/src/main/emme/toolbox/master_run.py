@@ -596,7 +596,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 #       add CV trips to auto demand
                 #       add EE and EI trips to auto demand
                 if not skipTripTableCreation[iteration]:
-                    import_auto_demand(output_dir, external_zones, num_processors, base_scenario)
+                    import_auto_demand(output_dir, external_zones, int(agg_zones)+int(ext_zones),num_processors, base_scenario)
 
         if not skipFinalHighwayAssignment:
             with _m.logbook_trace("Final traffic assignments"):
