@@ -28,7 +28,8 @@ def agg_input_files(
     "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
     "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
     "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
-    "households.csv", "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts"]
+    "households.csv", "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts",
+    "TripMatrices.csv"]
     ):
     
     """
@@ -315,6 +316,22 @@ def agg_input_files(
     if "SoaTazDistAlts.csv" in input_files:
         df_SoaTazDistAlts = pd.DataFrame({"a" : range(1,taz_zones+1), "dest" : range(1, taz_zones+1)})
         df_SoaTazDistAlts.to_csv(os.path.join(rsm_dir, "uec", "SoaTazDistAlts.csv"), index=False)
+
+    if "TripMatrices.csv" in input_files:
+        trips = pd.read_csv(os.path.join(model_dir,"output", "TripMatrices.csv"))
+        trips['i'] = trips['i'].map(taz_crosswalk)
+        trips['j'] = trips['j'].map(taz_crosswalk)
+
+        cols = trips.columns
+        cols.remove("i")
+        cols.remove("j")
+
+        trips_df = trips.groupby(['i', 'j'])[cols].sum().reset_index()
+        trips.to_csv(os.path.join(rsm_dir, "output", "TripMatrices.csv"))
+
+    else:
+        FileNotFoundError("TripMatrices.csv")
+
                
                 
 

@@ -49,5 +49,6 @@ agg_input_files(
     "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
     "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
     "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
-    "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts"],
+    "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts",
+    "TripMatrices.csv"],
 	)
