@@ -322,12 +322,12 @@ def agg_input_files(
         trips['i'] = trips['i'].map(dict_clusters)
         trips['j'] = trips['j'].map(dict_clusters)
 
-        cols = trips.columns
+        cols = list(trips.columns)
         cols.remove("i")
         cols.remove("j")
 
         trips_df = trips.groupby(['i', 'j'])[cols].sum().reset_index()
-        trips.to_csv(os.path.join(rsm_dir, "output", "TripMatrices.csv"))
+        trips.to_csv(os.path.join(rsm_dir, "output", "TripMatrices.csv"), index = False)
 
     else:
         FileNotFoundError("TripMatrices.csv")

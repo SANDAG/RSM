@@ -43,7 +43,6 @@ translate_demand(
     rsm_input_dir
 )
 
-
 agg_mats = []
 
 for period in periods:
@@ -68,15 +67,15 @@ for period in periods:
 
     agg_mats.append('TNCVehicleTrips'+period+file_ext)
 
-#Aggregating the trips based on new zone structure
+agg_mats.append('EmptyAVTrips'+file_ext)
 
+#Aggregating the trips based on new zone structure
 translate_demand(
     agg_mats,
     agg_zone_mapping,
     org_model_output_dir,
     rsm_output_dir
 )
-
 
 copy_mats = []
 for period in periods:
@@ -86,9 +85,9 @@ for period in periods:
     copy_mats.append('tranTrips'+period+file_ext)
     copy_mats.append('tranVisitorTrips'+period+file_ext)
 
-
 copy_transit_demand(
     copy_mats,
     org_model_output_dir,
     rsm_output_dir
 )
+
