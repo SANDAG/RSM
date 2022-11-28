@@ -16,6 +16,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import shutil
 from sandag_rsm.logging import logging_start
 from sandag_rsm.assembler import rsm_assemble
 
@@ -35,11 +36,15 @@ iteration = sys.argv[3]
 ORG_INDIV_TRIPS = os.path.join(org_model_dir, "output", "indivTripData_3.csv")
 ORG_JOINT_TRIPS = os.path.join(org_model_dir, "output", "jointTripData_3.csv")
 RSM_INDIV_TRIPS = os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv")
-RSM_JOINT_TRIPS = os.path.join(rsm_dir, "output", "jointTripData" + str(iteration) + ".csv")
-HOUSEHOLDS = os.path.join(rsm_dir, "input", "households.csv")
+RSM_JOINT_TRIPS = os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv")
+HOUSEHOLDS = os.path.join(org_model_dir, "input", "households.csv")
 
+#creating copy of individual and joint trips file
+shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_rsm_"+ str(iteration) + ".csv"))
+shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_rsm_"+ str(iteration) + ".csv"))
 
-final_trips_rsm, combined_trips_by_zone = rsm_assemble(
+#RSM Assembler
+final_trips_rsm, combined_trips_by_zone, final_ind, final_jnt = rsm_assemble(
     ORG_INDIV_TRIPS,
     ORG_JOINT_TRIPS,
     RSM_INDIV_TRIPS,
@@ -47,8 +52,9 @@ final_trips_rsm, combined_trips_by_zone = rsm_assemble(
     HOUSEHOLDS
 )
 
-
-
+#save as csv files
+final_ind.to_csv(os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv"))
+final_jnt.to_csv(os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv"))
 
 
 
