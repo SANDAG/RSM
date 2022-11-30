@@ -81,6 +81,7 @@ class ImportMatrices(_m.Tool(), gen_utils.Snapshot):
     external_zones = _m.Attribute(str)
     output_dir = _m.Attribute(unicode)
     num_processors = _m.Attribute(str)
+   
     
     tool_run_msg = ""
 
@@ -156,7 +157,7 @@ class ImportMatrices(_m.Tool(), gen_utils.Snapshot):
             raise
 
     @_m.logbook_trace("Create TOD auto trip tables", save_arguments=True)
-    def __call__(self, output_dir, external_zones, total_zones, num_processors, scenario):
+    def __call__(self, output_dir, external_zones, num_processors, scenario):
         attributes = {
             "output_dir": output_dir, 
             "external_zones": external_zones, 
@@ -171,7 +172,6 @@ class ImportMatrices(_m.Tool(), gen_utils.Snapshot):
         self.scenario = scenario
         self.output_dir = output_dir
         self.external_zones = external_zones
-        self.total_zones = total_zones
         self.num_processors = num_processors
         self.import_traffic_trips(props)
         self.import_commercial_vehicle_demand(props)
@@ -373,6 +373,10 @@ class ImportMatrices(_m.Tool(), gen_utils.Snapshot):
         share_light = props["cvm.share.light"]
         share_medium = props["cvm.share.medium"]
         share_heavy = props["cvm.share.heavy"]
+        if int(props['run.rsm'])>0:
+            total_zones = int(props['agg.zones']) + int(props['external.zones'])
+        else:
+            total_zones = 4996
 
         scenario = self.scenario
         emmebank = scenario.emmebank
