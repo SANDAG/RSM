@@ -92,6 +92,7 @@ def rsm_assemble(
     if mgra_crosswalk is not None:
         logger.info("applying mgra_crosswalk to original data")
         mgra_crosswalk = pd.read_csv(mgra_crosswalk).set_index("MGRA")["cluster_id"]
+        mgra_crosswalk[-1] = -1
         for col in [c for c in ind_trips_full.columns if c.lower().endswith("_mgra")]:
             ind_trips_full[col] = ind_trips_full[col].map(mgra_crosswalk)
         for col in [c for c in jnt_trips_full.columns if c.lower().endswith("_mgra")]:
