@@ -36,12 +36,12 @@ mat_names = []
 for period in periods:
     mat_names.append('trip'+period+file_ext)
 
-translate_demand(
-    matrix_names,
+""" translate_demand(
+    mat_names,
     agg_zone_mapping,
     org_model_input_dir,
     rsm_input_dir
-)
+) """
 
 agg_mats = []
 
@@ -53,6 +53,8 @@ for period in periods:
         agg_mats.append('autoInternalExternalTrips'+period+vot+file_ext)
         agg_mats.append('autoVisitorTrips'+period+vot+file_ext)
 
+
+for period in periods:
     agg_mats.append('nmotAirportTrips.CBX'+period+file_ext)
     agg_mats.append('nmotAirportTrips.SAN'+period+file_ext)
     agg_mats.append('nmotCrossBorderTrips'+period+file_ext)
@@ -77,12 +79,13 @@ translate_demand(
     rsm_output_dir
 )
 
+#copying transit demand matrices 
 copy_mats = []
 for period in periods:
     copy_mats.append('tranAirportTrips.SAN'+period+file_ext)
     copy_mats.append('tranCrossBorderTrips'+period+file_ext)
     copy_mats.append('tranInternalExternalTrips'+period+file_ext)
-    copy_mats.append('tranTrips'+period+file_ext)
+    #copy_mats.append('tranTrips'+period+file_ext)
     copy_mats.append('tranVisitorTrips'+period+file_ext)
 
 copy_transit_demand(

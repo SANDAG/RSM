@@ -18,10 +18,7 @@ import re
 import glob
 from sandag_rsm.logging import logging_start
 from sandag_rsm.sampler import rsm_household_sampler
-from sandag_rsm.utility import {
-    get_shadow_pricing_files,
-    modify_sandag_properties
-}
+from sandag_rsm.utility import *
 
 #
 #   CONFIG HERE
@@ -37,8 +34,9 @@ FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(rsm_dir, "input", "households.csv")
 FULL_ABM_SYNTH_PERSONS = os.path.join(rsm_dir, "input", "persons.csv")
 OUTPUT_MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_dir, "input", "taz_crosswalk.csv")
-ABM_PROPERTIES = os.path.join(rsm_dir, "conf", "sandag_abm.properties")
-
+ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
+ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
+INPUT_RSM_DIR = os.path.join(rsm_dir, "input")
  
 
 #output files
@@ -62,14 +60,21 @@ if iteration == 1:
 
 else:
 
-    PREV_ITER_ACCESS = os.path.join(rsm_dir, "input", "accessibilities_"+ str(iteration - 1)+".csv")
+    PREV_ITER_ACCESS = os.path.join(rsm_dir, "input", "accessibilities_"+ str(iteration-1)+".csv")
     CURR_ITER_ACCESS = os.path.join(rsm_dir, "input", "accessibilities_" + str(iteration) + ".csv")
 
     # get the shadow pricing and school pricing file
-    wrok_file, sch_file = get_shadow_pricing_files(OUTPUT_RSM_DIR)
-    
+    work_file, sch_file = get_shadow_pricing_files(OUTPUT_RSM_DIR)
+    #print(work_file, sch_file)
+
+    #create copy of sandag_abm.properties file 
+    copy_file(os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties"), os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm_"+str(iteration)+".properties"))
+
+    copy_file(os.path.join(OUTPUT_RSM_DIR, work_file), os.path.join(INPUT_RSM_DIR, work_file))
+    copy_file(os.path.join(OUTPUT_RSM_DIR, sch_file), os.path.join(INPUT_RSM_DIR, sch_file))
+
     # modifies the sandag_abm.properties file to reflect the names of shadow pricing files
-    modify_sandag_properties(ABM_PROPERTIES, wrok_file, sch_file, iteration)
+    # modify_sandag_properties_for_shadowpricing(ABM_PROPERTIES, work_file, sch_file, iteration)
 
     rsm_household_sampler(
         input_dir=rsm_dir,

@@ -373,7 +373,7 @@ class ImportMatrices(_m.Tool(), gen_utils.Snapshot):
         share_light = props["cvm.share.light"]
         share_medium = props["cvm.share.medium"]
         share_heavy = props["cvm.share.heavy"]
-        if int(props['run.rsm'])>0:
+        if int(props['run.rsm.abm.setup'])>0:
             total_zones = int(props['agg.zones']) + int(props['external.zones'])
         else:
             total_zones = 4996

@@ -1,6 +1,7 @@
 import re
 import glob
 import shutil
+import os
 
 class ReplacementOfString:
     """
@@ -24,6 +25,7 @@ def extract_number_in_filename(f):
     s = re.findall("\d+",f)
     return (int(s[0]) if s else -1,f)
 
+
 def get_shadow_pricing_files(folder):
     """
     folder is path to location of shadow pricing files.
@@ -31,24 +33,27 @@ def get_shadow_pricing_files(folder):
     sp_work_files = glob.glob(os.path.join(folder, 'ShadowPricingOutput_work*.csv'), recursive=True)
     sp_sch_files = glob.glob(os.path.join(folder, 'ShadowPricingOutput_school*.csv'), recursive=True)
 
+    sp_work_files =  [os.path.split(x)[1] for x in sp_work_files]
+    sp_sch_files = [os.path.split(x)[1] for x in sp_sch_files]
+
     sp_work_max = max(sp_work_files, key=extract_number_in_filename)
     sp_school_max = max(sp_sch_files, key=extract_number_in_filename)
 
     return sp_work_max, sp_school_max
 
-def modify_sandag_properties(src_file, wrok_file, sch_file, iteration):
+
+def copy_file(src, dest):
     """
-    
+    Create copy of file 
+
+    """
+    shutil.copy(src, dest)
+
+
+def modify_sandag_properties_for_shadowpricing(src_file, wrok_file, sch_file, iteration):
     """
 
-    #create a copy of the sandag_abm.properties file with iteration number
-    file_path = os.path.split(src_file)[0]
-    file_name_with_ext = os.path.split(src_file)[1]
-    file_name = os.path.splitext(file_name_with_ext)[0]
-
-    dest_file = file_path+file_name+'_'+str(iteration-1),'.properties'
-
-    shutil.copy(src_file, dest_file)
+    """
 
     #modfiying the sandag properties file
     with open(src_file) as f:
@@ -58,8 +63,7 @@ def modify_sandag_properties(src_file, wrok_file, sch_file, iteration):
     'UsualWorkLocationChoice.ShadowPrice.Input.File' : 'input/' + wrok_file,
     'UsualSchoolLocationChoice.ShadowPrice.Input.File' : 'input/' + sch_file,
     'uwsl.ShadowPricing.Work.MaximumIterations' : 1,
-    'uwsl.ShadowPricing.School.MaximumIterations' : 1,
-    'acc.read.input.file' : 'true'
+    'uwsl.ShadowPricing.School.MaximumIterations' : 1
     }
 
     for keys in strings_to_levers_file:
@@ -67,4 +71,26 @@ def modify_sandag_properties(src_file, wrok_file, sch_file, iteration):
 
     with open(src_file, 'wt') as f:
         f.write(y)
+
+def modify_sandag_properties_for_accessibility(src_file, value):
+    """
+
+    """
+    
+    #modfiying the sandag properties file
+    with open(src_file) as f:
+        y = f.read()
+
+    strings_to_levers_file = {
+
+    'acc.read.input.file' : value
+    }
+
+    for keys in strings_to_levers_file:
+        y = ReplacementOfString(keys).sub(strings_to_levers_file[keys], y)
+
+    with open(src_file, 'wt') as f:
+        f.write(y)
+
+
 

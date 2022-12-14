@@ -327,7 +327,7 @@ def agg_input_files(
         cols.remove("j")
 
         trips_df = trips.groupby(['i', 'j'])[cols].sum().reset_index()
-        trips.to_csv(os.path.join(rsm_dir, "output", "TripMatrices.csv"), index = False)
+        trips_df.to_csv(os.path.join(rsm_dir, "output", "TripMatrices.csv"), index = False)
 
     else:
         FileNotFoundError("TripMatrices.csv")
