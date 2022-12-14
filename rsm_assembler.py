@@ -38,6 +38,7 @@ ORG_JOINT_TRIPS = os.path.join(org_model_dir, "output", "jointTripData_3.csv")
 RSM_INDIV_TRIPS = os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv")
 RSM_JOINT_TRIPS = os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv")
 HOUSEHOLDS = os.path.join(org_model_dir, "input", "households.csv")
+MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 
 #creating copy of individual and joint trips file
 shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_rsm_"+ str(iteration) + ".csv"))
@@ -49,12 +50,13 @@ final_trips_rsm, combined_trips_by_zone, final_ind, final_jnt = rsm_assemble(
     ORG_JOINT_TRIPS,
     RSM_INDIV_TRIPS,
     RSM_JOINT_TRIPS,
-    HOUSEHOLDS
+    HOUSEHOLDS,
+    MGRA_CROSSWALK
 )
 
 #save as csv files
-final_ind.to_csv(os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv"))
-final_jnt.to_csv(os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv"))
+final_ind.to_csv(os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv"), index = False)
+final_jnt.to_csv(os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv"), index = False)
 
 
 
