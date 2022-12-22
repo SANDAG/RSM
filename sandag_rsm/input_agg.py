@@ -29,7 +29,7 @@ def agg_input_files(
     "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
     "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
     "households.csv", "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts",
-    "TripMatrices.csv"]
+    "TripMatrices.csv", "transponderModelAccessibilities.csv"]
     ):
     
     """
@@ -331,6 +331,17 @@ def agg_input_files(
 
     else:
         FileNotFoundError("TripMatrices.csv")
+
+
+    if "transponderModelAccessibilities.csv" in input_files:
+        tran_access = pd.read_csv(os.path.join(model_dir, "output", "transponderModelAccessibilities.csv"))
+        tran_access['TAZ'] = tran_access['TAZ'].map(dict_clusters)
+        
+        tran_access_agg = tran_access.groupby(['TAZ'])['DIST','AVGTTS','PCTDETOUR'].mean().reset_index()
+        tran_access_agg.to_csv(os.path.join(rsm_dir, "output", "transponderModelAccessibilities.csv"), index = False)
+
+    else:
+        FileNotFoundError("transponderModelAccessibilities.csv") transponderModelAccessibilities.csv
 
                
                 
