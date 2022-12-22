@@ -41,8 +41,8 @@ HOUSEHOLDS = os.path.join(org_model_dir, "input", "households.csv")
 MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 
 #creating copy of individual and joint trips file
-shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_rsm_"+ str(iteration) + ".csv"))
-shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_rsm_"+ str(iteration) + ".csv"))
+shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_abm_"+ str(iteration) + ".csv"))
+shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_abm_"+ str(iteration) + ".csv"))
 
 #RSM Assembler
 final_trips_rsm, combined_trips_by_zone, final_ind, final_jnt = rsm_assemble(
