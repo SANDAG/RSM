@@ -74,7 +74,7 @@ else:
     copy_file(os.path.join(OUTPUT_RSM_DIR, sch_file), os.path.join(INPUT_RSM_DIR, sch_file))
 
     # modifies the sandag_abm.properties file to reflect the names of shadow pricing files
-    # modify_sandag_properties_for_shadowpricing(ABM_PROPERTIES, work_file, sch_file, iteration)
+    modify_sandag_properties_for_shadowpricing(ABM_PROPERTIES, work_file, sch_file, iteration)
 
     rsm_household_sampler(
         input_dir=rsm_dir,
