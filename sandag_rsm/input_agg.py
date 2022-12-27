@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
+import itertools
+
 # to convert dataframe to fixed width column format
 def to_fwf(df, 
     fname
@@ -29,7 +31,7 @@ def agg_input_files(
     "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
     "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
     "households.csv", "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts",
-    "TripMatrices.csv", "transponderModelAccessibilities.csv"]
+    "TripMatrices.csv"]
     ):
     
     """
@@ -332,17 +334,124 @@ def agg_input_files(
     else:
         FileNotFoundError("TripMatrices.csv")
 
+    if "crossBorderTours.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "crossBorderTours.csv"))
+        df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
+        df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
 
-    if "transponderModelAccessibilities.csv" in input_files:
-        tran_access = pd.read_csv(os.path.join(model_dir, "output", "transponderModelAccessibilities.csv"))
-        tran_access['TAZ'] = tran_access['TAZ'].map(dict_clusters)
-        
-        tran_access_agg = tran_access.groupby(['TAZ'])['DIST','AVGTTS','PCTDETOUR'].mean().reset_index()
-        tran_access_agg.to_csv(os.path.join(rsm_dir, "output", "transponderModelAccessibilities.csv"), index = False)
+        df['originTAZ'] = df['originTAZ'].map(dict_clusters)
+        df['destinationTAZ'] = df['destinationTAZ'].map(dict_clusters)
+        df.to_csv(os.path.join(rsm_dir, "output", "crossBorderTours.csv"), index = False)
 
     else:
-        FileNotFoundError("transponderModelAccessibilities.csv") transponderModelAccessibilities.csv
+        raise FileNotFoundError("crossBorderTours.csv")
 
-               
-                
+    if "crossBorderTrips.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "crossBorderTrips.csv"))
+        df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
+        df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
+        
+        df['originTAZ'] = df['originTAZ'].map(dict_clusters)
+        df['destinationTAZ'] = df['destinationTAZ'].map(dict_clusters)
+        df.to_csv(os.path.join(rsm_dir, "output", "crossBorderTrips.csv"), index = False)
 
+    else:
+        raise FileNotFoundError("crossBorderTrips.csv")
+
+    if "internalExternalTrips.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "internalExternalTrips.csv"))
+        df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
+        df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
+
+        df['originTAZ'] = df['originTAZ'].map(dict_clusters)
+        df['destinationTAZ'] = df['destinationTAZ'].map(dict_clusters)
+        df.to_csv(os.path.join(rsm_dir, "output", "internalExternalTrips.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("internalExternalTrips.csv")
+
+    if "visitorTours.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "visitorTours.csv"))
+        
+        df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
+        df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
+        
+        df.to_csv(os.path.join(rsm_dir, "output", "visitorTours.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("visitorTours.csv")
+        
+    if "visitorTrips.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "visitorTrips.csv"))
+        
+        df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
+        df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
+        
+        df.to_csv(os.path.join(rsm_dir, "output", "visitorTrips.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("visitorTrips.csv")
+
+    if "householdAVTrips.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "householdAVTrips.csv"))
+        #print(os.path.join(model_dir, "output", "householdAVTrips.csv"))
+        df['orig_mgra'] = df['orig_mgra'].map(mgra_cwk)
+        df['dest_gra'] = df['dest_gra'].map(mgra_cwk)
+
+        df['trip_orig_mgra'] = df['trip_orig_mgra'].map(mgra_cwk)
+        df['trip_dest_mgra'] = df['trip_dest_mgra'].map(mgra_cwk)
+        df.to_csv(os.path.join(rsm_dir, "output", "householdAVTrips.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("householdAVTrips.csv")
+
+    if "airport_out.CBX.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "airport_out.CBX.csv"))
+        df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
+        df['destinationMgra'] = df['destinationMgra'].map(mgra_cwk)
+        
+        df['originTAZ'] = df['originTAZ'].map(dict_clusters)
+        df['destinationTAZ'] = df['destinationTAZ'].map(dict_clusters)
+        df.to_csv(os.path.join(rsm_dir, "output", "airport_out.CBX.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("airport_out.CBX.csv")
+
+    if "airport_out.SAN.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "airport_out.SAN.csv"))
+        df['originMgra'] = df['originMgra'].map(mgra_cwk)
+        df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
+        
+        df['originTAZ'] = df['originTAZ'].map(dict_clusters)
+        df['destinationTAZ'] = df['destinationTAZ'].map(dict_clusters)
+        df.to_csv(os.path.join(rsm_dir, "output", "airport_out.SAN.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("airport_out.SAN.csv")
+
+    if "TNCtrips.csv" in input_files: 
+        df = pd.read_csv(os.path.join(model_dir, "output", "TNCtrips.csv"))
+        df['originMgra'] = df['originMgra'].map(mgra_cwk)
+        df['destinationMgra'] = df['destinationMgra'].map(mgra_cwk)
+        
+        df['originTaz'] = df['originTaz'].map(dict_clusters)
+        df['destinationTaz'] = df['destinationTaz'].map(dict_clusters)
+        df.to_csv(os.path.join(rsm_dir, "output", "TNCtrips.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("TNCtrips.csv")
+
+    files = ["Trip" + "_" + i + "_" + j + ".csv" for i, j in
+                itertools.product(["FA", "GO", "IN", "RE", "SV", "TH", "WH"],
+                                   ["OE", "AM", "MD", "PM", "OL"])]
+
+    for file in files:
+        df = pd.read_csv(os.path.join(model_dir, "output", file))
+        df['I'] = df['I'].map(dict_clusters)
+        df['J'] = df['J'].map(dict_clusters)
+        df['HomeZone'] = df['HomeZone'].map(dict_clusters)
+        df.to_csv(os.path.join(rsm_dir, "output",file), index = False)
+
+    
+
+    
