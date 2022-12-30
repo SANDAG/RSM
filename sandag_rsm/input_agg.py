@@ -408,7 +408,7 @@ def agg_input_files(
     if "airport_out.CBX.csv" in input_files: 
         df = pd.read_csv(os.path.join(model_dir, "output", "airport_out.CBX.csv"))
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
-        df['destinationMgra'] = df['destinationMgra'].map(mgra_cwk)
+        df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
         
         df['originTAZ'] = df['originTAZ'].map(dict_clusters)
         df['destinationTAZ'] = df['destinationTAZ'].map(dict_clusters)
@@ -419,7 +419,7 @@ def agg_input_files(
 
     if "airport_out.SAN.csv" in input_files: 
         df = pd.read_csv(os.path.join(model_dir, "output", "airport_out.SAN.csv"))
-        df['originMgra'] = df['originMgra'].map(mgra_cwk)
+        df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
         df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
         
         df['originTAZ'] = df['originTAZ'].map(dict_clusters)

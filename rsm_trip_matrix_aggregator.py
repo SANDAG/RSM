@@ -36,12 +36,13 @@ mat_names = []
 for period in periods:
     mat_names.append('trip'+period+file_ext)
 
-""" translate_demand(
+translate_demand(
     mat_names,
     agg_zone_mapping,
     org_model_input_dir,
     rsm_input_dir
-) """
+)
+
 
 agg_mats = []
 
