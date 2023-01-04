@@ -30,8 +30,11 @@ def agg_input_files(
     "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
     "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
     "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
-    "households.csv", "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts.csv",
-    "TripMatrices.csv"]
+    "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts.csv",
+    "TripMatrices.csv", "transponderModelAccessibilities.csv", "crossBorderTours.csv", 
+    "internalExternalTrips.csv", "visitorTours.csv", "visitorTrips.csv", "householdAVTrips.csv", 
+    "crossBorderTrips.csv", "TNCTrips.csv", "airport_out.SAN.csv", "airport_out.CBX.csv", 
+    "TNCtrips.csv"]
     ):
     
     """
@@ -183,7 +186,20 @@ def agg_input_files(
 
         df_tap_ptype = df_tap_ptype[["tap", "lot id", "parking type", "cluster_id", "capacity", "distance", "transit mode"]]
         df_tap_ptype = df_tap_ptype.rename(columns = {"cluster_id": "taz"})
-        df_tap_ptype.to_fwf(os.path.join(rsm_dir, "input", "tap.ptype"))
+        #df_tap_ptype.to_fwf(os.path.join(rsm_dir, "input", "tap.ptype"))
+
+        widths = [5, 6, 6, 5, 5, 5, 3]
+
+        with open(os.path.join(rsm_dir, "input", "tap.ptype"), 'w') as f:
+            for index, row in df_tap_ptype.iterrows():
+                field1 = str(row[0]).rjust(widths[0])
+                field2 = str(row[1]).rjust(widths[1])
+                field3 = str(row[2]).rjust(widths[2])
+                field4 = str(row[3]).rjust(widths[3])
+                field5 = str(row[4]).rjust(widths[4])
+                field6 = str(row[5]).rjust(widths[5])
+                field7 = str(row[6]).rjust(widths[6])
+                f.write(f'{field1}{field2}{field3}{field4}{field5}{field6}{field7}\n')
 
     else:
         raise FileNotFoundError("tap.ptype")
@@ -333,6 +349,16 @@ def agg_input_files(
 
     else:
         FileNotFoundError("TripMatrices.csv")
+
+    if "transponderModelAccessibilities.csv" in input_files:
+        tran_access = pd.read_csv(os.path.join(model_dir, "output", "transponderModelAccessibilities.csv"))
+        tran_access['TAZ'] = tran_access['TAZ'].map(dict_clusters)
+
+        tran_access_agg = tran_access.groupby(['TAZ'])['DIST','AVGTTS','PCTDETOUR'].mean().reset_index()
+        tran_access_agg.to_csv(os.path.join(rsm_dir, "output","transponderModelAccessibilities.csv"), index = False)
+
+    else:
+        raise FileNotFoundError("transponderModelAccessibilities.csv")
 
     if "crossBorderTours.csv" in input_files: 
         df = pd.read_csv(os.path.join(model_dir, "output", "crossBorderTours.csv"))
