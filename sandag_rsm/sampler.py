@@ -153,6 +153,7 @@ def rsm_household_sampler(
         for taz_id, row in taz_hh.iterrows():
             df = input_household_df.loc[input_household_df["taz"] == taz_id]
             sampling_rate = row["sampling_rate"]
+            logger.info(f"{taz_id=} {sampling_rate=}")
             df = df.sample(frac=sampling_rate, random_state=taz_id + random_seed)
             sample_households.append(df)
 
