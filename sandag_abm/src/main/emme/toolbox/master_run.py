@@ -83,6 +83,9 @@ import datetime
 import pyodbc
 import win32com.client as win32
 
+import pandas as pd
+from scipy.spatial import distance
+
 _join = os.path.join
 _dir = os.path.dirname
 _norm = os.path.normpath
@@ -227,12 +230,12 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
             raise Exception("Python virtual environment not installed at expected location %s" % VIRUTALENV_PATH)
         venv_path = os.environ.get("PYTHON_VIRTUALENV")
         rsm_venv_path = os.environ.get("RSM_VIRTUALENV")
+        rsm_script_path = os.environ.get("RSM_SCRIPT_DIR")
+        rsm_python2_path = os.environ.get("rsm_python2_env")
         if not venv_path:
             raise Exception("Environment variable PYTHON_VIRTUALENV not set, start Emme from 'start_emme_with_virtualenv.bat'")
         if not venv_path == VIRUTALENV_PATH:
             raise Exception("PYTHON_VIRTUALENV is not the expected value (%s instead of %s)" % (venv_path, VIRUTALENV_PATH))
-        if not rsm_venv_path:
-            raise Exception("Environment variable RSM_VIRTUALENV not set, start Emme from 'start_emme_with_virtualenv.bat")
         venv_path_found = False
         for path in sys.path:
             if VIRUTALENV_PATH in path:
@@ -296,9 +299,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         visualizer_reference_label = props["visualizer.reference.label"]
         visualizer_build_label = props["visualizer.build.label"]
         mgraInputFile = props["mgra.socec.file"]
-
-        #for zone restructing in network files 
         taz_cwk_file = props["taz.to.cluster.crosswalk.file"]
+        mgra_cwk_file = props["mgra.to.cluster.crosswalk.file"]
         cluster_zone_file = props["cluster.zone.centroid.file"]
 
         period_ids = list(enumerate(periods, start=int(scenario_id) + 1))
@@ -340,10 +342,17 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         skipTransitShed = props["RunModel.skipTransitShed"]
         transitShedThreshold = props["transitShed.threshold"]
         transitShedTOD = props["transitShed.TOD"]
+        
+        #RSM Inputs
+        run_rsm_setup = int(props["run.rsm.setup"])
+        run_rsm_abm = int(props["run.rsm.abm.setup"])
+        org_full_model_dir = props["full.modelrun.dir"]
+        aggregated_zones = props["agg.zones"]
+        ext_zones = props["external.zones"]
 
         #check if visualizer.reference.path is valid in filesbyyears.csv
         if not os.path.exists(visualizer_reference_path):
-            raise Exception("Visualizer reference %s does not exist. Check filesbyyears.csv." %(visualizer_reference_path))
+            raise Exception("Visualizer reference %s does not exist. Check filesbyyears.csv." %(visualizer_reference_path)) 
             
         if useLocalDrive:
             folder_name = os.path.basename(main_directory)
@@ -370,7 +379,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         external_zones = "1-12"
 
         travel_modes = ["auto", "tran", "nmot", "othr"]
-        core_abm_files = ["Trips*.omx", "InternalExternalTrips*.omx"]
+        core_abm_files = ["Trips*.omx"] #, "InternalExternalTrips*.omx"]
         core_abm_files = [mode + name for name in core_abm_files for mode in travel_modes]
         smm_abm_files = ["AirportTrips*.omx", "CrossBorderTrips*.omx", "VisitorTrips*.omx"]
         smm_abm_files = [mode + name for name in smm_abm_files for mode in travel_modes]
@@ -391,7 +400,24 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                           "Checking if AT and Transit Networks are consistent")
             self.check_for_fatal(_join(self._path, "logFiles", "AtTransitCheck_event.log"),
                                  "AT and Transit network consistency checking failed! Open AtTransitCheck_event.log for details.")
+            
+            #working
+            if run_rsm_setup>0:
+                self.run_proc("runRSMZoneAggregator.cmd", 
+                [input_dir, rsm_venv_path, rsm_script_path, org_full_model_dir, aggregated_zones, ext_zones],
+                "Zone Aggregator")
 
+                self.run_proc("runRSMInputAggregator.cmd", 
+                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, aggregated_zones, ext_zones], 
+                "Input Files Aggregator")
+                
+                self.run_proc("runInputTripMatrixAggregator.cmd", 
+                [main_directory, rsm_python2_path, org_full_model_dir, rsm_script_path, taz_cwk_file], 
+                "Input Trip Matrix files Aggregator")
+            
+            
+            
+            
             if startFromIteration == 1:  # only run the setup / init steps if starting from iteration 1
                 if not skipWalkLogsums:
                     self.run_proc("runSandagWalkLogsums.cmd", [drive, path_forward_slash],
@@ -406,12 +432,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
 
                 mgraFile = 'mgra13_based_input' + str(scenarioYear) + '.csv'
                 self.complete_work(scenarioYear, input_dir, output_dir, mgraFile, "walkMgraEquivMinutes.csv")
-
-                self.run_proc("runRSMZoneAggregator.cmd", [input_dir, output_dir, rsm_venv_path],
-                          "Zone Aggregator")
-
-                self.run_proc("runRSMInputAggregator.cmd", [org_model_directory, main_directory, rsm_venv_path], "Input files Aggregator")
-
+                
+                
                 if not skipBuildNetwork:
                     base_scenario = import_network(
                         source=input_dir,
@@ -429,16 +451,177 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                                 modify_network.run(base_scenario)
                         except ImportError as e:
                             pass
-
-                    hwy_network = self.update_centroid_connectors(
-                                                        input_dir, 
-                                                        base_scenario, 
-                                                        main_emmebank, 
-                                                        external_zones, 
-                                                        taz_cwk_file, 
-                                                        cluster_zone_file)
                     
-                    base_scenario.publish_network(hwy_network)
+                    #########################################  added on 0629
+                    
+                    
+                    taz_cwk = pd.read_csv(os.path.join(main_directory, taz_cwk_file), index_col = 0)
+                    taz_cwk = taz_cwk['cluster_id'].to_dict()
+
+                    emmebank = _m.Modeller().emmebank
+                    scenario = emmebank.scenario(base_scenario)
+                    hwy_network = scenario.get_network()
+
+
+                    centroid_nodes = []
+                    exclude_nodes = []
+
+                    for node in range(1,13,1):
+                        exclude_nodes.append(hwy_network.node(node))
+
+                    for node in hwy_network.centroids():
+                        if not node in exclude_nodes:
+                            centroid_nodes.append(node)
+
+                    i_nodes = []
+                    j_nodes = []
+                    data1 = []
+                    length = []
+                    links = []
+
+                    for link in hwy_network.links():
+                        if link.i_node in centroid_nodes:
+                            links.append(link)
+                            i_nodes.append(int(link.i_node))
+                            j_nodes.append(int(link.j_node))
+                            data1.append(link.data1)
+                            length.append(link.length)
+
+                    df = pd.DataFrame({'links' : links, 'i_nodes' : i_nodes, 'j_nodes': j_nodes, 'ul1_org': data1, 'length_org':length})
+                    df['i_nodes_new'] = df['i_nodes'].map(taz_cwk)
+                    
+                    #get XY of existing centroids
+                    j_nodes_list = df['j_nodes'].unique()
+                    j_nodes_list = [hwy_network.node(x) for x in j_nodes_list]
+
+                    j_nodes = []
+                    j_x = []
+                    j_y = []
+                    for nodes in hwy_network.nodes():
+                        if nodes in j_nodes_list:
+                            j_nodes.append(nodes)
+                            j_x.append(nodes.x)
+                            j_y.append(nodes.y)
+
+                    j_nodes_XY = pd.DataFrame({'j_nodes' : j_nodes, 'j_x' : j_x, 'j_y': j_y})
+                    j_nodes_XY['j_nodes'] = [int(x) for x in j_nodes_XY['j_nodes']]
+                    df = pd.merge(df, j_nodes_XY, on = 'j_nodes', how = 'left')
+
+                    agg_node_coords = pd.read_csv(os.path.join(main_directory, cluster_zone_file))
+                    df = pd.merge(df, agg_node_coords, left_on = 'i_nodes_new', right_on = 'cluster_id', how = 'left')
+                    df = df.drop(columns = 'cluster_id')
+                    df = df.rename(columns = {'centroid_x' : 'i_new_x', 'centroid_y' : 'i_new_y'})
+
+                    i_coords = zip(df['j_x'], df['j_y'])
+                    j_coords = zip(df['i_new_x'], df['i_new_y'])
+
+                    df['length'] = [distance.euclidean(i, j)/5280.0 for i,j in zip(i_coords, j_coords)]
+
+                    #delete all the existing centroid nodes
+                    for index,row in df.iterrows():
+                        if hwy_network.node(row['i_nodes']):
+                            hwy_network.delete_node(row['i_nodes'], True)  
+
+                    # create new nodes (centroids of clusters)
+                    for index,row in agg_node_coords.iterrows():
+                        new_node = hwy_network.create_node(row['cluster_id'], is_centroid = True)
+                        new_node.x = int(row['centroid_x'])
+                        new_node.y = int(row['centroid_y'])
+
+                    df['type'] = 10
+                    df['num_lanes'] = 1
+                    df['vdf'] = 11
+                    df['ul3'] = 999999
+
+                    final_df = df[["i_nodes_new", "j_nodes", "length", "type", "num_lanes", "vdf", "ul3"]]
+                    final_df = final_df.drop_duplicates()
+                    final_df = final_df.reset_index(drop=True)
+                    final_df['type'] = final_df['type'].astype("int") 
+
+                    # create new links
+                    for index,row in final_df.iterrows():
+                        
+                        link_ij = hwy_network.create_link(row['i_nodes_new'], row['j_nodes'], 
+                                            modes = ["d", "h", "H", "i","I","s", "S", "v", "V", "m", "M", "t", "T"])
+                        link_ij.length = row['length']
+                        link_ij.type = row['type'].astype("int")
+                        link_ij.num_lanes = row['num_lanes'].astype("int")
+                        link_ij.volume_delay_func = row['vdf'].astype("int")
+                        link_ij.data3 = row['ul3'].astype("int")
+                        link_ij['@lane_ea'] = 1 # had to do this as they are being replaced in highway assignment by the values in these columns
+                        link_ij['@lane_am'] = 1
+                        link_ij['@lane_md'] = 1
+                        link_ij['@lane_pm'] = 1
+                        link_ij['@lane_ev'] = 1
+                        
+                        link_ij['@capacity_link_ea'] = 999999 
+                        link_ij['@capacity_link_am'] = 999999 
+                        link_ij['@capacity_link_md'] = 999999 
+                        link_ij['@capacity_link_pm'] = 999999 
+                        link_ij['@capacity_link_ev'] = 999999 
+                        
+                        link_ij['@capacity_inter_ea'] = 999999 
+                        link_ij['@capacity_inter_am'] = 999999 
+                        link_ij['@capacity_inter_md'] = 999999 
+                        link_ij['@capacity_inter_pm'] = 999999 
+                        link_ij['@capacity_inter_ev'] = 999999
+                        
+             
+                        if(row['length'] > 0.85):
+                            link_ij['@time_link_ea'] = row['length'] * 60 / 20
+                            link_ij['@time_link_am'] = row['length'] * 60 / 20 
+                            link_ij['@time_link_md'] = row['length'] * 60 / 20
+                            link_ij['@time_link_pm'] = row['length'] * 60 / 20
+                            link_ij['@time_link_ev'] = row['length'] * 60 / 20 
+                        else:
+                            link_ij['@time_link_ea'] = row['length'] * 60 / 45
+                            link_ij['@time_link_am'] = row['length'] * 60 / 45 
+                            link_ij['@time_link_md'] = row['length'] * 60 / 45 
+                            link_ij['@time_link_pm'] = row['length'] * 60 / 45 
+                            link_ij['@time_link_ev'] = row['length'] * 60 / 45
+
+                       
+                        link_ji = hwy_network.create_link(row['j_nodes'], row['i_nodes_new'], 
+                                            modes = ["d", "h", "H", "i","I","s", "S", "v", "V", "m", "M", "t", "T"])
+                        link_ji.length = row['length']
+                        link_ji.type = row['type'].astype("int")
+                        link_ji.num_lanes = row['num_lanes'].astype("int")
+                        link_ji.volume_delay_func = row['vdf'].astype("int")
+                        link_ji.data3 = row['ul3'].astype("int")
+                        link_ji['@lane_ea'] = 1 # had to do this as they are being replaced in highway assignment by the values in these columns
+                        link_ji['@lane_am'] = 1
+                        link_ji['@lane_md'] = 1
+                        link_ji['@lane_pm'] = 1
+                        link_ji['@lane_ev'] = 1
+                        
+                        link_ji['@capacity_link_ea'] = 999999  
+                        link_ji['@capacity_link_am'] = 999999 
+                        link_ji['@capacity_link_md'] = 999999 
+                        link_ji['@capacity_link_pm'] = 999999 
+                        link_ji['@capacity_link_ev'] = 999999 
+                        
+                        link_ji['@capacity_inter_ea'] = 999999 
+                        link_ji['@capacity_inter_am'] = 999999 
+                        link_ji['@capacity_inter_md'] = 999999 
+                        link_ji['@capacity_inter_pm'] = 999999 
+                        link_ji['@capacity_inter_ev'] = 999999
+                        
+                        if(row['length'] > 0.85):
+                            link_ji['@time_link_ea'] = row['length'] * 60 / 20
+                            link_ji['@time_link_am'] = row['length'] * 60 / 20 
+                            link_ji['@time_link_md'] = row['length'] * 60 / 20
+                            link_ji['@time_link_pm'] = row['length'] * 60 / 20
+                            link_ji['@time_link_ev'] = row['length'] * 60 / 20 
+                        else:
+                            link_ji['@time_link_ea'] = row['length'] * 60 / 45
+                            link_ji['@time_link_am'] = row['length'] * 60 / 45 
+                            link_ji['@time_link_md'] = row['length'] * 60 / 45 
+                            link_ji['@time_link_pm'] = row['length'] * 60 / 45 
+                            link_ji['@time_link_ev'] = row['length'] * 60 / 45
+
+                    scenario.publish_network(hwy_network)
+
+                    #############################################
 
                     if not skipInputChecker:
                         input_checker(path=self._path)
@@ -514,6 +697,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         for iteration in range(startFromIteration - 1, end_iteration):
             msa_iteration = iteration + 1
             with _m.logbook_trace("Iteration %s" % msa_iteration):
+            
+             
                 if not skipCoreABM[iteration] or not skipOtherSimulateModel[iteration] or not skipMAASModel[iteration]:
                     self.run_proc("runMtxMgr.cmd", [drive, drive + path_no_drive], "Start matrix manager")
                     self.run_proc("runHhMgr.cmd", [drive, drive + path_no_drive], "Start Hh manager")
@@ -555,10 +740,57 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 # also needed as CT-RAMP does not overwrite existing files
                 if not skipCoreABM[iteration]:
                     self.remove_prev_iter_files(core_abm_files, output_dir, iteration)
-                    self.run_proc(
+                    
+                    if run_rsm_abm>0:
+                        
+                        #set accsebility to false
+                        self.run_proc(
+                        "setAccessibility.cmd",
+                        [main_directory, rsm_venv_path, rsm_script_path, "false"],
+                        "Modify sandag_abm.properties file for accessibility", capture_output=True)
+                        
+                        #creating accessibility file
+                        self.run_proc(
+                        "runSandagAbm_acc.cmd",
+                        [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
+                        "Java-Run CT-RAMP - Accesibility", capture_output=True)
+                        
+                        #run RSM Sampler
+                        self.run_proc("runRSMSampler.cmd", 
+                        [main_directory, rsm_venv_path, rsm_script_path, msa_iteration], 
+                        "Create sampled households and person files")
+                        
+                        #set accessibility to true
+                        self.run_proc(
+                        "setAccessibility.cmd",
+                        [main_directory, rsm_venv_path, rsm_script_path, "true"],
+                        "Modify sandag_abm.properties file for accessibility", capture_output=True)
+                        
+                        #run CT RAMP
+                        self.run_proc(
+                        "runSandagAbm_RSM_SDRM.cmd",
+                        [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
+                        "Java-Run CT-RAMP", capture_output=True)
+                        
+                        #run RSM Assembler
+                        self.run_proc("runRSMAssembler.cmd", 
+                        [main_directory, rsm_venv_path,  rsm_script_path, org_full_model_dir, msa_iteration], 
+                        "RSM Assembler", capture_output=True)
+                        
+                        #run build trip tables
+                        self.run_proc(
+                        "runSandagAbm_RSM_SDRM_TripTables.cmd",
+                        [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
+                        "Java-Run CT-RAMP", capture_output=True)
+                        
+                        
+                    else:
+                    
+                        self.run_proc(
                         "runSandagAbm_SDRM.cmd",
                         [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
                         "Java-Run CT-RAMP", capture_output=True)
+
                 if not skipOtherSimulateModel[iteration]:
                     self.remove_prev_iter_files(smm_abm_files, output_dir, iteration)
                     self.run_proc(
@@ -596,7 +828,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 #       add CV trips to auto demand
                 #       add EE and EI trips to auto demand
                 if not skipTripTableCreation[iteration]:
-                    import_auto_demand(output_dir, external_zones, int(agg_zones)+int(ext_zones),num_processors, base_scenario)
+                    import_auto_demand(output_dir, external_zones, num_processors, base_scenario)
 
         if not skipFinalHighwayAssignment:
             with _m.logbook_trace("Final traffic assignments"):
@@ -1155,10 +1387,6 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
     def get_link_attributes(self):
         export_utils = _m.Modeller().module("inro.emme.utility.export_utilities")
         return export_utils.get_link_attributes(_m.Modeller().scenario)
-
-    def update_centroid_connectors(self, source, base_scenario, emmebank, external_zone, taz_cwk_file, cluster_zone_file):
-        adjust_network = _m.Modeller().module("inro.import.adjust_network_links")
-        return adjust_network.adjust_network_links(source, base_scenario, emmebank, external_zone, taz_cwk_file, cluster_zone_file)
 
     def sql_select_scenario(self, year, iteration, sample, path, dbtime):  # YMA, 1/24/2019
         """Return scenario_id from [dimension].[scenario] given path"""
