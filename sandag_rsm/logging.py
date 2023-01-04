@@ -16,7 +16,7 @@ class ElapsedTimeFormatter(logging.Formatter):
         return super(ElapsedTimeFormatter, self).format(record)
 
 
-def logging_start(level=None):
+def logging_start(level=None, filename="rsm-logging.log"):
     for h in logging.getLogger().handlers:
         if isinstance(h, logging.StreamHandler):
             if h.stream == sys.stdout:
@@ -28,5 +28,9 @@ def logging_start(level=None):
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
+    if filename is not None:
+        filehandler = logging.FileHandler(filename)
+        filehandler.setFormatter(formatter)
+        logging.getLogger().addHandler(filehandler)
     if level is not None:
         logging.getLogger().setLevel(level)

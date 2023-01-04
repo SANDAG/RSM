@@ -122,7 +122,6 @@ def rsm_household_sampler(
     rsm_zones = _resolve_df(taz_crosswalk, input_dir)
     dict_clusters = dict(zip(rsm_zones["taz"], rsm_zones["cluster_id"]))
 
-    
     rsm_mgra_zones = _resolve_df(mgra_crosswalk, input_dir)
     rsm_mgra_zones.columns = rsm_mgra_zones.columns.str.strip().str.lower()
     dict_clusters_mgra = dict(zip(rsm_mgra_zones["mgra"], rsm_mgra_zones["cluster_id"]))
@@ -202,6 +201,7 @@ def rsm_household_sampler(
         for taz_id, row in sample_rate_df.iterrows():
             df = input_household_df.loc[input_household_df["taz"] == taz_id]
             sampling_rate = row["sampling_rate"]
+            logger.info(f"{taz_id=} {sampling_rate=}")
             df = df.sample(frac=sampling_rate, random_state=taz_id + random_seed)
             sample_households.append(df)
 
