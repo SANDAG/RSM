@@ -1,16 +1,18 @@
 #
-# On the host machine, on linux or macOS terminal run:
+# Aggregates the donor model zones to RSM zones
+# This python file is being called in bin\runRSMZoneAggregator.cmd
 #
-# ```shell
-# docker run -v $(pwd):/home/mambauser/sandag_rsm -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
-#
-# or in `cwd` on Windows, run:
-#
-# ```shell
-# docker run -v %cd%:/home/mambauser/sandag_rsm -v "C:\VY-Projects\Github\RSM\notebooks\data-dl":/data -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
-#
+# inputs:
+#   rsm_input_dir: RSM directory  
+#   full_model_output_dir: Donor model directory
+#   agg_zones: Aggregated zone
+#   ext_zones: External zones
+# outputs:
+#   mgra_crosswalk.csv
+#   taz_crosswalk.csv
+#   cluster_centroids.csv
+#   mgra13_based_input2016
+
 
 import os
 import sys
@@ -27,18 +29,11 @@ from sandag_rsm.zone_agg import (
     merge_zone_data,
 )
 
-#
-#   CONFIG HERE
-#   All these files should be relative to and within in the current working dir
-#
 
 rsm_input_dir = sys.argv[1]
 full_model_output_dir = sys.argv[2]
 agg_zones = int(sys.argv[3])
 ext_zones = int(sys.argv[4])
-
-#full_model_output_dir = r"T:\RTP\2021RP\2021rp_final\abm_runs\2016"
-#rsm_input_dir = r"T:\ABM\CS_Space\sandbox2-rsmMY2016\input" 
 
 #input files
 FULL_ABM_MGRA = os.path.join(full_model_output_dir, "input", "mgra13_based_input2016.csv")
@@ -57,16 +52,16 @@ OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_input_dir, "taz_crosswalk.csv")
 OUTPUT_CLUSTER_CENTROIDS = os.path.join(rsm_input_dir, "cluster_centroids.csv")
 OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_input_dir, "mgra13_based_input2016.csv")
 
-OUTPUT_RSM_SAMPLED_HOUSHOLDS = os.path.join(rsm_input_dir, "sampled_households_1.csv")
-OUTPUT_RSM_SAMPLED_PERSONS = os.path.join(rsm_input_dir, "sampled_person_1.csv")
-
-logging_start()
+logging_start(
+    filename=os.path.join(rsm_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
+)
+logging.info("start logging rsm_zone_aggregator")
 
 #
 #   Zone Aggregation
 #
 
-print("loading mgra data")
+logger.info("loading mgra data")
 mgra = load_mgra_data(
     shapefilename=FULL_ABM_MGRA_SHAPEFILE,
     supplemental_features=FULL_ABM_MGRA,
@@ -74,22 +69,22 @@ mgra = load_mgra_data(
     topo=True,
 )
 
-print("loading trip file")
+logger.info("loading trip file")
 trips = load_trip_list(trips_filename = "indivTripData_3.csv", data_dir = FULL_ABM_TRIP_DIR)
 
 
 tazs = merge_zone_data(mgra, cluster_id="taz")
 
-print("getting mode shares")
+logger.info("getting mode shares")
 trip_mode_shares = trip_mode_shares_by_taz(trips, tazs=tazs.index, mgra_gdf=mgra)
 tazs = tazs.join(trip_mode_shares.add_prefix("modeshare_"), on='taz')
 
-print("adding poi")
+logger.info("adding poi")
 poi = poi_taz_mgra(mgra)
 
 cluster_factors = {"popden": 1, "empden": 1, "modeshare_NM": 100, "modeshare_WT": 100}
 
-print("attaching skims to poi taz")
+logger.info("attaching skims to poi taz")
 tazs, cluster_factors = attach_poi_taz_skims(
     tazs,
     FULL_ABM_AM_HIGHWAY_SKIM,

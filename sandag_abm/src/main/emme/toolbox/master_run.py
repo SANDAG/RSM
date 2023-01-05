@@ -743,7 +743,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     
                     if run_rsm_abm>0:
                         
-                        #set accsebility to false
+                        #set accessibility to false
                         self.run_proc(
                         "setAccessibility.cmd",
                         [main_directory, rsm_venv_path, rsm_script_path, "false"],
