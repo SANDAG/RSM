@@ -76,7 +76,6 @@ else:
 
     # get the shadow pricing and school pricing file
     work_file, sch_file = get_shadow_pricing_files(OUTPUT_RSM_DIR)
-    # print(work_file, sch_file)
 
     # create copy of sandag_abm.properties file
     copy_file(
@@ -110,3 +109,5 @@ else:
         output_household=OUTPUT_RSM_SAMPLED_HOUSHOLDS,
         output_person=OUTPUT_RSM_SAMPLED_PERSONS,
     )
+
+logging.info("finished logging rsm_sampler")

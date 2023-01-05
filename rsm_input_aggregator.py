@@ -1,18 +1,19 @@
 #
-# On the host machine, on linux or macOS terminal run:
+# Aggregate donor model input files/uec/non-abm model outputs to new zone structure
+# This python file is being called in bin\runRSMInputAggregator.cmd
 #
-# ```shell
-# docker run -v $(pwd):/home/mambauser/sandag_rsm -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
+# inputs:
+#   rsm_main_dir: RSM main directory
+#   org_model_dir: Donor model directory
+#   agg_zones: Aggregated zones
+#   ext_zones: External zones
 #
-# or in `cwd` on Windows, run:
-#
-# ```shell
-# docker run -v %cd%:/home/mambauser/sandag_rsm -v "C:\VY-Projects\Github\RSM\notebooks\data-dl":/data -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
-#
+# outputs:
+#   aggregated csv files
 
 import sys
+import os
+import logging
 from sandag_rsm.data_load.zones import load_mgra_data
 from sandag_rsm.logging import logging_start
 from sandag_rsm.sampler import rsm_household_sampler
@@ -23,21 +24,19 @@ from sandag_rsm.zone_agg import (
     merge_zone_data,
 )
 from sandag_rsm.input_agg import agg_input_files
-#
-#   CONFIG HERE
-#   All these files should be relative to and within in the current working dir
-#
-logging_start()
 
 rsm_main_dir = sys.argv[1]
 org_model_dir = sys.argv[2]
 agg_zones = sys.argv[3]
 ext_zones = sys.argv[4]
 
-#
-#   Input Aggregation
-#
+logging_start(
+    filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
+)
+logging.info("start logging rsm_input_aggregator")
 
+
+#   Input Aggregation
 agg_input_files(
     model_dir = org_model_dir, 
     rsm_dir = rsm_main_dir,
@@ -53,5 +52,7 @@ agg_input_files(
     "TripMatrices.csv", "transponderModelAccessibilities.csv", "crossBorderTours.csv", 
     "internalExternalTrips.csv", "visitorTours.csv", "visitorTrips.csv", "householdAVTrips.csv", 
     "crossBorderTrips.csv", "TNCTrips.csv", "airport_out.SAN.csv", "airport_out.CBX.csv", 
-    "TNCtrips.csv"],
+    "TNCtrips.csv"]
 	)
+
+logging.info("finished logging rsm_input_aggregator")

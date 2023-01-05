@@ -3,7 +3,7 @@
 # This python file is being called in bin\runRSMZoneAggregator.cmd
 #
 # inputs:
-#   rsm_input_dir: RSM directory  
+#   rsm_input_dir: RSM input directory
 #   full_model_output_dir: Donor model directory
 #   agg_zones: Aggregated zone
 #   ext_zones: External zones
@@ -11,12 +11,13 @@
 #   mgra_crosswalk.csv
 #   taz_crosswalk.csv
 #   cluster_centroids.csv
-#   mgra13_based_input2016
+#   mgra13_based_input2016.csv
 
 
 import os
 import sys
 import pandas as pd
+import logging
 from sandag_rsm.data_load.zones import load_mgra_data
 from sandag_rsm.data_load.triplist import load_trip_list, trip_mode_shares_by_mgra, trip_mode_shares_by_taz
 from sandag_rsm.logging import logging_start
@@ -30,12 +31,13 @@ from sandag_rsm.zone_agg import (
 )
 
 
-rsm_input_dir = sys.argv[1]
+rsm_main_dir = sys.argv[1]
 full_model_output_dir = sys.argv[2]
 agg_zones = int(sys.argv[3])
 ext_zones = int(sys.argv[4])
 
 #input files
+rsm_input_dir = os.path.join(rsm_main_dir, "input")
 FULL_ABM_MGRA = os.path.join(full_model_output_dir, "input", "mgra13_based_input2016.csv")
 FULL_ABM_MGRA_SHAPEFILE = os.path.join(rsm_input_dir, "MGRASHAPE.zip")
 FULL_ABM_AM_HIGHWAY_SKIM = os.path.join(full_model_output_dir, "output", "traffic_skims_AM.omx")
@@ -53,7 +55,7 @@ OUTPUT_CLUSTER_CENTROIDS = os.path.join(rsm_input_dir, "cluster_centroids.csv")
 OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_input_dir, "mgra13_based_input2016.csv")
 
 logging_start(
-    filename=os.path.join(rsm_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
+    filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
 )
 logging.info("start logging rsm_zone_aggregator")
 
@@ -61,7 +63,7 @@ logging.info("start logging rsm_zone_aggregator")
 #   Zone Aggregation
 #
 
-logger.info("loading mgra data")
+logging.info("loading mgra data")
 mgra = load_mgra_data(
     shapefilename=FULL_ABM_MGRA_SHAPEFILE,
     supplemental_features=FULL_ABM_MGRA,
@@ -69,22 +71,22 @@ mgra = load_mgra_data(
     topo=True,
 )
 
-logger.info("loading trip file")
+logging.info("loading trip file")
 trips = load_trip_list(trips_filename = "indivTripData_3.csv", data_dir = FULL_ABM_TRIP_DIR)
 
 
 tazs = merge_zone_data(mgra, cluster_id="taz")
 
-logger.info("getting mode shares")
+logging.info("getting mode shares")
 trip_mode_shares = trip_mode_shares_by_taz(trips, tazs=tazs.index, mgra_gdf=mgra)
 tazs = tazs.join(trip_mode_shares.add_prefix("modeshare_"), on='taz')
 
-logger.info("adding poi")
+logging.info("adding poi")
 poi = poi_taz_mgra(mgra)
 
 cluster_factors = {"popden": 1, "empden": 1, "modeshare_NM": 100, "modeshare_WT": 100}
 
-logger.info("attaching skims to poi taz")
+logging.info("attaching skims to poi taz")
 tazs, cluster_factors = attach_poi_taz_skims(
     tazs,
     FULL_ABM_AM_HIGHWAY_SKIM,
@@ -93,7 +95,7 @@ tazs, cluster_factors = attach_poi_taz_skims(
     cluster_factors=cluster_factors,
 )
 
-print("aggregating zones")
+logging.info("aggregating zones")
 agglom3full = aggregate_zones(
     tazs,
     cluster_factors=cluster_factors,
@@ -104,7 +106,7 @@ agglom3full = aggregate_zones(
     explicit_col="taz",
 )
 
-print("printing outputs")
+logging.info("printing outputs")
 taz_crosswalk = make_crosswalk(agglom3full, tazs, old_index="taz").sort_values("taz")
 mgra_crosswalk = make_crosswalk(agglom3full, mgra, old_index="MGRA").sort_values("MGRA")
 agglom3full = mark_centroids(agglom3full)
@@ -145,7 +147,7 @@ taz_crosswalk.to_csv(OUTPUT_TAZ_CROSSWALK, index=False)
 cluster_centroids.to_csv(OUTPUT_CLUSTER_CENTROIDS, index=False)
 agglom3full.to_csv(OUTPUT_RSM_ZONE_FILE, index=False)
 
-
+logging.info("Finished logging rsm_zone_aggregator")
 
 
 

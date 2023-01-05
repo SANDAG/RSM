@@ -2,12 +2,15 @@
 import os
 import sys
 from pathlib import Path
-
+import logging
 import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
 import itertools
+
+logger = logging.getLogger(__name__)
+
 
 # to convert dataframe to fixed width column format
 def to_fwf(df, 
@@ -52,13 +55,16 @@ def agg_input_files(
                 "microMgraEquivMinutes.csv", "microMgraTapEquivMinutes.csv", 
                 "walkMgraTapEquivMinutes.csv", "walkMgraEquivMinutes.csv", "bikeTazLogsum.csv",
                 "bikeMgraLogsum.csv", "zone.term", "zones.park", "tap.ptype", "accessam.csv",
-                "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv", 
-                "households.csv", "ShadowPricingOutput_school_9.csv", "ShadowPricingOutput_work_9.csv",
-                "TourDcSoaDistanceAlts"
+                "ParkLocationAlts.csv", "CrossBorderDestinationChoiceSoaAlternatives.csv",
+                "TourDcSoaDistanceAlts.csv", "DestinationChoiceAlternatives.csv", "SoaTazDistAlts.csv",
+                "TripMatrices.csv", "transponderModelAccessibilities.csv", "crossBorderTours.csv",
+                "internalExternalTrips.csv", "visitorTours.csv", "visitorTrips.csv", "householdAVTrips.csv",
+                "crossBorderTrips.csv", "TNCTrips.csv", "airport_out.SAN.csv", "airport_out.CBX.csv",
+                "TNCtrips.csv"
         
         Returns
         -------
-        Aggregated files in the RSM input/uec directory
+        Aggregated files in the RSM input/output/uec directory
     """
 
     df_clusters = pd.read_csv(os.path.join(rsm_dir, "input", taz_cwk_file))
@@ -73,7 +79,8 @@ def agg_input_files(
     mgra_zones = int(agg_zones)
 
     # aggregating microMgraEquivMinutes.csv
-    if "microMgraEquivMinutes.csv" in input_files: 
+    if "microMgraEquivMinutes.csv" in input_files:
+        logging.info("Aggregating - microMgraEquivMinutes.csv")
         df_mm_eqmin = pd.read_csv(os.path.join(model_dir, "output", "microMgraEquivMinutes.csv"))
         df_mm_eqmin['i_new'] = df_mm_eqmin['i'].map(mgra_cwk)
         df_mm_eqmin['j_new'] = df_mm_eqmin['j'].map(mgra_cwk)
@@ -90,6 +97,7 @@ def agg_input_files(
 
     # aggregating microMgraTapEquivMinutes.csv"   
     if "microMgraTapEquivMinutes.csv" in input_files:
+        logging.info("Aggregating - microMgraTapEquivMinutes.csv")
         df_mm_tap = pd.read_csv(os.path.join(model_dir, "output", "microMgraTapEquivMinutes.csv"))
         df_mm_tap['mgra'] = df_mm_tap['mgra'].map(mgra_cwk)
 
@@ -102,7 +110,8 @@ def agg_input_files(
         raise FileNotFoundError("microMgraTapEquivMinutes.csv")
 
     # aggregating walkMgraTapEquivMinutes.csv
-    if "walkMgraTapEquivMinutes.csv" in input_files: 
+    if "walkMgraTapEquivMinutes.csv" in input_files:
+        logging.info("Aggregating - walkMgraTapEquivMinutes.csv")
         df_wlk_mgra_tap = pd.read_csv(os.path.join(model_dir, "output", "walkMgraTapEquivMinutes.csv"))
         df_wlk_mgra_tap["mgra"] = df_wlk_mgra_tap["mgra"].map(mgra_cwk)
 
@@ -114,6 +123,7 @@ def agg_input_files(
 
     # aggregating walkMgraEquivMinutes.csv
     if "walkMgraEquivMinutes.csv" in input_files:
+        logging.info("Aggregating - walkMgraEquivMinutes.csv")
         df_wlk_min = pd.read_csv(os.path.join(model_dir, "output", "walkMgraEquivMinutes.csv"))
         df_wlk_min["i"] = df_wlk_min["i"].map(mgra_cwk)
         df_wlk_min["j"] = df_wlk_min["j"].map(mgra_cwk)
@@ -127,6 +137,7 @@ def agg_input_files(
 
     # aggregating biketazlogsum
     if "bikeTazLogsum.csv" in input_files:
+        logging.info("Aggregating - bikeTazLogsum.csv")
         bike_taz = pd.read_csv(os.path.join(model_dir, "output", "bikeTazLogsum.csv"))
 
         bike_taz["i"] = bike_taz["i"].map(dict_clusters)
@@ -140,6 +151,7 @@ def agg_input_files(
 
     # aggregating bikeMgraLogsum.csv
     if "bikeMgraLogsum.csv" in input_files:
+        logging.info("Aggregating - bikeMgraLogsum.csv")
         bike_mgra = pd.read_csv(os.path.join(model_dir, "output", "bikeMgraLogsum.csv"))
         bike_mgra["i"] = bike_mgra["i"].map(mgra_cwk)
         bike_mgra["j"] = bike_mgra["j"].map(mgra_cwk)
@@ -151,6 +163,7 @@ def agg_input_files(
 
     # aggregating zone.term
     if "zone.term" in input_files:
+        logging.info("Aggregating - zone.term")
         df_zone_term = pd.read_fwf(os.path.join(model_dir, "input", "zone.term"), header = None)
         df_zone_term.columns = ["taz", "terminal_time"]
 
@@ -165,6 +178,7 @@ def agg_input_files(
 
     # aggregating zones.park
     if "zones.park" in input_files:
+        logging.info("Aggregating - zone.park")
         df_zones_park = pd.read_fwf(os.path.join(model_dir, "input", "zone.park"), header = None)
         df_zones_park.columns = ["taz", "park_zones"]
 
@@ -179,6 +193,7 @@ def agg_input_files(
 
     # aggregating tap.ptype 
     if "tap.ptype" in input_files:
+        logging.info("Aggregating - tap.ptype")
         df_tap_ptype = pd.read_fwf(os.path.join(model_dir, "input", "tap.ptype"), header = None)
         df_tap_ptype.columns = ["tap", "lot id", "parking type", "taz", "capacity", "distance", "transit mode"]
 
@@ -206,6 +221,7 @@ def agg_input_files(
 
     #aggregating accessam.csv
     if "accessam.csv" in input_files:
+        logging.info("Aggregating - accessam.csv")
         df_acc = pd.read_csv(os.path.join(model_dir, "input", "accessam.csv"), header = None)
         df_acc.columns = ['TAZ', 'TAP', 'TIME', 'DISTANCE', 'MODE']
 
@@ -219,6 +235,7 @@ def agg_input_files(
 
     # aggregating ParkLocationAlts.csv
     if "ParkLocationAlts.csv" in input_files:
+        logging.info("Aggregating - ParkLocationAlts.csv")
         df_park = pd.read_csv(os.path.join(model_dir, "uec", "ParkLocationAlts.csv"))
         df_park['mgra_new'] = df_park["mgra"].map(mgra_cwk)
         df_park_agg = df_park.groupby(["mgra_new"])["parkarea"].min().reset_index() # assuming 1 is "parking" and 2 is "no parking"
@@ -232,6 +249,7 @@ def agg_input_files(
 
     # aggregating CrossBorderDestinationChoiceSoaAlternatives.csv
     if "CrossBorderDestinationChoiceSoaAlternatives.csv" in input_files:
+        logging.info("Aggregating - CrossBorderDestinationChoiceSoaAlternatives.csv")
         df_cb = pd.read_csv(os.path.join(model_dir, "uec","CrossBorderDestinationChoiceSoaAlternatives.csv"))
 
         df_cb["mgra_entry"] = df_cb["mgra_entry"].map(mgra_cwk)
@@ -252,7 +270,8 @@ def agg_input_files(
 
     # aggregating households.csv
     if "households.csv" in input_files:
-        df_hh = pd.read_csv(os.path.join(model_dir, "input","households.csv"))
+        logging.info("Aggregating - households.csv")
+        df_hh = pd.read_csv(os.path.join(model_dir, "input", "households.csv"))
         df_hh["mgra"] = df_hh["mgra"].map(mgra_cwk)
         df_hh["taz"] = df_hh["taz"].map(dict_clusters)
 
@@ -263,6 +282,7 @@ def agg_input_files(
 
     # aggregating ShadowPricingOutput_school_9.csv
     if "ShadowPricingOutput_school_9.csv" in input_files:
+        logging.info("Aggregating - ShadowPricingOutput_school_9.csv")
         df_sp_sch = pd.read_csv(os.path.join(model_dir, "input", "ShadowPricingOutput_school_9.csv"))
 
         agg_instructions = {}
@@ -293,6 +313,7 @@ def agg_input_files(
 
     # aggregating ShadowPricingOutput_work_9.csv
     if "ShadowPricingOutput_work_9.csv" in input_files:
+        logging.info("Aggregating - ShadowPricingOutput_work_9.csv")
         df_sp_wrk = pd.read_csv(os.path.join(model_dir, "input", "ShadowPricingOutput_work_9.csv"))
 
         agg_instructions = {}
@@ -324,18 +345,22 @@ def agg_input_files(
         FileNotFoundError("ShadowPricingOutput_work_9.csv")
         
     if "TourDcSoaDistanceAlts.csv" in input_files:
+        logging.info("Aggregating - TourDcSoaDistanceAlts.csv")
         df_TourDcSoaDistanceAlts = pd.DataFrame({"a" : range(1,taz_zones+1), "dest" : range(1, taz_zones+1)})
         df_TourDcSoaDistanceAlts.to_csv(os.path.join(rsm_dir, "uec", "TourDcSoaDistanceAlts.csv"), index=False)
         
     if "DestinationChoiceAlternatives.csv" in input_files:
+        logging.info("Aggregating - DestinationChoiceAlternatives.csv")
         df_DestinationChoiceAlternatives = pd.DataFrame({"a" : range(1,mgra_zones+1), "mgra" : range(1, mgra_zones+1)})
         df_DestinationChoiceAlternatives.to_csv(os.path.join(rsm_dir, "uec", "DestinationChoiceAlternatives.csv"), index=False)
         
     if "SoaTazDistAlts.csv" in input_files:
+        logging.info("Aggregating - SoaTazDistAlts.csv")
         df_SoaTazDistAlts = pd.DataFrame({"a" : range(1,taz_zones+1), "dest" : range(1, taz_zones+1)})
         df_SoaTazDistAlts.to_csv(os.path.join(rsm_dir, "uec", "SoaTazDistAlts.csv"), index=False)
 
     if "TripMatrices.csv" in input_files:
+        logging.info("Aggregating - TripMatrices.csv")
         trips = pd.read_csv(os.path.join(model_dir,"output", "TripMatrices.csv"))
         trips['i'] = trips['i'].map(dict_clusters)
         trips['j'] = trips['j'].map(dict_clusters)
@@ -351,6 +376,7 @@ def agg_input_files(
         FileNotFoundError("TripMatrices.csv")
 
     if "transponderModelAccessibilities.csv" in input_files:
+        logging.info("Aggregating - transponderModelAccessibilities.csv")
         tran_access = pd.read_csv(os.path.join(model_dir, "output", "transponderModelAccessibilities.csv"))
         tran_access['TAZ'] = tran_access['TAZ'].map(dict_clusters)
 
@@ -360,7 +386,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("transponderModelAccessibilities.csv")
 
-    if "crossBorderTours.csv" in input_files: 
+    if "crossBorderTours.csv" in input_files:
+        logging.info("Aggregating - crossBorderTours.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "crossBorderTours.csv"))
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
         df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
@@ -372,7 +399,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("crossBorderTours.csv")
 
-    if "crossBorderTrips.csv" in input_files: 
+    if "crossBorderTrips.csv" in input_files:
+        logging.info("Aggregating - crossBorderTrips.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "crossBorderTrips.csv"))
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
         df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
@@ -384,7 +412,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("crossBorderTrips.csv")
 
-    if "internalExternalTrips.csv" in input_files: 
+    if "internalExternalTrips.csv" in input_files:
+        logging.info("Aggregating - internalExternalTrips.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "internalExternalTrips.csv"))
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
         df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
@@ -396,7 +425,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("internalExternalTrips.csv")
 
-    if "visitorTours.csv" in input_files: 
+    if "visitorTours.csv" in input_files:
+        logging.info("Aggregating - visitorTours.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "visitorTours.csv"))
         
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
@@ -407,7 +437,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("visitorTours.csv")
         
-    if "visitorTrips.csv" in input_files: 
+    if "visitorTrips.csv" in input_files:
+        logging.info("Aggregating - visitorTrips.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "visitorTrips.csv"))
         
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
@@ -418,7 +449,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("visitorTrips.csv")
 
-    if "householdAVTrips.csv" in input_files: 
+    if "householdAVTrips.csv" in input_files:
+        logging.info("Aggregating - householdAVTrips.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "householdAVTrips.csv"))
         #print(os.path.join(model_dir, "output", "householdAVTrips.csv"))
         df['orig_mgra'] = df['orig_mgra'].map(mgra_cwk)
@@ -431,7 +463,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("householdAVTrips.csv")
 
-    if "airport_out.CBX.csv" in input_files: 
+    if "airport_out.CBX.csv" in input_files:
+        logging.info("Aggregating - airport_out.CBX.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "airport_out.CBX.csv"))
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
         df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
@@ -443,7 +476,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("airport_out.CBX.csv")
 
-    if "airport_out.SAN.csv" in input_files: 
+    if "airport_out.SAN.csv" in input_files:
+        logging.info("Aggregating - airport_out.SAN.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "airport_out.SAN.csv"))
         df['originMGRA'] = df['originMGRA'].map(mgra_cwk)
         df['destinationMGRA'] = df['destinationMGRA'].map(mgra_cwk)
@@ -455,7 +489,8 @@ def agg_input_files(
     else:
         raise FileNotFoundError("airport_out.SAN.csv")
 
-    if "TNCtrips.csv" in input_files: 
+    if "TNCtrips.csv" in input_files:
+        logging.info("Aggregating - TNCtrips.csv")
         df = pd.read_csv(os.path.join(model_dir, "output", "TNCtrips.csv"))
         df['originMgra'] = df['originMgra'].map(mgra_cwk)
         df['destinationMgra'] = df['destinationMgra'].map(mgra_cwk)
@@ -472,6 +507,7 @@ def agg_input_files(
                                    ["OE", "AM", "MD", "PM", "OL"])]
 
     for file in files:
+        logging.info(f"Aggregating - {file}")
         df = pd.read_csv(os.path.join(model_dir, "output", file))
         df['I'] = df['I'].map(dict_clusters)
         df['J'] = df['J'].map(dict_clusters)
