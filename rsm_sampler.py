@@ -1,17 +1,16 @@
 #
-# On the host machine, on linux or macOS terminal run:
+# Creates sampled household and person file
+# This file is being called in bin/runRSMSampler.cmd
 #
-# ```shell
-# docker run -v $(pwd):/home/mambauser/sandag_rsm -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
 #
-# or in `cwd` on Windows, run:
+# inputs:
+#   rsm_dir: RSM main  directory
+#   iteration: iteraton number
+# outputs:
+#   sampled_households.csv
+#   sampled_persons.csv
 #
-# ```shell
-# docker run -v %cd%:/home/mambauser/sandag_rsm -v "C:\VY-Projects\Github\RSM\notebooks\data-dl":/data
-#     -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
-#
+
 import logging
 import os
 import sys
@@ -24,14 +23,8 @@ from sandag_rsm.utility import (
     modify_sandag_properties_for_shadowpricing,
 )
 
-#
-#   CONFIG HERE
-#   All these files should be relative to and within in the current working dir
-#
-
 rsm_dir = sys.argv[1]
 iteration = int(sys.argv[2])
-
 
 # input files
 FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(rsm_dir, "input", "households.csv")
@@ -42,7 +35,6 @@ ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
 ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
 INPUT_RSM_DIR = os.path.join(rsm_dir, "input")
 
-
 # output files
 OUTPUT_RSM_DIR = os.path.join(rsm_dir, "output")
 OUTPUT_RSM_SAMPLED_HOUSHOLDS = os.path.join(rsm_dir, "input", "sampled_households.csv")
@@ -51,7 +43,7 @@ OUTPUT_RSM_SAMPLED_PERSONS = os.path.join(rsm_dir, "input", "sampled_person.csv"
 logging_start(
     filename=os.path.join(rsm_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
 )
-logging.info("start logging rsm_sampler")
+logging.info(f"start logging rsm_sampler for {iteration}")
 
 if iteration == 1:
     rsm_household_sampler(
@@ -110,4 +102,4 @@ else:
         output_person=OUTPUT_RSM_SAMPLED_PERSONS,
     )
 
-logging.info("finished logging rsm_sampler")
+logging.info(f"finished logging rsm_sampler for {iteration}")

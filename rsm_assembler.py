@@ -1,36 +1,32 @@
 #
-# On the host machine, on linux or macOS terminal run:
+# Assembles trips from CT-RAMP of RSM and donor model to final trip tables
+# This python file is being called in bin/runRSMAssembler.cmd
 #
-# ```shell
-# docker run -v $(pwd):/home/mambauser/sandag_rsm -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
+# inputs:
+#   rsm_dir: RSM main directory
+#   org_model_dir: Donor model directory
+#   iteration: Iteration number of the model run
 #
-# or in `cwd` on Windows, run:
-#
-# ```shell
-# docker run -v %cd%:/home/mambauser/sandag_rsm -v "C:\VY-Projects\Github\RSM\notebooks\data-dl":/data -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
 #
 
 import os
 import sys
+import logging
 import pandas as pd
 import numpy as np
 import shutil
 from sandag_rsm.logging import logging_start
 from sandag_rsm.assembler import rsm_assemble
 
-#
-#   CONFIG HERE
-#   All these files should be relative to and within in the current working dir
-#
 
-logging_start()
+logging_start(
+    filename=os.path.join(rsm_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
+)
+logging.info("start logging rsm_assembler")
 
 rsm_dir = sys.argv[1]
 org_model_dir = sys.argv[2]
 iteration = sys.argv[3]
-
 
 #input files
 ORG_INDIV_TRIPS = os.path.join(org_model_dir, "output", "indivTripData_3.csv")
@@ -58,8 +54,7 @@ final_trips_rsm, combined_trips_by_zone, final_ind, final_jnt = rsm_assemble(
 final_ind.to_csv(os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv"), index = False)
 final_jnt.to_csv(os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv"), index = False)
 
-
-
+logging.info("finished logging rsm_assembler")
 
 
 

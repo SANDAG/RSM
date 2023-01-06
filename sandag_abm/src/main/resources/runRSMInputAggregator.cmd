@@ -7,5 +7,5 @@ set ORG_FULL_MODEL_DIR=%4
 set AGGREGATED_ZONES=%5
 set EXT_ZONES=%6
 
-::cd RSM_SCRIPT_DIR
+rem #### create aggregated input/uec files
 "%PYTHON_DIR%/python.exe" "%RSM_SCRIPT_DIR%/rsm_input_aggregator.py" %MAIN_DIR% %ORG_FULL_MODEL_DIR% %AGGREGATED_ZONES% %EXT_ZONES%

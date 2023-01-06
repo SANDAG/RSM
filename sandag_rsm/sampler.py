@@ -202,7 +202,7 @@ def rsm_household_sampler(
         for taz_id, row in sample_rate_df.iterrows():
             df = input_household_df.loc[input_household_df["taz"] == taz_id]
             sampling_rate = row["sampling_rate"]
-            logger.info(f"{taz_id=} {sampling_rate=}")
+            logger.info(f"Sampling rate of {taz_id}: {sampling_rate}")
             df = df.sample(frac=sampling_rate, random_state=taz_id + random_seed)
             sample_households.append(df)
 
@@ -218,5 +218,8 @@ def rsm_household_sampler(
     persons_df = _resolve_df(input_person, input_dir)
     sample_persons_df = persons_df.loc[persons_df["hhid"].isin(sample_hhids)]
     sample_persons_df.to_csv(_resolve_out_filename(output_person), index=False)
+
+    global_sample_rate = len(sample_households_df) / len(input_household_df)
+    logger.info(f"Total Sampling Rate : {global_sample_rate}")
 
     return sample_households_df, sample_persons_df

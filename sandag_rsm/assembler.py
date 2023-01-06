@@ -1,7 +1,7 @@
 import logging
 import os
 from pathlib import Path
-
+import numpy as np
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -184,7 +184,6 @@ def rsm_assemble(
     combined_trips_by_zone = combined_trips_by_zone.eval(
         "net_change = (n_trips_rsm - n_trips_orig)"
     )
-    import numpy as np
 
     combined_trips_by_zone["max_trips"] = np.fmax(
         combined_trips_by_zone.n_trips_rsm, combined_trips_by_zone.n_trips_orig

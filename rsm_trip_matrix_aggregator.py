@@ -1,15 +1,17 @@
 #
-# On the host machine, on linux or macOS terminal run:
+# Aggregates demand files to RSM zone structure
+# Uses specific version of python -
+# This python file is being called in bin\runInputTripMatrixAggregator.cmd
 #
-# ```shell
-# docker run -v $(pwd):/home/mambauser/sandag_rsm -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
+# Inputs:
+#   rsm_main_dir: RSM main directory
+#   org_model_dir: Donor model main directory
+#   agg_zone_mapping: TAZ to RSM zone crosswalk
 #
-# or in `cwd` on Windows, run:
+# Outputs:
+#   Aggregated OMX files based on new zone structure
 #
-# ```shell
-# docker run -v %cd%:/home/mambauser/sandag_rsm -v "C:\VY-Projects\Github\RSM\notebooks\data-dl":/data -w /home/mambauser/sandag_rsm sandag_rsm python RSM_pregame.py
-# ```
+# Please note that logging couldn't be included in the module because of the different python environments
 #
 
 import os
@@ -19,6 +21,7 @@ from sandag_rsm.translate import (
     translate_demand, 
     copy_transit_demand,
 )
+
 
 rsm_main_dir = os.path.join(sys.argv[1])
 rsm_input_dir = os.path.join(sys.argv[1], "input")
