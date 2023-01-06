@@ -404,7 +404,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
             #working
             if run_rsm_setup>0:
                 self.run_proc("runRSMZoneAggregator.cmd", 
-                [input_dir, rsm_venv_path, rsm_script_path, org_full_model_dir, aggregated_zones, ext_zones],
+                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, aggregated_zones, ext_zones],
                 "Zone Aggregator")
 
                 self.run_proc("runRSMInputAggregator.cmd", 

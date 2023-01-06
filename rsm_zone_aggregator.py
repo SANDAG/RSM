@@ -3,7 +3,7 @@
 # This python file is being called in bin\runRSMZoneAggregator.cmd
 #
 # inputs:
-#   rsm_input_dir: RSM input directory
+#   rsm_main_dir: RSM main directory
 #   full_model_output_dir: Donor model directory
 #   agg_zones: Aggregated zone
 #   ext_zones: External zones
