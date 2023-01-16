@@ -170,21 +170,21 @@ def merge_zone_data(
     # adding bins
     dissolved["totintbin"] = 1
     dissolved.loc[
-        (dissolved["totintbin"] >= 80) & (dissolved["totintbin"] < 130), "totintbin"
+        (dissolved["totint"] >= 80) & (dissolved["totint"] < 130), "totintbin"
     ] = 2
-    dissolved.loc[(dissolved["totintbin"] >= 130), "totintbin"] = 3
+    dissolved.loc[(dissolved["totint"] >= 130), "totintbin"] = 3
 
     dissolved["empdenbin"] = 1
     dissolved.loc[
-        (dissolved["empdenbin"] >= 10) & (dissolved["empdenbin"] < 30), "empdenbin"
+        (dissolved["empden"] >= 10) & (dissolved["empden"] < 30), "empdenbin"
     ] = 2
-    dissolved.loc[(dissolved["empdenbin"] >= 30), "empdenbin"] = 3
+    dissolved.loc[(dissolved["empden"] >= 30), "empdenbin"] = 3
 
     dissolved["dudenbin"] = 1
     dissolved.loc[
-        (dissolved["dudenbin"] >= 5) & (dissolved["dudenbin"] < 10), "dudenbin"
+        (dissolved["duden"] >= 5) & (dissolved["duden"] < 10), "dudenbin"
     ] = 2
-    dissolved.loc[(dissolved["dudenbin"] >= 10), "dudenbin"] = 3
+    dissolved.loc[(dissolved["duden"] >= 10), "dudenbin"] = 3
 
     return dissolved
 
