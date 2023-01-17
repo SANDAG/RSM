@@ -299,9 +299,6 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         visualizer_reference_label = props["visualizer.reference.label"]
         visualizer_build_label = props["visualizer.build.label"]
         mgraInputFile = props["mgra.socec.file"]
-        taz_cwk_file = props["taz.to.cluster.crosswalk.file"]
-        mgra_cwk_file = props["mgra.to.cluster.crosswalk.file"]
-        cluster_zone_file = props["cluster.zone.centroid.file"]
 
         period_ids = list(enumerate(periods, start=int(scenario_id) + 1))
 
@@ -345,10 +342,13 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         
         #RSM Inputs
         run_rsm_setup = int(props["run.rsm.setup"])
-        run_rsm_abm = int(props["run.rsm.abm.setup"])
+        run_rsm = int(props["run.rsm"])
         org_full_model_dir = props["full.modelrun.dir"]
-        aggregated_zones = props["agg.zones"]
-        ext_zones = props["external.zones"]
+        num_rsm_zones = props["rsm.zones"]
+        num_external_zones = props["external.zones"]
+        taz_crosswalk_file = props["taz.to.cluster.crosswalk.file"]
+        mgra_crosswalk_file = props["mgra.to.cluster.crosswalk.file"]
+        cluster_zone_file = props["cluster.zone.centroid.file"]
 
         #check if visualizer.reference.path is valid in filesbyyears.csv
         if not os.path.exists(visualizer_reference_path):
@@ -401,23 +401,20 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
             self.check_for_fatal(_join(self._path, "logFiles", "AtTransitCheck_event.log"),
                                  "AT and Transit network consistency checking failed! Open AtTransitCheck_event.log for details.")
             
-            #working
             if run_rsm_setup>0:
                 self.run_proc("runRSMZoneAggregator.cmd", 
-                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, aggregated_zones, ext_zones],
+                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, num_rsm_zones, num_external_zones],
                 "Zone Aggregator")
 
                 self.run_proc("runRSMInputAggregator.cmd", 
-                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, aggregated_zones, ext_zones], 
+                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, num_rsm_zones, num_external_zones], 
                 "Input Files Aggregator")
                 
                 self.run_proc("runInputTripMatrixAggregator.cmd", 
-                [main_directory, rsm_python2_path, org_full_model_dir, rsm_script_path, taz_cwk_file], 
+                [main_directory, rsm_python2_path, org_full_model_dir, rsm_script_path, taz_crosswalk_file], 
                 "Input Trip Matrix files Aggregator")
-            
-            
-            
-            
+
+
             if startFromIteration == 1:  # only run the setup / init steps if starting from iteration 1
                 if not skipWalkLogsums:
                     self.run_proc("runSandagWalkLogsums.cmd", [drive, path_forward_slash],
@@ -455,8 +452,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     #########################################  added on 0629
                     
                     
-                    taz_cwk = pd.read_csv(os.path.join(main_directory, taz_cwk_file), index_col = 0)
-                    taz_cwk = taz_cwk['cluster_id'].to_dict()
+                    taz_crosswalk = pd.read_csv(os.path.join(main_directory, taz_crosswalk_file), index_col = 0)
+                    taz_crosswalk = taz_crosswalk['cluster_id'].to_dict()
 
                     emmebank = _m.Modeller().emmebank
                     scenario = emmebank.scenario(base_scenario)
@@ -488,7 +485,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                             length.append(link.length)
 
                     df = pd.DataFrame({'links' : links, 'i_nodes' : i_nodes, 'j_nodes': j_nodes, 'ul1_org': data1, 'length_org':length})
-                    df['i_nodes_new'] = df['i_nodes'].map(taz_cwk)
+                    df['i_nodes_new'] = df['i_nodes'].map(taz_crosswalk)
                     
                     #get XY of existing centroids
                     j_nodes_list = df['j_nodes'].unique()
@@ -741,15 +738,16 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 if not skipCoreABM[iteration]:
                     self.remove_prev_iter_files(core_abm_files, output_dir, iteration)
                     
-                    if run_rsm_abm>0:
+                    if run_rsm:
                         
-                        #set accessibility to false
+                        #set 'acc.read.input.file' property to false
+                        #For RSM, accessibility is now run outside the main ABM run. 
                         self.run_proc(
                         "setAccessibility.cmd",
                         [main_directory, rsm_venv_path, rsm_script_path, "false"],
                         "Modify sandag_abm.properties file for accessibility", capture_output=True)
                         
-                        #creating accessibility file
+                        #run accessibility
                         self.run_proc(
                         "runSandagAbm_acc.cmd",
                         [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
@@ -760,13 +758,14 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         [main_directory, rsm_venv_path, rsm_script_path, msa_iteration], 
                         "Create sampled households and person files")
                         
-                        #set accessibility to true
+                        #set 'acc.read.input.file' property to true
+                        #so that the accessibilities (computed before) are read from file during the CT-RAMP ABM run
                         self.run_proc(
                         "setAccessibility.cmd",
                         [main_directory, rsm_venv_path, rsm_script_path, "true"],
                         "Modify sandag_abm.properties file for accessibility", capture_output=True)
                         
-                        #run CT RAMP
+                        #run CT-RAMP
                         self.run_proc(
                         "runSandagAbm_RSM_SDRM.cmd",
                         [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
