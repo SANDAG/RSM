@@ -19,14 +19,14 @@ from sandag_rsm.logging import logging_start
 from sandag_rsm.assembler import rsm_assemble
 
 
+rsm_dir = sys.argv[1]
+org_model_dir = sys.argv[2]
+iteration = sys.argv[3]
+
 logging_start(
     filename=os.path.join(rsm_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
 )
 logging.info("start logging rsm_assembler")
-
-rsm_dir = sys.argv[1]
-org_model_dir = sys.argv[2]
-iteration = sys.argv[3]
 
 #input files
 ORG_INDIV_TRIPS = os.path.join(org_model_dir, "output", "indivTripData_3.csv")
