@@ -29,7 +29,9 @@ from sandag_rsm.zone_agg import (
     mark_centroids,
     merge_zone_data,
 )
-
+from sandag_rsm.utility import (
+    set_default_sandag_properties_file
+)
 
 rsm_main_dir = sys.argv[1]
 full_model_output_dir = sys.argv[2]
@@ -44,6 +46,8 @@ FULL_ABM_AM_HIGHWAY_SKIM = os.path.join(full_model_output_dir, "output", "traffi
 FULL_ABM_TRIP_DIR = os.path.join(full_model_output_dir, "output")
 FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(full_model_output_dir, "input", "households.csv")
 FULL_ABM_SYNTH_PERSONS = os.path.join(full_model_output_dir, "input", "persons.csv")
+ABM_PROPERTIES_FOLDER = os.path.join(rsm_main_dir, "conf")
+ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
 AGGREGATED_ZONES =  agg_zones
 EXTERNAL_ZONES = ext_zones
 EXPLICIT_ZONE_AGG = []
@@ -58,6 +62,14 @@ logging_start(
     filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
 )
 logging.info("start logging rsm_zone_aggregator")
+
+
+#
+# Set to default values in properties files
+#
+logging.info("Set default values in sandag_abm.properties file")
+set_default_sandag_properties_file(ABM_PROPERTIES)
+
 
 #
 #   Zone Aggregation

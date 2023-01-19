@@ -214,8 +214,9 @@ def aggregate_zones(
     random_state : RandomState or int
     cluster_factors : dict
     cluster_factors_onehot : dict
-    use_xy : bool
-        Use X and Y coordinates as a cluster factor
+    use_xy : bool or float
+        Use X and Y coordinates as a cluster factor, use a float to scale the
+        x-y coordinates from the CRS if needed.
     explicit_agg : list[int or list]
         A list containing integers (individual MGRAs that should not be aggregated)
         or lists of integers (groups of MGRAs that should be aggregated exactly as
