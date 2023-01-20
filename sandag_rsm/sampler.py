@@ -219,7 +219,7 @@ def rsm_household_sampler(
     sample_persons_df = persons_df.loc[persons_df["hhid"].isin(sample_hhids)]
     sample_persons_df.to_csv(_resolve_out_filename(output_person), index=False)
 
-    global_sample_rate = len(sample_households_df) / len(input_household_df)
+    global_sample_rate = round(len(sample_households_df) / len(input_household_df),2)
     logger.info(f"Total Sampling Rate : {global_sample_rate}")
 
     return sample_households_df, sample_persons_df
