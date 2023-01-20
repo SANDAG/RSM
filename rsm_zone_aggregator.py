@@ -5,8 +5,8 @@
 # inputs:
 #   rsm_main_dir: RSM main directory
 #   full_model_output_dir: Donor model directory
-#   agg_zones: Aggregated zone
-#   ext_zones: External zones
+#   num_rsm_zones: Number of RSM zones
+#   num_ext_zones: Number of external zones
 # outputs:
 #   mgra_crosswalk.csv
 #   taz_crosswalk.csv
@@ -35,8 +35,8 @@ from sandag_rsm.utility import (
 
 rsm_main_dir = sys.argv[1]
 full_model_output_dir = sys.argv[2]
-agg_zones = int(sys.argv[3])
-ext_zones = int(sys.argv[4])
+NUM_RSM_ZONES = int(sys.argv[3])
+NUM_EXT_ZONES = int(sys.argv[4])
 
 #input files
 rsm_input_dir = os.path.join(rsm_main_dir, "input")
@@ -48,13 +48,11 @@ FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(full_model_output_dir, "input", "househo
 FULL_ABM_SYNTH_PERSONS = os.path.join(full_model_output_dir, "input", "persons.csv")
 ABM_PROPERTIES_FOLDER = os.path.join(rsm_main_dir, "conf")
 ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
-AGGREGATED_ZONES =  agg_zones
-EXTERNAL_ZONES = ext_zones
 EXPLICIT_ZONE_AGG = []
 
 #output files
 OUTPUT_MGRA_CROSSWALK = os.path.join(rsm_input_dir, "mgra_crosswalk.csv")
-OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_input_dir, "taz_crosswalk.csv")
+OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_input_dir, "taz_crosswalk.csv")`
 OUTPUT_CLUSTER_CENTROIDS = os.path.join(rsm_input_dir, "cluster_centroids.csv")
 OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_input_dir, "mgra13_based_input2016.csv")
 
@@ -111,7 +109,7 @@ logging.info("aggregating zones")
 agglom3full = aggregate_zones(
     tazs,
     cluster_factors=cluster_factors,
-    n_zones=AGGREGATED_ZONES,
+    n_zones=NUM_RSM_ZONES,
     method="agglom_adj",
     use_xy=1e-4,
     explicit_agg=EXPLICIT_ZONE_AGG,
@@ -147,12 +145,12 @@ if len(hch_dist_df) > 0:
     agglom3full.loc[agglom3full['hch_dist'].isin(ech_dist_mod), 'enrollgrade9to12'] = 99999
 
 
-ext_zones_df = pd.DataFrame({'taz':range(1,EXTERNAL_ZONES+1), 'cluster_id': range(1,EXTERNAL_ZONES+1)})
+ext_zones_df = pd.DataFrame({'taz':range(1,NUM_EXT_ZONES+1), 'cluster_id': range(1,NUM_EXT_ZONES+1)})
 
 taz_crosswalk = pd.concat([taz_crosswalk, ext_zones_df])
 taz_crosswalk = taz_crosswalk.sort_values('taz')
 
-mgra_crosswalk['cluster_id'] = mgra_crosswalk['cluster_id'] - EXTERNAL_ZONES
+mgra_crosswalk['cluster_id'] = mgra_crosswalk['cluster_id'] - NUM_EXT_ZONES
 
 mgra_crosswalk.to_csv(OUTPUT_MGRA_CROSSWALK, index=False)
 taz_crosswalk.to_csv(OUTPUT_TAZ_CROSSWALK, index=False)
