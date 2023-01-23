@@ -17,7 +17,7 @@
 import os
 import sys
 import openmatrix as omx
-from sandag_rsm.translate import (
+from rsm.translate import (
     translate_demand, 
     copy_transit_demand,
 )

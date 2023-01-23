@@ -14,8 +14,8 @@
 
 import sys
 import os
-from sandag_rsm.logging import logging_start
-from sandag_rsm.utility import *
+from rsm.logging import logging_start
+from rsm.utility import *
 
 #
 #   CONFIG HERE

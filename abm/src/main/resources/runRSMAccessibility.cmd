@@ -21,7 +21,6 @@ rem ### Name the project directory.  This directory will hava data and runtime s
 set RUNTIME=%PROJECT_DIRECTORY%
 set CONFIG=%RUNTIME%/conf
 
-
 set JAR_LOCATION=%PROJECT_DIRECTORY%/application
 set LIB_JAR_PATH=%JAR_LOCATION%\*
 
@@ -45,6 +44,3 @@ cd %PROJECT_DRIVE%%PROJECT_DIRECTORY%
 
 rem ### create a copy of accessibilities file for rsm sampler
 xcopy /Y /F "%PROJECT_DIRECTORY%/input/accessibilities.csv" "%PROJECT_DIRECTORY%/input/accessibilities_%iteration%.csv*"
-
-
-

@@ -15,9 +15,9 @@ import logging
 import os
 import sys
 
-from sandag_rsm.logging import logging_start
-from sandag_rsm.sampler import rsm_household_sampler
-from sandag_rsm.utility import (
+from rsm.logging import logging_start
+from rsm.sampler import rsm_household_sampler
+from rsm.utility import (
     copy_file,
     get_shadow_pricing_files,
     modify_sandag_properties_for_shadowpricing,

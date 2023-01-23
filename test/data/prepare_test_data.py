@@ -11,7 +11,7 @@ import numpy as np
 import openmatrix as omx
 import pandas as pd
 
-from sandag_rsm.data_load.zones import simplify_shapefile
+from rsm.data_load.zones import simplify_shapefile
 
 this_dir = Path(os.path.dirname(__file__))
 

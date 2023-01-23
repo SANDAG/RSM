@@ -1,5 +1,5 @@
 #
-# Assembles trips from CT-RAMP of RSM and donor model to final trip tables
+# Assembles trips from RSM ABM and FULL SANDAG ABM to build final trip tables
 # This python file is being called in bin/runRSMAssembler.cmd
 #
 # inputs:
@@ -7,17 +7,13 @@
 #   org_model_dir: Donor model directory
 #   iteration: Iteration number of the model run
 #
-#
 
 import os
 import sys
 import logging
-import pandas as pd
-import numpy as np
 import shutil
-from sandag_rsm.logging import logging_start
-from sandag_rsm.assembler import rsm_assemble
-
+from rsm.logging import logging_start
+from rsm.assembler import rsm_assemble
 
 rsm_dir = sys.argv[1]
 org_model_dir = sys.argv[2]
@@ -55,9 +51,3 @@ final_ind.to_csv(os.path.join(rsm_dir, "output", "indivTripData_" + str(iteratio
 final_jnt.to_csv(os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv"), index = False)
 
 logging.info("finished logging rsm_assembler")
-
-
-
-
-
-
