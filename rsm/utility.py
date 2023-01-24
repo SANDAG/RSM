@@ -53,98 +53,34 @@ def copy_file(src, dest):
     """
     shutil.copy(src, dest)
 
-
-def modify_sandag_properties_for_shadowpricing(src_file, wrok_file, sch_file, iteration):
+def get_property(properties_file, property_name):
     """
-    Modifies the the sandag properties file with shadow pricing file names
-
+    Extracts the property_value for a property_name from sandag_abm.properties files
     """
-
-    #modfiying the sandag properties file
-    with open(src_file) as f:
-        y = f.read()
-
-    strings_to_levers_file = {
-    'UsualWorkLocationChoice.ShadowPrice.Input.File' : 'input/' + wrok_file,
-    'UsualSchoolLocationChoice.ShadowPrice.Input.File' : 'input/' + sch_file,
-    'uwsl.ShadowPricing.Work.MaximumIterations' : 1,
-    'uwsl.ShadowPricing.School.MaximumIterations' : 1
-    }
-
-    for keys in strings_to_levers_file:
-        y = ReplacementOfString(keys).sub(strings_to_levers_file[keys], y)
-
-    with open(src_file, 'wt') as f:
-        f.write(y)
-
-def modify_sandag_properties_for_accessibility(src_file, value):
-    """
-    Modifies the sandag properties file by setting the acc.read.input.file as True or False
-
-    """
-    
-    #modfiying the sandag properties file
-    with open(src_file) as f:
-        y = f.read()
-
-    strings_to_levers_file = {
-
-    'acc.read.input.file' : value
-    }
-
-    for keys in strings_to_levers_file:
-        y = ReplacementOfString(keys).sub(strings_to_levers_file[keys], y)
-
-    with open(src_file, 'wt') as f:
-        f.write(y)
-
-
-
-def get_user_input(src_file, value):
-    """
-    Extracts the value of variable from sandag_abm.properties files
-
-    """
-    with open(src_file, "r") as f:
+    with open(properties_file, "r") as f:
         lines = f.readlines()
         for line in lines:
-            if value in line:
+            if property_name in line:
                 final_line = line
 
     if final_line:
-        extracted_value = final_line.split()[2]
+        property_value = final_line.split()[2]
 
     else:
-        raise Exception("{} not found in sandag_agbm.properties file".format(value))
+        raise Exception("{} not found in sandag_agbm.properties file".format(property_name))
 
-    return extracted_value
+    return property_value
 
-def set_default_sandag_properties_file(src_file):
+def set_property(properties_file, property_name, property_value):
     """
-    Set default valies in sandag_abm.properties file for RSM
+    Modifies the sandag properties file
 
     """
-    #modfiying the sandag properties file
-    with open(src_file) as f:
+
+    with open(properties_file) as f:
         y = f.read()
 
-    strings_to_levers_file = {
-    'acc.read.input.file' : 'false',
-    'PopulationSynthesizer.InputToCTRAMP.HouseholdFile' : 'input/sampled_households.csv',
-    'PopulationSynthesizer.InputToCTRAMP.PersonFile' : 'input/sampled_person.csv',
-    'UsualWorkLocationChoice.ShadowPrice.Input.File' : '',
-    'UsualSchoolLocationChoice.ShadowPrice.Input.File' : '',  
-    'uwsl.ShadowPricing.Work.MaximumIterations' : 10,
-    'uwsl.ShadowPricing.School.MaximumIterations' : 10
-    }
+    y = ReplacementOfString(property_name).sub(property_value, y)
 
-    for keys in strings_to_levers_file:
-        y = ReplacementOfString(keys).sub(strings_to_levers_file[keys], y)
-
-    with open(src_file, 'wt') as f:
+    with open(properties_file, 'wt') as f:
         f.write(y)
-
-
-
-
-

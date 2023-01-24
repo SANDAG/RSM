@@ -29,9 +29,6 @@ from rsm.zone_agg import (
     mark_centroids,
     merge_zone_data,
 )
-from rsm.utility import (
-    set_default_sandag_properties_file
-)
 
 rsm_main_dir = sys.argv[1]
 full_model_output_dir = sys.argv[2]
@@ -60,14 +57,6 @@ logging_start(
     filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
 )
 logging.info("start logging rsm_zone_aggregator")
-
-
-#
-# Set to default values in properties files
-#
-logging.info("Set default values in sandag_abm.properties file")
-set_default_sandag_properties_file(ABM_PROPERTIES)
-
 
 #
 #   Zone Aggregation
@@ -158,8 +147,3 @@ cluster_centroids.to_csv(OUTPUT_CLUSTER_CENTROIDS, index=False)
 agglom3full.to_csv(OUTPUT_RSM_ZONE_FILE, index=False)
 
 logging.info("Finished logging rsm_zone_aggregator")
-
-
-
-
-

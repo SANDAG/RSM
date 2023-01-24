@@ -345,7 +345,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         run_rsm = int(props["run.rsm"])
         num_rsm_zones = props["rsm.zones"]
         num_external_zones = props["external.zones"]
-        org_full_model_dir = props["full.modelrun.dir"]
+        orig_full_model_dir = props["full.modelrun.dir"]
         taz_crosswalk_file = props["taz.to.cluster.crosswalk.file"]
         mgra_crosswalk_file = props["mgra.to.cluster.crosswalk.file"]
         cluster_zone_file = props["cluster.zone.centroid.file"]
@@ -402,19 +402,20 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                                  "AT and Transit network consistency checking failed! Open AtTransitCheck_event.log for details.")
             
             if run_rsm_setup > 0:
+
                 self.run_proc(
                 "runRSMZoneAggregator.cmd", 
-                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, num_rsm_zones, num_external_zones],
+                [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones],
                 "Zone Aggregator")
 
                 self.run_proc(
                 "runRSMInputAggregator.cmd", 
-                [main_directory, rsm_venv_path, rsm_script_path, org_full_model_dir, num_rsm_zones, num_external_zones], 
+                [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones], 
                 "Input Files Aggregator")
                 
                 self.run_proc(
                 "runRSMTripMatrixAggregator.cmd", 
-                [main_directory, rsm_python2_venv_path, org_full_model_dir, rsm_script_path, taz_crosswalk_file], 
+                [main_directory, rsm_python2_venv_path, orig_full_model_dir, rsm_script_path, taz_crosswalk_file], 
                 "Input Trip Matrix files Aggregator")
 
 
@@ -454,6 +455,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     
                     #########################################  added on 0629
                     
+                    #TODO-AK: Try to move this to a separate function
                     
                     taz_crosswalk = pd.read_csv(os.path.join(main_directory, taz_crosswalk_file), index_col = 0)
                     taz_crosswalk = taz_crosswalk['cluster_id'].to_dict()
@@ -742,35 +744,29 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     self.remove_prev_iter_files(core_abm_files, output_dir, iteration)
                     
                     if run_rsm > 0:
-                        
-                        # TODO-AK: fix the way properties are updated
-                        #set 'acc.read.input.file' property to false
-                        #For RSM, accessibility is now run outside the main ABM run. 
+                        #set rsm specific properties
                         self.run_proc(
-                        "setAccessibility.cmd",
-                        [main_directory, rsm_venv_path, rsm_script_path, "false"],
-                        "Modify sandag_abm.properties file for accessibility", capture_output=True)
+                        "runRSMUpdateProperties.cmd", 
+                        [main_directory, rsm_venv_path, rsm_script_path, msa_iteration], 
+                        "Update Properties", capture_output=True)                  
                         
                         #run accessibility (stand-alone) outside of the ABM call
                         self.run_proc(
                         "runRSMAccessibility.cmd",
                         [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
-                        "Create Accesibility", capture_output=True)
+                        "Create Accessibility", capture_output=True)
                         
-                        #run RSM Sampler
+                        #run RSM Sampler 
                         self.run_proc(
                         "runRSMSampler.cmd", 
                         [main_directory, rsm_venv_path, rsm_script_path, msa_iteration], 
                         "RSM Sampler", capture_output=True)
                         
-                        # TODO-AK: fix the way properties are updated
-                        #set 'acc.read.input.file' property to true
-                        #so that the accessibilities (computed before) are read from file during the CT-RAMP ABM run
                         self.run_proc(
-                        "setAccessibility.cmd",
-                        [main_directory, rsm_venv_path, rsm_script_path, "true"],
-                        "Modify sandag_abm.properties file for accessibility", capture_output=True)
-                        
+                        "runRSMSetProperty.cmd", 
+                        [main_directory, rsm_venv_path, rsm_script_path, 'acc.read.input.file', 'true']
+                        "Set Property", capture_output=True)     
+
                         #run CT-RAMP
                         self.run_proc(
                         "runRSMSandagAbm.cmd",
@@ -780,7 +776,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         #run RSM Assembler
                         self.run_proc(
                         "runRSMAssembler.cmd", 
-                        [main_directory, rsm_venv_path,  rsm_script_path, org_full_model_dir, msa_iteration], 
+                        [main_directory, rsm_venv_path,  rsm_script_path, orig_full_model_dir, msa_iteration], 
                         "RSM Assembler", capture_output=True)
                         
                         #run build trip tables
