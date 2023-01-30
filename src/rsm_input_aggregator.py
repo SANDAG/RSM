@@ -14,6 +14,8 @@
 import sys
 import os
 import logging
+main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
+sys.path.append(main_path)
 from rsm.data_load.zones import load_mgra_data
 from rsm.logging import logging_start
 from rsm.sampler import rsm_household_sampler

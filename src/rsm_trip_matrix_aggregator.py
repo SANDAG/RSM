@@ -17,6 +17,8 @@
 import os
 import sys
 import openmatrix as omx
+main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
+sys.path.append(main_path)
 from rsm.translate import (
     translate_demand, 
     copy_transit_demand,

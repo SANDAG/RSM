@@ -12,6 +12,8 @@ import os
 import sys
 import logging
 import shutil
+main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
+sys.path.append(main_path)
 from rsm.logging import logging_start
 from rsm.assembler import rsm_assemble
 

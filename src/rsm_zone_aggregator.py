@@ -13,11 +13,14 @@
 #   cluster_centroids.csv
 #   mgra13_based_input2016.csv
 
-
 import os
 import sys
 import pandas as pd
 import logging
+#sys.path.append('T:/ABM/WSP_Space/RSM/')
+main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
+sys.path.append(main_path)
+from rsm.poi import attach_poi_taz_skims, poi_taz_mgra
 from rsm.data_load.zones import load_mgra_data
 from rsm.data_load.triplist import load_trip_list, trip_mode_shares_by_mgra, trip_mode_shares_by_taz
 from rsm.logging import logging_start

@@ -1,12 +1,15 @@
 import sys
+import os
+main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
+sys.path.append(main_path)
 from rsm.utility import *
 
-rsm_dir = sys.argv[1]
-iteration = sys.argv[2]
+main_dir = sys.argv[1]
+iteration = int(sys.argv[2])
 
-properties_file = os.path.join(rsm_dir, "conf", "sandag_abm.properties")
-input_dir = os.path.join(rsm_dir, "input")
-output_dir = os.path.join(rsm_dir, "output")
+properties_file = os.path.join(main_dir, "conf", "sandag_abm.properties")
+input_dir = os.path.join(main_dir, "input")
+output_dir = os.path.join(main_dir, "output")
 
 set_property(properties_file, 'acc.read.input.file', 'false')
 set_property(properties_file, 'PopulationSynthesizer.InputToCTRAMP.HouseholdFile', 'input/sampled_households.csv')

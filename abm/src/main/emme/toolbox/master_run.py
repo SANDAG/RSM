@@ -764,7 +764,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         
                         self.run_proc(
                         "runRSMSetProperty.cmd", 
-                        [main_directory, rsm_venv_path, rsm_script_path, 'acc.read.input.file', 'true']
+                        [main_directory, rsm_venv_path, rsm_script_path, 'acc.read.input.file', 'true'],
                         "Set Property", capture_output=True)     
 
                         #run CT-RAMP
