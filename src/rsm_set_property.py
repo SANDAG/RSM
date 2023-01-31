@@ -1,4 +1,5 @@
 import sys
+import os 
 main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
 sys.path.append(main_path)
 from rsm.utility import *
