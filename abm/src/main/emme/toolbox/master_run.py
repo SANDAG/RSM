@@ -746,7 +746,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     if run_rsm > 0:
                         #set rsm specific properties
                         self.run_proc(
-                        "runRSMUpdateProperties.cmd", 
+                        "runRSMSetupUpdate.cmd", 
                         [main_directory, rsm_venv_path, rsm_script_path, msa_iteration], 
                         "Update Properties", capture_output=True)                  
                         

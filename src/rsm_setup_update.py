@@ -21,6 +21,16 @@ if iteration == 1:
     set_property(properties_file, 'UsualSchoolLocationChoice.ShadowPrice.Input.File', '')
     set_property(properties_file, 'uwsl.ShadowPricing.Work.MaximumIterations', 10)
     set_property(properties_file, 'uwsl.ShadowPricing.School.MaximumIterations', 10)
+    
+    # delete shadow price files if present
+    for file in os.scandir(input_dir):
+        if file.name.startswith("Shadow"):
+            os.remove(file)
+
+    for file in os.scandir(output_dir):
+        if file.name.startswith("Shadow"):
+            os.remove(file)
+            
 else: 
     work_file, sch_file = get_shadow_pricing_files(output_dir)
 

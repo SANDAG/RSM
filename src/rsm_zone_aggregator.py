@@ -46,8 +46,6 @@ FULL_ABM_AM_HIGHWAY_SKIM = os.path.join(full_model_output_dir, "output", "traffi
 FULL_ABM_TRIP_DIR = os.path.join(full_model_output_dir, "output")
 FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(full_model_output_dir, "input", "households.csv")
 FULL_ABM_SYNTH_PERSONS = os.path.join(full_model_output_dir, "input", "persons.csv")
-ABM_PROPERTIES_FOLDER = os.path.join(rsm_main_dir, "conf")
-ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
 EXPLICIT_ZONE_AGG = []
 
 #output files
