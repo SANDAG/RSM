@@ -1,0 +1,20 @@
+header:
+  tab: "RSM OD Flow Maps"
+  title: "SANDAG RSM VISUALIZATION"
+  description: "RSM Visualization Dashboard"
+
+layout:
+  - title: 'Trip Origin/Destination Flows'
+    description: 'Major flows shown'
+    type: 'flowmap'
+    height: 10
+    props:
+      boundaries: 'data/processed/run1/CityCPA.geojson'
+      boundariesJoinCol: 'CPA'
+      boundariesLabels: 'NAME'
+      dataset: 'data/processed/run1/trip_od_summary.csv'
+      origin: 'origin'
+      destination: 'destination'
+      flow: 'trips'
+
+

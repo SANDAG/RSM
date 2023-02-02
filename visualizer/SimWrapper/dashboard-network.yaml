@@ -1,0 +1,29 @@
+header:
+  tab: "RSM Network "
+  title: "SANDAG RSM VISUALIZATION"
+  description: "RSM Visualization Dashboard"
+
+
+
+layout:
+  row1:
+    - title: 'Link example'
+      description: 'Sample data'
+      type: links
+      height: 8
+      props:
+        network: "data/processed/run9/hwyLoad_FeaturesToJSON1.json"
+        projection: EPSG:4269
+        zoom: 9
+        showDifferences: true
+        datasets:
+          csvFile: "data/processed/run1/network_summary.csv"
+          csvBase: "data/processed/donor_model/network_summary.csv"
+        display:
+          color:
+            dataset: csvFile
+            columnName: vmt_total
+            colorRamp:
+              ramp: Viridis
+              steps: 9
+
