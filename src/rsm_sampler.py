@@ -43,7 +43,8 @@ logging_start(
 logging.info(f"start logging rsm_sampler for {iteration}")
 
 run_rsm_sampling = get_property(ABM_PROPERTIES, "run.rsm.sampling")
-user_defined_sample_rate = float(get_property(ABM_PROPERTIES, "rsm.sampling.rate"))
+sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
+min_sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.min.sampling.rate"))
 
 if run_rsm_sampling.lower() == 'true' and iteration > 1:
     PREV_ITER_ACCESS = os.path.join(
@@ -65,7 +66,8 @@ rsm_household_sampler(
     input_person=FULL_ABM_SYNTH_PERSONS,
     taz_crosswalk=OUTPUT_TAZ_CROSSWALK,
     mgra_crosswalk=OUTPUT_MGRA_CROSSWALK,
-    default_sampling_rate=user_defined_sample_rate,
+    default_sampling_rate=sampling_rate,
+    lower_bound_sampling_rate=min_sampling_rate,
     output_household=OUTPUT_RSM_SAMPLED_HOUSHOLDS,
     output_person=OUTPUT_RSM_SAMPLED_PERSONS,
 )
