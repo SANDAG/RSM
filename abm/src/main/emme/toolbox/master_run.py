@@ -345,6 +345,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         run_rsm = int(props["run.rsm"])
         num_rsm_zones = props["rsm.zones"]
         num_external_zones = props["external.zones"]
+        rsm_cc_start_id = prop["rsm.centroid.connector.start.id"]
         orig_full_model_dir = props["full.modelrun.dir"]
         taz_crosswalk_file = props["taz.to.cluster.crosswalk.file"]
         mgra_crosswalk_file = props["mgra.to.cluster.crosswalk.file"]
@@ -539,6 +540,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     final_df = final_df.drop_duplicates()
                     final_df = final_df.reset_index(drop=True)
                     final_df['type'] = final_df['type'].astype("int") 
+                    
+                    cc_id = rsm_cc_start_id
 
                     # create new links
                     for index,row in final_df.iterrows():
@@ -568,7 +571,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         link_ij['@capacity_inter_pm'] = 999999 
                         link_ij['@capacity_inter_ev'] = 999999
                         
-             
+                        link_ij['tcov_id'] = cc_id
+                        
                         if(row['length'] > 0.85):
                             link_ij['@time_link_ea'] = row['length'] * 60 / 20
                             link_ij['@time_link_am'] = row['length'] * 60 / 20 
@@ -608,6 +612,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         link_ji['@capacity_inter_pm'] = 999999 
                         link_ji['@capacity_inter_ev'] = 999999
                         
+                        link_ji['tcov_id'] = cc_id + 1
+                        
                         if(row['length'] > 0.85):
                             link_ji['@time_link_ea'] = row['length'] * 60 / 20
                             link_ji['@time_link_am'] = row['length'] * 60 / 20 
@@ -620,7 +626,9 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                             link_ji['@time_link_md'] = row['length'] * 60 / 45 
                             link_ji['@time_link_pm'] = row['length'] * 60 / 45 
                             link_ji['@time_link_ev'] = row['length'] * 60 / 45
-
+                            
+                        cc_id = cc_id + 2
+                        
                     scenario.publish_network(hwy_network)
 
                     #############################################
