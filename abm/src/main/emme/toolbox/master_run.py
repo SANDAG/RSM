@@ -345,7 +345,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         run_rsm = int(props["run.rsm"])
         num_rsm_zones = props["rsm.zones"]
         num_external_zones = props["external.zones"]
-        rsm_cc_start_id = prop["rsm.centroid.connector.start.id"]
+        rsm_cc_start_id = props["rsm.centroid.connector.start.id"]
         orig_full_model_dir = props["full.modelrun.dir"]
         taz_crosswalk_file = props["taz.to.cluster.crosswalk.file"]
         mgra_crosswalk_file = props["mgra.to.cluster.crosswalk.file"]
