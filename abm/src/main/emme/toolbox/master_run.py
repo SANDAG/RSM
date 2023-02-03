@@ -571,7 +571,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         link_ij['@capacity_inter_pm'] = 999999 
                         link_ij['@capacity_inter_ev'] = 999999
                         
-                        link_ij['tcov_id'] = cc_id
+                        link_ij['@tcov_id'] = cc_id
                         
                         if(row['length'] > 0.85):
                             link_ij['@time_link_ea'] = row['length'] * 60 / 20
@@ -612,7 +612,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         link_ji['@capacity_inter_pm'] = 999999 
                         link_ji['@capacity_inter_ev'] = 999999
                         
-                        link_ji['tcov_id'] = cc_id + 1
+                        link_ji['@tcov_id'] = cc_id + 1
                         
                         if(row['length'] > 0.85):
                             link_ji['@time_link_ea'] = row['length'] * 60 / 20
