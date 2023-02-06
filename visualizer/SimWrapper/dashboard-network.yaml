@@ -12,7 +12,7 @@ layout:
       type: links
       height: 8
       props:
-        network: "data/processed/run9/hwyLoad_FeaturesToJSON1.json"
+        network: "data/processed/run1/hwyLoad.json"
         projection: EPSG:4269
         zoom: 9
         showDifferences: true

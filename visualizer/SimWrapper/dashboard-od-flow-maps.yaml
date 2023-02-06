@@ -9,8 +9,8 @@ layout:
     type: 'flowmap'
     height: 10
     props:
-      boundaries: 'data/processed/run1/CityCPA.geojson'
-      boundariesJoinCol: 'CPA'
+      boundaries: 'data/processed/run1/SRA.json'
+      boundariesJoinCol: 'SRA'
       boundariesLabels: 'NAME'
       dataset: 'data/processed/run1/trip_od_summary.csv'
       origin: 'origin'
