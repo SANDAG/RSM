@@ -1,0 +1,112 @@
+#######################################################################################
+#                                                                                     #
+#                                Data Pipeline Settings                               #
+#                                                                                     #
+#######################################################################################
+
+
+# Specify data to extract and load
+extract:
+    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/run1/report"
+      test_size: 
+      data:
+          - "households.csv"
+          - "individualTrips.csv"
+          - "jointTrips.csv"
+          - "transit_onoff.csv"
+          - "internalExternalTrips.csv"
+          - "airportCBXTrips.csv"
+          - "airportSANTrips.csv"
+          - "commercialVehicleTrips.csv"
+          - "crossBorderTrips.csv"
+          - "externalInternalTrips.csv"
+          - "externalExternalTrips.csv"
+          - "truckTrips.csv"
+          - "visitorTrips.csv"
+          - "hwyload_*.csv"
+          - "hwyTcad.csv"
+
+    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/run1/input"
+      test_size: 
+      data:
+
+          - "households_org.csv"
+          - "mgra_crosswalk.csv"
+
+    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/shapefile"
+      test_size: 
+      data:          
+          - "mgra13_to_SRA.csv"
+
+          
+
+
+
+
+
+# Specify transformation steps
+transform:
+    processor: "config/processor.csv"
+    summarizer: "config/expressions.csv"
+    steps:
+        - name: step_1
+          concat:
+              - table_name: trips
+                include:
+                    - individualTrips
+                    - jointTrips
+                    - internalExternalTrips
+                    - airportCBXTrips
+                    - airportSANTrips
+                    - commercialVehicleTrips
+                    - crossBorderTrips
+                    - externalInternalTrips
+                    - externalExternalTrips
+                    - truckTrips
+                    - visitorTrips
+
+              - table_name: highway_load
+                include:
+                    - 'hwyload_*'
+
+
+          merge:
+
+              - table_name: households_org
+                include:
+                    - households_org
+                    - mgra_crosswalk
+                merge_cols:
+                    - ["mgra"]
+                    - ["MGRA"]
+                merge_type: left
+
+              - table_name: households
+                include:
+                    - households
+                    - mgra_crosswalk
+                merge_cols:
+                    - ["homeMGRA"]
+                    - ["MGRA"]
+                merge_type: left
+          process: True           
+
+        - name: step_2
+          merge:
+              - table_name: network
+                include:
+                    - highway_network
+                    - highway_load
+                merge_cols:
+                    - ["ID", "timePeriod"]
+                    - ["ID1", "timePeriod"]
+                merge_type: left
+          process: True
+
+
+        - name: step_3
+          summarize: True
+          process: True
+load:
+    outdir: "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/processed/run1"
+    empty_fill: 0
