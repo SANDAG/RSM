@@ -1,0 +1,15 @@
+inputs:
+    shapefile_dir: "SimWrapper\\data\\external\\shapefile"
+    cross_reference_mgra_file_name: "mgra_crosswalk.csv"
+    mode_summary_file_name: "trip_mode_summary.csv"
+    vmt_summary_file_name: "vmt_summary.csv"
+    compared_scenarios_dir: "SimWrapper\\data\\processed\\all_runs"
+    intrazonal_trips_file_name: "trips_intrazonal_summary.csv"
+
+parameters:    
+    rsm_scenario_list:  ["run1"]
+    base_scenario: "donor_model"
+    
+
+outputs:
+    intrazonal_vmt_file_name: "vmt_intrazonal_summary.csv"
