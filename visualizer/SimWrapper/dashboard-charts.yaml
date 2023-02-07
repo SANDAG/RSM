@@ -57,18 +57,7 @@ layout:
         x: ["MODE"]
         columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
         yAxisTitle: "Percent of Trips"
-        xAxisTitle: "Transit Mode"        
-
-    transit_boardings Run 1:
-    - type: "bar"
-      title: "Transit Boardings Run 1 "
-      description: "Transit Boardings by Mode and Period"
-      props:
-        dataset: "data/processed/run1/transit_summary.csv"
-        x: ["MODE"]
-        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
-        yAxisTitle: "Percent of Trips"
-        xAxisTitle: "Transit Mode"   
+        xAxisTitle: "Transit Mode"         
 
     transit_boardings Run 2:
     - type: "bar"
@@ -80,50 +69,6 @@ layout:
         columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
         yAxisTitle: "Percent of Trips"
         xAxisTitle: "Transit Mode"  
-
-    transit_boardings Run 4:
-    - type: "bar"
-      title: "Transit Boardings Run 4 "
-      description: "Transit Boardings by Mode and Period"
-      props:
-        dataset: "data/processed/run4/transit_summary.csv"
-        x: ["MODE"]
-        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
-        yAxisTitle: "Percent of Trips"
-        xAxisTitle: "Transit Mode"  
-
-    transit_boardings Run 7:
-    - type: "bar"
-      title: "Transit Boardings Run 7 "
-      description: "Transit Boardings by Mode and Period"
-      props:
-        dataset: "data/processed/run7/transit_summary.csv"
-        x: ["MODE"]
-        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
-        yAxisTitle: "Percent of Trips"
-        xAxisTitle: "Transit Mode"  
-
-    transit_boardings Run 8:
-    - type: "bar"
-      title: "Transit Boardings Run 8 "
-      description: "Transit Boardings by Mode and Period"
-      props:
-        dataset: "data/processed/run8/transit_summary.csv"
-        x: ["MODE"]
-        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
-        yAxisTitle: "Percent of Trips"
-        xAxisTitle: "Transit Mode"  
-
-    transit_boardings Run 9:
-    - type: "bar"
-      title: "Transit Boardings Run 9 "
-      description: "Transit Boardings by Mode and Period"
-      props:
-        dataset: "data/processed/run9/transit_summary.csv"
-        x: ["MODE"]
-        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
-        yAxisTitle: "Percent of Trips"
-        xAxisTitle: "Transit Mode"                                  
 
 
     trip purpose by TOD:
@@ -137,66 +82,11 @@ layout:
         yAxisTitle: "Time of Day"
         flipAxes: true
 
-    trip purpose by TOD Run 1:
-    - title: "Trip Purpose by TOD Run 1 "
-      type: heatmap
-      props:
-        dataset: "data/processed/run1/trip_tod_purpose_summary.csv"
-        y: tripPurposeDestination
-        columns: ['EA','AM','MD','PM','EV']
-        xAxisTitle: "Activity Type"
-        yAxisTitle: "Time of Day"
-        flipAxes: true
-
     trip purpose by TOD Run 2:
     - title: "Trip Purpose by TOD Run 2 "
       type: heatmap
       props:
         dataset: "data/processed/run2/trip_tod_purpose_summary.csv"
-        y: tripPurposeDestination
-        columns: ['EA','AM','MD','PM','EV']
-        xAxisTitle: "Activity Type"
-        yAxisTitle: "Time of Day"
-        flipAxes: true
-
-    trip purpose by TOD Run 4:
-    - title: "Trip Purpose by TOD Run 4 "
-      type: heatmap
-      props:
-        dataset: "data/processed/run4/trip_tod_purpose_summary.csv"
-        y: tripPurposeDestination
-        columns: ['EA','AM','MD','PM','EV']
-        xAxisTitle: "Activity Type"
-        yAxisTitle: "Time of Day"
-        flipAxes: true
-
-    trip purpose by TOD Run 7:
-    - title: "Trip Purpose by TOD Run 7 "
-      type: heatmap
-      props:
-        dataset: "data/processed/run7/trip_tod_purpose_summary.csv"
-        y: tripPurposeDestination
-        columns: ['EA','AM','MD','PM','EV']
-        xAxisTitle: "Activity Type"
-        yAxisTitle: "Time of Day"
-        flipAxes: true        
-
-    trip purpose by TOD Run 8:
-    - title: "Trip Purpose by TOD Run 8 "
-      type: heatmap
-      props:
-        dataset: "data/processed/run8/trip_tod_purpose_summary.csv"
-        y: tripPurposeDestination
-        columns: ['EA','AM','MD','PM','EV']
-        xAxisTitle: "Activity Type"
-        yAxisTitle: "Time of Day"
-        flipAxes: true
-
-    trip purpose by TOD Run 9:
-    - title: "Trip Purpose by TOD Run 9 "
-      type: heatmap
-      props:
-        dataset: "data/processed/run9/trip_tod_purpose_summary.csv"
         y: tripPurposeDestination
         columns: ['EA','AM','MD','PM','EV']
         xAxisTitle: "Activity Type"

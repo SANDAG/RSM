@@ -4,17 +4,29 @@ header:
   description: "RSM Visualization Dashboard"
 
 layout:
-  - title: 'Trip Origin/Destination Flows'
+  - title: 'Trip Origin/Destination Flows Run 2'
     description: 'Major flows shown'
     type: 'flowmap'
     height: 10
     props:
-      boundaries: 'data/processed/run1/SRA.json'
+      boundaries: 'data/external/shapefile/SRA.json'
       boundariesJoinCol: 'SRA'
       boundariesLabels: 'NAME'
-      dataset: 'data/processed/run1/trip_od_summary.csv'
+      dataset: 'data/processed/run2/trip_od_summary.csv'
       origin: 'origin'
       destination: 'destination'
       flow: 'trips'
 
+  - title: 'Trip Origin/Destination Flows Donor Model'
+    description: 'Major flows shown'
+    type: 'flowmap'
+    height: 10
+    props:
+      boundaries: 'data/external/shapefile/SRA.json'
+      boundariesJoinCol: 'SRA'
+      boundariesLabels: 'NAME'
+      dataset: 'data/processed/donor_model/trip_od_summary.csv'
+      origin: 'origin'
+      destination: 'destination'
+      flow: 'trips'
 

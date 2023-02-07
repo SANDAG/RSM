@@ -19,19 +19,6 @@ layout:
           datasetJoinCol: 'homeMGRA'
           datasetValue: 'household_numbers'
 
-    zero Run 1:
-    - type: "map"
-      title: "Zero Car Households Run 1"
-      description: "Distribution of Zero Car Households."
-      height: 12
-      props:
-          boundaries: "data/processed/run1/MGRA13_gcs_run1.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run1/zero_car_households_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'household_numbers'
-
     zero Run 2:
     - type: "map"
       title: "Zero Car Households Run 2"
@@ -44,58 +31,3 @@ layout:
           dataset: "data/processed/run2/zero_car_households_summary.csv"
           datasetJoinCol: 'mgra'
           datasetValue: 'household_numbers'
-
-
-    zero Run 4:
-    - type: "map"
-      title: "Zero Car Households Run 4"
-      description: "Distribution of Zero Car Households."
-      height: 12
-      props:
-          boundaries: "data/processed/run4/MGRA13_gcs_run4.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run4/zero_car_households_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'household_numbers'
-
-    zero Run 7:
-    - type: "map"
-      title: "Zero Car Households Run 7"
-      description: "Distribution of Zero Car Households."
-      height: 12
-      props:
-          boundaries: "data/processed/run7/MGRA13_gcs_run7.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run7/zero_car_households_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'household_numbers'
-
-
-    zero Run 8:
-    - type: "map"
-      title: "Zero Car Households Run 8"
-      description: "Distribution of Zero Car Households."
-      height: 12
-      props:
-          boundaries: "data/processed/run8/MGRA13_gcs_run8.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run8/zero_car_households_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'household_numbers'                    
-
-
-    zero Run 9:
-    - type: "map"
-      title: "Zero Car Households Run 9"
-      description: "Distribution of Zero Car Households."
-      height: 12
-      props:
-          boundaries: "data/processed/run9/MGRA13_gcs_run9.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run9/zero_car_households_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'household_numbers'             

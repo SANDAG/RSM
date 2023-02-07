@@ -12,12 +12,12 @@ layout:
       type: links
       height: 8
       props:
-        network: "data/processed/run1/hwyLoad.json"
+        network: "data/processed/run2/hwyLoad.json"
         projection: EPSG:4269
         zoom: 9
         showDifferences: true
         datasets:
-          csvFile: "data/processed/run1/network_summary.csv"
+          csvFile: "data/processed/run2/network_summary.csv"
           csvBase: "data/processed/donor_model/network_summary.csv"
         display:
           color:

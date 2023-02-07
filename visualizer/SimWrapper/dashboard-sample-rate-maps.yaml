@@ -6,22 +6,6 @@ header:
 layout:      
       
 
-    sample-rate run1:
-    - type: "map"
-      title: "Sample Rate for RSMAZ Run 1"
-      description: "Sample Rate for RSMAZ."
-      height: 12
-      props:
-          boundaries: "data/processed/run1/MGRA13_gcs_run1.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run1/households_sample_mgra_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'sample_rate'
-          colorRamp:
-            ramp: inferno
-            steps: 2 
-
     sample-rate run2:
     - type: "map"
       title: "Sample Rate for RSMAZ Run 2"
@@ -37,70 +21,4 @@ layout:
           colorRamp:
             ramp: inferno
             steps: 2 
-
-
-    sample-rate run4:
-    - type: "map"
-      title: "Sample Rate for RSMAZ Run 4"
-      description: "Sample Rate for RSMAZ."
-      height: 12
-      props:
-          boundaries: "data/processed/run4/MGRA13_gcs_run4.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run4/households_sample_mgra_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'sample_rate'
-          colorRamp:
-            ramp: inferno
-            steps: 2 
-
-
-
-    sample-rate run7:
-    - type: "map"
-      title: "Sample Rate for RSMAZ Run 7"
-      description: "Sample Rate for RSMAZ."
-      height: 12
-      props:
-          boundaries: "data/processed/run7/MGRA13_gcs_run7.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run7/households_sample_mgra_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'sample_rate'
-          colorRamp:
-            ramp: inferno
-            steps: 2 
-
-    sample-rate run8:
-    - type: "map"
-      title: "Sample Rate for RSMAZ Run 8"
-      description: "Sample Rate for RSMAZ."
-      height: 12
-      props:
-          boundaries: "data/processed/run8/MGRA13_gcs_run8.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run8/households_sample_mgra_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'sample_rate'
-          colorRamp:
-            ramp: inferno
-            steps: 2 
-
-    sample-rate run9:
-    - type: "map"
-      title: "Sample Rate for RSMAZ Run 9"
-      description: "Sample Rate for RSMAZ."
-      height: 12
-      props:
-          boundaries: "data/processed/run9/MGRA13_gcs_run9.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run9/households_sample_mgra_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'sample_rate'
-          colorRamp:
-            ramp: inferno
-            steps: 2                                                                      
+                                                             
