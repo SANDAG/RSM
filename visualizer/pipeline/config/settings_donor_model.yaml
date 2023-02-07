@@ -7,7 +7,7 @@
 
 # Specify data to extract and load
 extract:
-    - filepath:  "C:/projects/SimWrapper/test/visualizer/SimWrapper/data/external/run2/report"
+    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/donor_model/report"
       test_size: 
       data:
           - "households.csv"
@@ -26,14 +26,13 @@ extract:
           - "hwyload_*.csv"
           - "hwyTcad.csv"
 
-    - filepath:  "C:/projects/SimWrapper/test/visualizer/SimWrapper/data/external/run2/input"
+    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/donor_model/input"
       test_size: 
       data:
 
           - "households_org.csv"
-          - "mgra_crosswalk.csv"
 
-    - filepath:  "C:/projects/SimWrapper/test/visualizer/SimWrapper/data/external/shapefile"
+    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/shapefile"
       test_size: 
       data:          
           - "mgra13_to_SRA.csv"
@@ -46,8 +45,8 @@ extract:
 
 # Specify transformation steps
 transform:
-    processor: "config/processor.csv"
-    summarizer: "config/expressions.csv"
+    processor: "config/processor_donor_model.csv"
+    summarizer: "config/expressions_donor_model.csv"
     steps:
         - name: step_1
           concat:
@@ -68,27 +67,6 @@ transform:
               - table_name: highway_load
                 include:
                     - 'hwyload_*'
-
-
-          merge:
-
-              - table_name: households_org
-                include:
-                    - households_org
-                    - mgra_crosswalk
-                merge_cols:
-                    - ["mgra"]
-                    - ["MGRA"]
-                merge_type: left
-
-              - table_name: households
-                include:
-                    - households
-                    - mgra_crosswalk
-                merge_cols:
-                    - ["homeMGRA"]
-                    - ["MGRA"]
-                merge_type: left
           process: True           
 
         - name: step_2
@@ -108,5 +86,5 @@ transform:
           summarize: True
           process: True
 load:
-    outdir: "C:/projects/SimWrapper/test/visualizer/SimWrapper/data/processed/run2"
+    outdir: "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/processed/donor_model"
     empty_fill: 0
