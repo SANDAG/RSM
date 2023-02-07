@@ -53,7 +53,7 @@ def generate_rsm_shapefile(mgra_shapefile_dir, cross_reference_mgra_name, rsm_sc
     mgra_rsm.to_file(os.path.join(output_dir, output_shapefile_name))
 
 
-def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary_file_name, vmt_intrazonal_df_file_name, out_dir):
+def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary_file_name, intrazonal_vmt_file_name, out_dir):
 
     
     temp1 = pd.DataFrame()
@@ -75,11 +75,11 @@ def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary
     temp3 = pd.DataFrame()
     for scenario in scenario_list:
         scenario_dir = os.path.join("SimWrapper\\data\\processed", scenario)  
-        summary_df = pd.read_csv(os.path.join(scenario_dir,vmt_intrazonal_df_file_name))
-        temp2["type"] = summary_df["type"]
-        temp2[scenario] = summary_df["vehicle_miles"]
+        summary_df = pd.read_csv(os.path.join(scenario_dir, intrazonal_vmt_file_name))
+        temp3["type"] = summary_df["type"]
+        temp3[scenario] = summary_df["vehicle_miles"]
 
-    temp3.to_csv(os.path.join(out_dir, vmt_intrazonal_df_file_name))
+    temp3.to_csv(os.path.join(out_dir, intrazonal_vmt_file_name))
 
 def compare_network_summary (network_comparison_scenario_pair, network_summary_file_name, out_dir):
 
