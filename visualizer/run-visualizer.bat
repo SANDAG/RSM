@@ -2,9 +2,9 @@
 
 :: set paths
 
-SET SIMWRAPPER_PATH=D:\Models\RSM\visualizer\SimWrapper
+SET SIMWRAPPER_PATH=C:\projects\SimWrapper\test\visualizer\SimWrapper
 
-
+cd /d %SIMWRAPPER_PATH%
 
 :: use this to start simwrapper
 :: and then type "http://localhost:8050/live" in a browser
