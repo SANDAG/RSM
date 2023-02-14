@@ -1,0 +1,16 @@
+
+rsm_scenarios:
+  run1:
+      name: "run1"
+      input: \simwrapper\data\external\run1\input
+      report: \simwrapper\data\external\run1\report
+      output: \simwrapper\data\processed\run1\
+
+base_scenarios:
+  donor_model:
+      name: "donor_model"
+      input: \simwrapper\data\external\donor_model\input
+      report: \simwrapper\data\external\donor_model\report
+      output: \simwrapper\data\processed\donor_model\
+
+shapefiles: \simwrapper\data\external\shapefile
