@@ -11,7 +11,7 @@ layout:
       props:
         dataset: "data/processed/all_runs/trip_mode_summary.csv"
         x: "tripMode"
-        columns: ["donor_model",	"run1",	"run2",	"run4",	"run7",	"run8",	"run9"]
+        columns: ["donor_model","run2"]
         xAxisName: "Mode"
         yAxisName: "Percent of Trips"
 
@@ -22,30 +22,20 @@ layout:
       props:
         dataset: "data/processed/all_runs/vmt_summary.csv"
         x: "class"
-        columns: ["donor_model",	"run1",	"run2",	"run4",	"run7",	"run8",	"run9"]
+        columns: ["donor_model","run2"]
         xAxisName: "Class"
         yAxisName: "VMT"
 
-    vmt_intrazonal:  
-    - type: "bar"
-      title: "Intrazonal VMT"
-      description: "Intrazonal VMT"
-      props:
-        dataset: "data/processed/all_runs/vmt_intrazonal_summary.csv"
-        x: "type"
-        columns: ["donor_model",	"run1",	"run2",	"run4",	"run7",	"run8",	"run9"]
-        xAxisName: "Class"
-        yAxisName: "VMT"
        
     vmt_total:  
     - type: "bar"
-      title: "Total VMT without Intrazonal"
-      description: "Total VMT without Intrazonal"
+      title: "Total VMT "
+      description: "Total VMT including Intrazonal VMT"
       props:
         dataset: "data/processed/all_runs/vmt_total_summary.csv"
         x: "type"
-        columns: ["donor_model",	"run1",	"run2",	"run4",	"run7",	"run8",	"run9"]
-        xAxisName: "Class"
+        columns: ["donor_model", "run2"]
+        xAxisName: "type"
         yAxisName: "VMT"
 
     transit_boardings:
