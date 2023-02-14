@@ -1,7 +1,7 @@
 Description,Out Table,Out Col,In Table,Filter,In Col,Func,Group
 #,,,,,,,
 Mode Share,trip_mode_summary,num_trips,trips,,weightTrip,sum,tripMode
-Intrazonal summary,trips_intrazonal_summary,distance,trips,originMGRA == destinationMGRA,distanceDrive,sum,tripMode
+Intrazonal summary,intrazonal_distance_by_mode_summary,distance,trips,originMGRA == destinationMGRA,distanceDrive,sum,tripMode
 Number of transit boardings,transit_summary,EA,transit_onoff,TOD=='EA',BOARDINGS,sum,MODE
 Number of transit boardings,transit_summary,AM,transit_onoff,TOD=='AM',BOARDINGS,sum,MODE
 Number of transit boardings,transit_summary,MD,transit_onoff,TOD=='MD',BOARDINGS,sum,MODE
