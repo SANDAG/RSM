@@ -94,7 +94,7 @@ with open("config_visualizer_support.yml", "w") as f:
     yml.safe_dump(config_visulizer_support, f, sort_keys=False)
 
 print("Visualizer Support Script")
-r = subprocess.call(["run-visualizer-support.bat", pipeline_path, visualizer_path])
+r = subprocess.call(["run-visulizer-support.bat", pipeline_path, visualizer_path])
 if (r==0):
     print("Script successfully finished")
 else: 
