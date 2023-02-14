@@ -3,11 +3,13 @@ import pandas as pd
 import logging
 import os
 import yaml
-
+import sys
 import src.pipeline as pipeline
 
 # Settings file path
-SETTINGS = 'config/settings.yaml'
+args = sys.argv
+settings_filename = args[1]
+SETTINGS = os.path.join("config", settings_filename )
 
 
 def load_yaml(fp):
