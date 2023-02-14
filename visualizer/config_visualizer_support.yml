@@ -1,0 +1,15 @@
+inputs:
+  shapefile_dir: SimWrapper\data\external\shapefile
+  cross_reference_mgra_file_name: mgra_crosswalk.csv
+  mode_summary_file_name: trip_mode_summary.csv
+  vmt_summary_file_name: vmt_summary.csv
+  compared_scenarios_dir: SimWrapper\data\processed\all_runs
+  intrazonal_distance_mode_file_name: intrazonal_distance_by_mode_summary.csv
+parameters:
+  rsm_scenario_list:
+  - run1
+  base_scenario: donor_model
+  base_scenario_list:
+  - donor_model
+outputs:
+  total_vmt_file_name: vmt_total_summary.csv

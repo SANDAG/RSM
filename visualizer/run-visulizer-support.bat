@@ -1,8 +1,10 @@
 @echo on
 
+SET arg1=%1
+SET arg2=%2
 :: set paths
-SET DATA_PIPELINE_PATH=C:\projects\SimWrapper\RSM_main\visualizer\Pipeline
-SET VISULAZER_PATH=C:\projects\SimWrapper\RSM_main\visualizer
+SET DATA_PIPELINE_PATH=%args1%
+SET VISULAZER_PATH=%args2%
 :: change the directory to data-pipeline-tool folder
 cd /d %DATA_PIPELINE_PATH%
 
@@ -16,7 +18,7 @@ CALL conda activate sandag-rsm-visualizer
 
 :: run the support script. 
 cd /d %VISULAZER_PATH%
-python visualizer_support.py "config.yml"
+python visualizer_support.py "config_visualizer_support.yml"
 
 
 
