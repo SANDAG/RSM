@@ -20,7 +20,7 @@ import openmatrix as omx
 main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
 sys.path.append(main_path)
 from rsm.translate import (
-    translate_demand, 
+    translate_omx_demand, 
     copy_transit_demand,
 )
 
@@ -41,7 +41,7 @@ mat_names = []
 for period in periods:
     mat_names.append('trip'+period+file_ext)
 
-translate_demand(
+translate_omx_demand(
     mat_names,
     agg_zone_mapping,
     org_model_input_dir,
@@ -78,7 +78,7 @@ for period in periods:
 agg_mats.append('EmptyAVTrips'+file_ext)
 
 #Aggregating the trips based on new zone structure
-translate_demand(
+translate_omx_demand(
     agg_mats,
     agg_zone_mapping,
     org_model_output_dir,

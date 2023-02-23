@@ -1,16 +1,14 @@
 import os
 #import logging
 import pandas as pd
-from pathlib import Path
 import openmatrix as omx
 import shutil
 
 #logger = logging.getLogger(__name__)
 
  
-def _aggregate_matrix(input_mtx, aggregate_mapping_dict):
-    matrix_array = input_mtx.read()
-    matrix_df = pd.DataFrame(matrix_array, columns = list(aggregate_mapping_dict.keys()))
+def _aggregate_matrix(input_mtx_array, aggregate_mapping_dict):
+    matrix_df = pd.DataFrame(input_mtx_array, columns = list(aggregate_mapping_dict.keys()))
     
     matrix_agg_df = matrix_df.rename(columns=(aggregate_mapping_dict))
     matrix_agg_df.index = list(aggregate_mapping_dict.values())
@@ -24,7 +22,7 @@ def _aggregate_matrix(input_mtx, aggregate_mapping_dict):
     return output_mtx
 
 
-def translate_demand(
+def translate_omx_demand(
     matrix_names,
     agg_zone_mapping,
     input_dir=".",
@@ -48,13 +46,6 @@ def translate_demand(
     
     """
     
-    #input_dir = Path(input_dir or ".")
-    #output_dir = Path(output_dir or ".")
-
-    #print(input_dir)
-    #print(output_dir)
-
-    #agg_zone_mapping_df = _resolve_df(agg_zone_mapping)
     agg_zone_mapping_df = pd.read_csv(os.path.join(agg_zone_mapping))
     agg_zone_mapping_df = agg_zone_mapping_df.sort_values('taz')
 
@@ -68,9 +59,9 @@ def translate_demand(
         
         #logger.info("Aggregating Matrix: " + mat_name + " ...")
 
-        input_skim_file = os.path.join(input_dir, mat_name) #Path(input_dir).expanduser().joinpath(mat_name)
+        input_skim_file = os.path.join(input_dir, mat_name)
         print(input_skim_file)
-        output_skim_file = os.path.join(output_dir, mat_name) #Path(output_dir).expanduser().joinpath(mat_name)
+        output_skim_file = os.path.join(output_dir, mat_name)
 
         assert os.path.isfile(input_skim_file)
 
@@ -82,7 +73,8 @@ def translate_demand(
     
         for core in input_cores:
             matrix = input_matrix[core]
-            matrix_agg = _aggregate_matrix(matrix, zone_mapping)
+            matrix_array = matrix.read()
+            matrix_agg = _aggregate_matrix(matrix_array, zone_mapping)
             output_matrix[core] = matrix_agg
 
         output_matrix.create_mapping(title=input_mapping_name, entries=agg_zones)
@@ -91,6 +83,46 @@ def translate_demand(
         output_matrix.close()
 
 
+def translate_emmebank_demand(
+    input_databank,
+    output_databank,
+    cores_to_aggregate,
+    agg_zone_mapping,
+): 
+    """
+    aggregates the demand matrix cores from one emme databank and loads them into another databank
+    
+    Parameters
+    ----------
+    input_databank : Emme databank
+    output_databank : Emme databank
+    cores_to_aggregate : list
+        matrix corenames to aggregate
+    agg_zone_mapping: Path-like or pandas.DataFrame
+        zone number mapping between original and aggregated zones. 
+        columns: original zones as 'taz' and aggregated zones as 'cluster_id'
+    
+    Returns
+    -------
+    None. Loads the trip matrices into emmebank.
+    """
+    
+    agg_zone_mapping_df = pd.read_csv(os.path.join(agg_zone_mapping))
+    agg_zone_mapping_df = agg_zone_mapping_df.sort_values('taz')
+    
+    agg_zone_mapping_df.columns= agg_zone_mapping_df.columns.str.strip().str.lower()
+    zone_mapping = dict(zip(agg_zone_mapping_df['taz'], agg_zone_mapping_df['cluster_id']))
+        
+    for core in cores_to_aggregate: 
+        matrix = input_databank.matrix(core).get_data()
+        matrix_array = matrix.to_numpy()
+        
+        matrix_agg = _aggregate_matrix(matrix_array, zone_mapping)
+        
+        output_matrix = output_databank.matrix(core)
+        output_matrix.set_numpy_data(matrix_agg)
+        
+    
 def copy_transit_demand(
     matrix_names,
     input_dir=".",
