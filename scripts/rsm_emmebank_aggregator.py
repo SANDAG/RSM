@@ -18,10 +18,6 @@ import os
 import sys
 import pandas as pd
 
-dem_utils = _m.Modeller().module('sandag.utilities.demand')
-
-import dem_utils.load_matrix_to_databank
-
 scenario = sys.argv[1]
 rsm_main_dir = os.path.join(sys.argv[2])
 orig_model_dir = os.path.join(sys.argv[3])
@@ -87,6 +83,5 @@ for core in emmebank_cores:
     
     matrix_agg = _aggregate_matrix(matrix_array, zone_mapping)
         
-    #matrix = rsm_emmebank.matrix(core)
-    #matrix.set_numpy_data(matrix_agg)
-    dem_utils.load_matrix_to_databank(matrix_agg, core)
+    matrix = rsm_emmebank.matrix(core)
+    matrix.set_numpy_data(matrix_agg)
