@@ -268,6 +268,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         utils = modeller.module('sandag.utilities.demand')
         load_properties = modeller.tool('sandag.utilities.properties')
         run_summary = modeller.tool("sandag.utilities.run_summary")
+        emmebank_aggregator = modeller.tool("sandag.utilities.databank_aggregator")
 
         self.username = username
         self.password = password
@@ -402,8 +403,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
             self.check_for_fatal(_join(self._path, "logFiles", "AtTransitCheck_event.log"),
                                  "AT and Transit network consistency checking failed! Open AtTransitCheck_event.log for details.")
             
-            if run_rsm_setup > 0:
-
+            if run_rsm_setup > 0: 
+            
                 self.run_proc(
                 "runRSMZoneAggregator.cmd", 
                 [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones],
@@ -419,6 +420,13 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 [main_directory, rsm_python2_venv_path, orig_full_model_dir, rsm_script_path, taz_crosswalk_file], 
                 "Input Trip Matrix files Aggregator")
 
+                #self.run_proc(
+                #"runRSMEmmebankMatrixAggregator.cmd", 
+                #[main_emmebank.scenario(scenario_id), main_directory, orig_full_model_dir, rsm_script_path, taz_crosswalk_file], 
+                #"Emmebank Matrix Aggregator",
+                #capture_output=True)
+                
+                emmebank_aggregator(main_directory, orig_full_model_dir, taz_crosswalk_file)
 
             if startFromIteration == 1:  # only run the setup / init steps if starting from iteration 1
                 if not skipWalkLogsums:
