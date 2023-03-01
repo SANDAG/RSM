@@ -418,7 +418,6 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     _shutil.copy(_join(rsm_baseline_run_dir, mgra_crosswalk_file), _join(main_directory, mgra_crosswalk_file))
                     _shutil.copy(_join(rsm_baseline_run_dir, cluster_zone_file), _join(main_directory, cluster_zone_file))
 
-
                 self.run_proc(
                 "runRSMInputAggregator.cmd", 
                 [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones], 
@@ -428,8 +427,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 "runRSMTripMatrixAggregator.cmd", 
                 [main_directory, rsm_python2_venv_path, orig_full_model_dir, rsm_script_path, taz_crosswalk_file], 
                 "Input Trip Matrix files Aggregator")
-                
-                emmebank_aggregator(main_directory, orig_full_model_dir, taz_crosswalk_file)
+
 
             if startFromIteration == 1:  # only run the setup / init steps if starting from iteration 1
                 if not skipWalkLogsums:
@@ -467,7 +465,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     
                     #########################################  added on 0629
                     
-                    #TODO-AK: Try to move this to a separate function
+                    #TODO-AK: move this to a separate function
                     
                     taz_crosswalk = pd.read_csv(os.path.join(main_directory, taz_crosswalk_file), index_col = 0)
                     taz_crosswalk = taz_crosswalk['cluster_id'].to_dict()
@@ -810,6 +808,10 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         "runSandagAbm_SDRM.cmd",
                         [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
                         "Java-Run CT-RAMP", capture_output=True)
+
+                if run_rsm == 1:
+                    # this is to aggregate the EE, EI and Truck matrices from emme databank
+                    emmebank_aggregator(main_directory, orig_full_model_dir, taz_crosswalk_file)
 
                 if not skipOtherSimulateModel[iteration]:
                     self.remove_prev_iter_files(smm_abm_files, output_dir, iteration)
