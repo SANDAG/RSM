@@ -45,14 +45,23 @@ logging.info(f"start logging rsm_sampler for {iteration}")
 run_rsm_sampling = get_property(ABM_PROPERTIES, "run.rsm.sampling")
 sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
 min_sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.min.sampling.rate"))
+baseline_run_dir = get_property(ABM_PROPERTIES, "rsm.baseline.run.dir")
 
-if run_rsm_sampling.lower() == 'true' and iteration > 1:
-    PREV_ITER_ACCESS = os.path.join(
-        rsm_dir, "input", "accessibilities_" + str(iteration - 1) + ".csv"
-    )
+if run_rsm_sampling == 1:
     CURR_ITER_ACCESS = os.path.join(
         rsm_dir, "input", "accessibilities_" + str(iteration) + ".csv"
     )
+
+    if iteration == 1:
+        # use accessibilities from baseline RSM run
+        PREV_ITER_ACCESS = os.path.join(
+            baseline_run_dir, "input", "accessibilities.csv"
+        )
+    else:
+        # use accessibilities from previous iteration of this same RSM run
+        PREV_ITER_ACCESS = os.path.join(
+            rsm_dir, "input", "accessibilities_" + str(iteration - 1) + ".csv"
+        )
 else: 
     PREV_ITER_ACCESS = None
     CURR_ITER_ACCESS = None

@@ -140,9 +140,7 @@ def rsm_household_sampler(
             logger.warning(f"missing curr_iter_access_df from {curr_iter_access}")
         if prev_iter_access_df is None:
             logger.warning(f"missing prev_iter_access_df from {prev_iter_access}")
-        # true for first iteraion
-        # sample 100% of households from study region
-        # sample 25% of the households from rest of the region
+        # true when sampler is turned off. default_sampling_rate should be set to 1
 
         taz_hh["sampling_rate"] = default_sampling_rate
         if study_area is not None:

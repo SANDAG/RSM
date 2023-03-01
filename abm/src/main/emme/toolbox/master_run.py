@@ -344,10 +344,12 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         #RSM Settings
         run_rsm_setup = int(props["run.rsm.setup"])
         run_rsm = int(props["run.rsm"])
+        run_zone_aggregator = int(props["run.rsm.zone.aggregator"])
         num_rsm_zones = props["rsm.zones"]
         num_external_zones = props["external.zones"]
         rsm_cc_start_id = props["rsm.centroid.connector.start.id"]
         orig_full_model_dir = props["full.modelrun.dir"]
+        rsm_baseline_run_dir = props["rsm.baseline.run.dir"]
         taz_crosswalk_file = props["taz.to.cluster.crosswalk.file"]
         mgra_crosswalk_file = props["mgra.to.cluster.crosswalk.file"]
         cluster_zone_file = props["cluster.zone.centroid.file"]
@@ -403,12 +405,19 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
             self.check_for_fatal(_join(self._path, "logFiles", "AtTransitCheck_event.log"),
                                  "AT and Transit network consistency checking failed! Open AtTransitCheck_event.log for details.")
             
-            if run_rsm_setup > 0: 
+            if run_rsm_setup == 1: 
             
-                self.run_proc(
-                "runRSMZoneAggregator.cmd", 
-                [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones],
-                "Zone Aggregator")
+                if run_zone_aggregator == 1:
+                    self.run_proc(
+                        "runRSMZoneAggregator.cmd", 
+                        [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones],
+                        "Zone Aggregator")
+                else:
+                    _shutil.copy(_join(rsm_baseline_run_dir, mgra_lu_input_file), _join(main_directory, mgra_lu_input_file))
+                    _shutil.copy(_join(rsm_baseline_run_dir, taz_crosswalk_file), _join(main_directory, taz_crosswalk_file))
+                    _shutil.copy(_join(rsm_baseline_run_dir, mgra_crosswalk_file), _join(main_directory, mgra_crosswalk_file))
+                    _shutil.copy(_join(rsm_baseline_run_dir, cluster_zone_file), _join(main_directory, cluster_zone_file))
+
 
                 self.run_proc(
                 "runRSMInputAggregator.cmd", 
@@ -419,12 +428,6 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 "runRSMTripMatrixAggregator.cmd", 
                 [main_directory, rsm_python2_venv_path, orig_full_model_dir, rsm_script_path, taz_crosswalk_file], 
                 "Input Trip Matrix files Aggregator")
-
-                #self.run_proc(
-                #"runRSMEmmebankMatrixAggregator.cmd", 
-                #[main_emmebank.scenario(scenario_id), main_directory, orig_full_model_dir, rsm_script_path, taz_crosswalk_file], 
-                #"Emmebank Matrix Aggregator",
-                #capture_output=True)
                 
                 emmebank_aggregator(main_directory, orig_full_model_dir, taz_crosswalk_file)
 
@@ -759,7 +762,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 if not skipCoreABM[iteration]:
                     self.remove_prev_iter_files(core_abm_files, output_dir, iteration)
                     
-                    if run_rsm > 0:
+                    if run_rsm == 1:
                         #set rsm specific properties
                         self.run_proc(
                         "runRSMSetupUpdate.cmd", 
