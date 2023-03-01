@@ -4,7 +4,7 @@
 #
 # inputs:
 #   rsm_main_dir: RSM main directory
-#   full_model_output_dir: Donor model directory
+#   full_model_dir: Donor model directory
 #   num_rsm_zones: Number of RSM zones
 #   num_ext_zones: Number of external zones
 # outputs:
@@ -32,27 +32,29 @@ from rsm.zone_agg import (
     mark_centroids,
     merge_zone_data,
 )
+from rsm.utility import *
 
 rsm_main_dir = sys.argv[1]
-full_model_output_dir = sys.argv[2]
+full_model_dir = sys.argv[2]
 NUM_RSM_ZONES = int(sys.argv[3])
 NUM_EXT_ZONES = int(sys.argv[4])
 
 #input files
-rsm_input_dir = os.path.join(rsm_main_dir, "input")
-FULL_ABM_MGRA = os.path.join(full_model_output_dir, "input", "mgra13_based_input2016.csv")
-FULL_ABM_MGRA_SHAPEFILE = os.path.join(rsm_input_dir, "MGRASHAPE.zip")
-FULL_ABM_AM_HIGHWAY_SKIM = os.path.join(full_model_output_dir, "output", "traffic_skims_AM.omx")
-FULL_ABM_TRIP_DIR = os.path.join(full_model_output_dir, "output")
-FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(full_model_output_dir, "input", "households.csv")
-FULL_ABM_SYNTH_PERSONS = os.path.join(full_model_output_dir, "input", "persons.csv")
+FULL_ABM_PROPERTIES = os.path.join(full_model_dir, "conf", "sandag_abm.properties")
+FULL_ABM_MGRA_FILE = os.path.join(full_model_dir, get_property(FULL_ABM_PROPERTIES, "mgra.socec.file"))
+FULL_ABM_MGRA_SHAPEFILE = os.path.join(rsm_main_dir, "input", "MGRASHAPE.zip")
+FULL_ABM_AM_HIGHWAY_SKIM = os.path.join(full_model_dir, "output", "traffic_skims_AM.omx")
+FULL_ABM_TRIP_DIR = os.path.join(full_model_dir, "output")
+FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(full_model_dir, "input", "households.csv")
+FULL_ABM_SYNTH_PERSONS = os.path.join(full_model_dir, "input", "persons.csv")
 EXPLICIT_ZONE_AGG = []
 
 #output files
-OUTPUT_MGRA_CROSSWALK = os.path.join(rsm_input_dir, "mgra_crosswalk.csv")
-OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_input_dir, "taz_crosswalk.csv")
-OUTPUT_CLUSTER_CENTROIDS = os.path.join(rsm_input_dir, "cluster_centroids.csv")
-OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_input_dir, "mgra13_based_input2016.csv")
+RSM_ABM_PROPERTIES = os.path.join(rsm_main_dir, "conf", "sandag_abm.properties")
+OUTPUT_MGRA_CROSSWALK = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.to.cluster.crosswalk.file"))
+OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "taz.to.cluster.crosswalk.file"))
+OUTPUT_CLUSTER_CENTROIDS = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "cluster.zone.centroid.file"))
+OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
 
 logging_start(
     filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO

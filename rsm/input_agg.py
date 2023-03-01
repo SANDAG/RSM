@@ -49,7 +49,6 @@ def agg_input_files(
             taz to aggregated zones file. Should be located in RSM input folder
         mgra_cwk_file : csv file, default mgra_crosswalk.csv
             mgra to aggregated zones file. Should be located in RSM input folder
-        mgra_zone_file : csv file, deafult mgra13_based_input2016.csv.csv
         input_files : list of input files to be aggregated. 
             Should include the following files
                 "microMgraEquivMinutes.csv", "microMgraTapEquivMinutes.csv", 
