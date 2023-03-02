@@ -3,31 +3,67 @@ header:
   title: "RSM Zero Car Households Maps"
   description: "RSM Visualization Dashboard"
 
-layout:      
+layout:
+  rsm base:
+    - type: map
+      title: 'Zero Car Households Base RSM'
+      description: 'Distribution of Zero Car Households'
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/processed/rsm_base/MGRA13_gcs_rsm_base.shp"
+        join: cluster_id
+      datasets:
+        zero-cars:
+          file: "data/processed/rsm_base/zero_car_households_summary.csv"
+          join: mgra
+      display:
+        fill:
+          dataset: zero-cars
+          columnName: household_numbers
+          colorRamp:
+            ramp: Plasma
+            steps: 7
 
+  rsm new:
+    - type: map
+      title: 'Zero Car Households New RSM'
+      description: 'Distribution of Zero Car Households'
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/processed/rsm_new/MGRA13_gcs_rsm_new.shp"
+        join: cluster_id
+      datasets:
+        zero-cars:
+          file: "data/processed/rsm_new/zero_car_households_summary.csv"
+          join: mgra
+      display:
+        fill:
+          dataset: zero-cars
+          columnName: household_numbers
+          colorRamp:
+            ramp: Plasma
+            steps: 7
 
-    zero Donor Model:
-    - type: "map"
-      title: "Zero Car Households Donor Model"
-      description: "Distribution of Zero Car Households."
-      height: 12
-      props:
-          boundaries: "data/processed/donor_model/MGRA13_gcs.json"
-          boundariesJoinCol: 'MGRA'
-          boundariesLabels: 'MGRA'
-          dataset: "data/processed/donor_model/zero_car_households_summary.csv"
-          datasetJoinCol: 'homeMGRA'
-          datasetValue: 'household_numbers'
-
-    zero Run 2:
-    - type: "map"
-      title: "Zero Car Households Run 2"
-      description: "Distribution of Zero Car Households."
-      height: 12
-      props:
-          boundaries: "data/processed/run2/MGRA13_gcs_run2.geojson"
-          boundariesJoinCol: 'cluster_id'
-          boundariesLabels: 'cluster_id'
-          dataset: "data/processed/run2/zero_car_households_summary.csv"
-          datasetJoinCol: 'mgra'
-          datasetValue: 'household_numbers'
+  donor model:
+    - type: map
+      title: 'Zero Car Households Donor Model'
+      description: 'Distribution of Zero Car Households'
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/external/shapefile/MGRA13_gcs.shp"
+        join: MGRA
+      datasets:
+        zero-cars:
+          file: "data/processed/donor_model/zero_car_households_summary.csv"
+          join: mgra
+      display:
+        fill:
+          dataset: zero-cars
+          columnName: household_numbers
+          colorRamp:
+            ramp: Plasma
+            steps: 7
+                                                

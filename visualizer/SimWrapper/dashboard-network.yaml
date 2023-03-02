@@ -6,24 +6,44 @@ header:
 
 
 layout:
-  row1:
-    - title: 'Link example'
-      description: 'Sample data'
+  base RSM:
+    - title: 'Network Summaries'
+      description: 'Network Measures Comparison for Base RSM'
       type: links
       height: 8
       props:
-        network: "data/processed/run2/hwyLoad.json"
+        network: 'data/external/shapefile/hwyload.geojson'
         projection: EPSG:4269
         zoom: 9
         showDifferences: true
         datasets:
-          csvFile: "data/processed/run2/network_summary.csv"
-          csvBase: "data/processed/donor_model/network_summary.csv"
+          csvFile: 'data/processed/rsm_base/network_summary.csv'
+          csvBase: 'data/processed/donor_model/network_summary.csv'
         display:
           color:
             dataset: csvFile
-            columnName: vmt_total
+            columnName: flow_total
             colorRamp:
               ramp: Viridis
               steps: 9
 
+  new RSM:
+    - title: 'Network Summaries'
+      description: 'Network Measures Comparison for New RSM'
+      type: links
+      height: 8
+      props:
+        network: 'data/external/shapefile/hwyload.geojson'
+        projection: EPSG:4269
+        zoom: 9
+        showDifferences: true
+        datasets:
+          csvFile: 'data/processed/rsm_new/network_summary.csv'
+          csvBase: 'data/processed/donor_model/network_summary.csv'
+        display:
+          color:
+            dataset: csvFile
+            columnName: flow_total
+            colorRamp:
+              ramp: Viridis
+              steps: 9
