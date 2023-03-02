@@ -16,7 +16,7 @@ layout:
       datasets:
         zero-cars:
           file: "data/processed/rsm_base/zero_car_households_summary.csv"
-          join: mgra
+          join: homeMGRA
       display:
         fill:
           dataset: zero-cars
@@ -37,7 +37,7 @@ layout:
       datasets:
         zero-cars:
           file: "data/processed/rsm_new/zero_car_households_summary.csv"
-          join: mgra
+          join: homeMGRA
       display:
         fill:
           dataset: zero-cars
@@ -58,7 +58,7 @@ layout:
       datasets:
         zero-cars:
           file: "data/processed/donor_model/zero_car_households_summary.csv"
-          join: mgra
+          join: homeMGRA
       display:
         fill:
           dataset: zero-cars
