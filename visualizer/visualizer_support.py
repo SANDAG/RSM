@@ -7,22 +7,25 @@ import itertools
 import geopandas as gpd
 import sys
 
-def shapefile_to_jason(shapefile_dir, base_scenario):
+def shapefile_to_json(shapefile_dir, base_scenario):
     
-    base_dir = os.path.join("SimWrapper\\data\\external", base_scenario)   
+#    base_dir = os.path.join("SimWrapper\\data\\external", base_scenario)   
     output_dir = os.path.join("SimWrapper\\data\\processed", base_scenario)
     base_json_file_name = "MGRA13_gcs" + "_" + base_scenario + ".json"
     # convert shapefiles to json for base
     mgra_base_shp = gpd.read_file(os.path.join(shapefile_dir, "MGRA13_gcs.shp"))
     mgra_base_shp.to_file(os.path.join(output_dir, base_json_file_name), driver='GeoJSON')
-    #convert cpa shapefile to json
+    #convert sra shapefile to json
     cpa_orig_shp = gpd.read_file(os.path.join(shapefile_dir, "SRA.shp"))
-    cpa_orig_shp_prj = cpa_orig_shp.to_crs(epsg=4269)
+    cpa_orig_shp_prj = cpa_orig_shp.to_crs(epsg=31468)
+    cpa_orig_shp_prj.to_file(os.path.join(shapefile_dir, "SRA.shp"))
     cpa_orig_shp_prj.to_file(os.path.join(shapefile_dir, "SRA.json"), driver='GeoJSON')
     #convert network files to json
-    network_shape = gpd.read_file(os.path.join(base_dir, "report", "hwyload_458.shp"))
-    network_shape_prj = network_shape.to_crs(epsg=4269)
-    network_shape_prj.to_file(os.path.join(output_dir, "hywload.json"), driver='GeoJSON')    
+#    network_shape = gpd.read_file(os.path.join(base_dir, "report", "hwyload_458.shp"))
+#    network_shape_highway= network_shape[network_shape.ifc == 1]
+#    network_shape_prj = network_shape_highway.to_crs(epsg=4269)
+#    network_shape_prj.to_file(os.path.join(output_dir, "hwyload.shp"))    
+#    network_shape_prj.to_file(os.path.join(output_dir, "hwyload.json"), driver='GeoJSON')    
 
 def rsm_geo_post_processing(scenario):
 
@@ -35,8 +38,10 @@ def rsm_geo_post_processing(scenario):
     mgra_rsm_shp.to_file(os.path.join(output_dir, rsm_json_file_name), driver='GeoJSON')
     #convert network files to json
     network_shape = gpd.read_file(os.path.join(scenario_dir, "report", "hwyload.shp"))
-    network_shape_prj = network_shape.to_crs(epsg=4269)
-    network_shape_prj.to_file(os.path.join(output_dir, "hywload.json"), driver='GeoJSON')
+    network_shape_highway= network_shape[network_shape.ifc == 1]
+    network_shape_prj = network_shape_highway.to_crs(epsg=4269)
+    network_shape_prj.to_file(os.path.join(output_dir, "hwyload.shp"))    
+    network_shape_prj.to_file(os.path.join(output_dir, "hwyload.json"), driver='GeoJSON')
 
 
 def generate_rsm_shapefile(mgra_shapefile_dir, cross_reference_mgra_name, rsm_scenario):
@@ -53,7 +58,7 @@ def generate_rsm_shapefile(mgra_shapefile_dir, cross_reference_mgra_name, rsm_sc
     mgra_rsm.to_file(os.path.join(output_dir, output_shapefile_name))
 
 
-def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary_file_name, intrazonal_vmt_file_name, out_dir):
+def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary_file_name, intrazonal_vmt_file_name, trip_od_summary_file_name, out_dir):
 
     
     temp1 = pd.DataFrame()
@@ -80,6 +85,47 @@ def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary
         temp3[scenario] = summary_df["vehicle_miles"]
 
     temp3.to_csv(os.path.join(out_dir, intrazonal_vmt_file_name), index=False)
+
+
+def trip_od_summary (rsm_scenario_list, base_scenario, trip_od_summary_file_name):
+
+
+    for scenario in rsm_scenario_list:
+
+        processed_dir = os.path.join("SimWrapper\\data\\processed", scenario) 
+        external_dir = os.path.join("SimWrapper\\data\\external", scenario)
+        shapefile_dir = os.path.join("SimWrapper\\data\\external\\shapefile")  
+        summary_df = pd.read_csv(os.path.join(processed_dir, trip_od_summary_file_name))
+        mgra_crosswalk = pd.read_csv(os.path.join(external_dir, "input", "mgra_crosswalk.csv"))
+        sra_crosswalk = pd.read_csv(os.path.join(shapefile_dir, "mgra13_to_sra.csv"))
+        mgra_sra_crosswalk = mgra_crosswalk.merge(sra_crosswalk)
+        mgra_sra_crosswalk = mgra_sra_crosswalk.groupby(["cluster_id"], as_index=False).mean()
+        summary_df = summary_df.merge(mgra_sra_crosswalk, left_on="originMGRA", right_on="cluster_id")
+        summary_df = summary_df.rename(columns={"SRA":"OriginSRA"})
+        summary_df = summary_df.merge(mgra_sra_crosswalk, left_on="destinationMGRA", right_on="cluster_id")
+        summary_df = summary_df.rename(columns={"SRA":"DestinationSRA"})
+        summary_df = summary_df.groupby(["OriginSRA","DestinationSRA" ], as_index=False).sum()
+        summary_df = summary_df[["OriginSRA","DestinationSRA","flows"]]
+        summary_df = summary_df.round(0)   
+
+        summary_df.to_csv(os.path.join(processed_dir, trip_od_summary_file_name), index=False)
+
+    for scenario in base_scenario:
+        print(scenario)
+        processed_dir = os.path.join("SimWrapper\\data\\processed", scenario) 
+        external_dir = os.path.join("SimWrapper\\data\\external", scenario)
+        shapefile_dir = os.path.join("SimWrapper\\data\\external\\shapefile")  
+        summary_df = pd.read_csv(os.path.join(processed_dir, trip_od_summary_file_name))
+        sra_crosswalk = pd.read_csv(os.path.join(shapefile_dir, "mgra13_to_sra.csv"))
+        summary_df = summary_df.merge(sra_crosswalk, left_on="originMGRA", right_on="MGRA")
+        summary_df = summary_df.rename(columns={"SRA":"OriginSRA"})
+        summary_df = summary_df.merge(mgra_sra_crosswalk, left_on="destinationMGRA", right_on="MGRA")
+        summary_df = summary_df.rename(columns={"SRA":"DestinationSRA"})
+        summary_df = summary_df.groupby(["OriginSRA","DestinationSRA" ], as_index=False).sum()
+        summary_df = summary_df[["OriginSRA","DestinationSRA","flows"]]
+        summary_df = summary_df.round(0)   
+
+        summary_df.to_csv(os.path.join(processed_dir, trip_od_summary_file_name), index=False)
 
 def compare_network_summary (network_comparison_scenario_pair, network_summary_file_name, out_dir):
 
@@ -129,22 +175,26 @@ if __name__ == "__main__":
     compared_scenarios_dir = config['inputs']['compared_scenarios_dir']
     intrazonal_distance_mode_file_name = config['inputs']['intrazonal_distance_mode_file_name']
     rsm_scenario_list = config['parameters']['rsm_scenario_list']
-    base_scenario = config['parameters']['base_scenario']
+    base_scenario_list = config['parameters']['base_scenario_list']
     total_vmt_file_name = config['outputs']['total_vmt_file_name']
+    trip_od_summary_file_name = config['inputs']['trip_od_summary_file_name']
 
+    trip_od_summary(rsm_scenario_list, base_scenario_list, trip_od_summary_file_name )
+    
     for scenario in (rsm_scenario_list):
         generate_rsm_shapefile(shapefile_dir, cross_reference_mgra_file_name, scenario)
-
-    shapefile_to_jason(shapefile_dir, base_scenario)      
+   
+    for scenario in (rsm_scenario_list):
+        shapefile_to_json(shapefile_dir, scenario)      
 
     for scenario in (rsm_scenario_list):
         rsm_geo_post_processing(scenario)
 
 
-    for scenario in (rsm_scenario_list + [base_scenario]):
+    for scenario in (rsm_scenario_list + base_scenario_list):
         intrazonal_vmt_aggregation(vmt_summary_file_name, intrazonal_distance_mode_file_name, total_vmt_file_name, scenario)
 
-    combine_scenarios_summary(rsm_scenario_list + [base_scenario], mode_summary_file_name, vmt_summary_file_name, total_vmt_file_name, compared_scenarios_dir)
+    combine_scenarios_summary(rsm_scenario_list + base_scenario_list, mode_summary_file_name, vmt_summary_file_name, total_vmt_file_name, trip_od_summary_file_name, compared_scenarios_dir)
 
 #    for pair in list(itertools.combinations(scenario_list, 2)):
 #        compare_network_summary (pair, network_summary_file_name, compared_scenarios_dir)
