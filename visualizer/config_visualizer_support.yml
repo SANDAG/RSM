@@ -5,10 +5,11 @@ inputs:
   vmt_summary_file_name: vmt_summary.csv
   compared_scenarios_dir: SimWrapper\data\processed\all_runs
   intrazonal_distance_mode_file_name: intrazonal_distance_by_mode_summary.csv
+  trip_od_summary_file_name: trip_od_summary.csv
 parameters:
   rsm_scenario_list:
-  - run1
-  base_scenario: donor_model
+  - rsm_base
+  - rsm_new
   base_scenario_list:
   - donor_model
 outputs:

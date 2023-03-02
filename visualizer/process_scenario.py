@@ -5,7 +5,7 @@ import yaml as yml
 import sys
 import subprocess
 
-config_file = "combine.yaml"
+config_file = "scenario.yaml"
 with open(os.path.join(config_file), 'r') as f:
     config = yml.safe_load(f)
 f.close()
@@ -29,7 +29,6 @@ for scenario in config["rsm_scenarios"]:
         settings = yml.safe_load(f)
     settings['extract'][0]['filepath'] = path_report
     settings['extract'][1]['filepath'] = path_input
-    settings['extract'][2]['filepath'] = path_shapefile
     settings['load']['outdir'] = path_output
     f.close()
 
@@ -54,15 +53,14 @@ for scenario in config["base_scenarios"]:
     path_output = os.path.join(base_path + config["base_scenarios"][scenario]["output"])
     path_shapefile = os.path.join(base_path + config["shapefiles"])
 
-    with open(os.path.join("pipeline\\config", settings_file_rsm), 'r') as f:
+    with open(os.path.join("pipeline\\config", settings_file_base), 'r') as f:
         settings = yml.safe_load(f)
     settings['extract'][0]['filepath'] = path_report
     settings['extract'][1]['filepath'] = path_input
-    settings['extract'][2]['filepath'] = path_shapefile
     settings['load']['outdir'] = path_output
     f.close()
 
-    with open(os.path.join("pipeline\\config", settings_file_rsm), "w") as f:
+    with open(os.path.join("pipeline\\config", settings_file_base), "w") as f:
         yml.safe_dump(settings, f, sort_keys=False)
 
     if not os.path.exists(path_output):

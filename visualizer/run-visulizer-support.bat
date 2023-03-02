@@ -3,8 +3,8 @@
 SET arg1=%1
 SET arg2=%2
 :: set paths
-SET DATA_PIPELINE_PATH=%args1%
-SET VISULAZER_PATH=%args2%
+SET DATA_PIPELINE_PATH=%arg1%
+SET VISULAZER_PATH=%arg2%
 :: change the directory to data-pipeline-tool folder
 cd /d %DATA_PIPELINE_PATH%
 
