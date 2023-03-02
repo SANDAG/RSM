@@ -1,10 +1,10 @@
 Description,Step,Type,Table,Out Col,In Col,Func
 Rename purpose,step_0,rename,airportCBXTrips,,,{'tripPurpose': 'tripPurposeDestination'}
 Rename purpose,step_0,rename,airportSANTrips,,,{'tripPurpose': 'tripPurposeDestination'}
-Define purpose (NA),step_0,column,internalExternalTrips,tripPurposeDestination,,Not Applicable
-Define purpose (NA),step_0,column,externalExternalTrips,tripPurposeDestination,,Not Applicable
+Define purpose (NA),step_0,column,internalExternalTrips,tripPurposeDestination,,"""Other"""
+Define purpose (NA),step_0,column,externalExternalTrips,tripPurposeDestination,,"""Other"""
 Rename purpose,step_0,rename,externalInternalTrips,,,{'tripPurpose': 'tripPurposeDestination'}
-Rename purpose,step_0,column,truckTrips,tripPurposeDestination,,Not Applicable
+Rename purpose,step_0,column,truckTrips,tripPurposeDestination,,"""Other"""
 Rename purpose,step_0,rename,visitorTrips,,,{'tripPurpose': 'tripPurposeDestination'}
 Map transit mode values,step_1,replace,transit_onoff,MODE,MODE,"{'PREM': 'Premium Transit', 'BUS': 'Local Bus', 'ALLPEN': 'Local Bus and Premium Transit'}"
 Map transit access mode values,step_1,replace,transit_onoff,ACCESSMODE,ACCESSMODE,"{'KNR': 'Kiss and Ride to Transit', 'PNR': 'Park and Ride to Transit', 'WLK': 'Walk to Transit'}"
@@ -23,10 +23,6 @@ Total B-A Truck flow,step_1,column,highway_load,BA_Flow_Truck,,BA_Flow_lhd+BA_Fl
 Total A-B flow,step_1,column,highway_load,AB_Flow,,AB_Flow_Auto+AB_Flow_Truck
 Total B-A flow,step_1,column,highway_load,BA_flow,,BA_Flow_Auto+BA_Flow_Truck
 Fill any null values in highway load,step_1,raw,highway_load,,,highway_load = highway_load.fillna(0)
-join sra zones to trips origin,step_1,raw,,,,"trips = pd.merge(trips, mgra13_to_SRA, left_on='originMGRA', right_on='MGRA')"
-Rename CPA,step_1,rename,trips,,,{'SRA': 'originSRA'}
-join cpa zones to trips destination,step_1,raw,,,,"trips = pd.merge(trips, mgra13_to_SRA, left_on='destinationMGRA', right_on='MGRA')"
-Rename CPA,step_1,rename,trips,,,{'SRA': 'destinationSRA'}
 Map TOD values,step_1,replace,trips,departTimeFiveTod,departTimeFiveTod,"{1: 'EA', 2: 'AM', 3: 'MD', 4: 'PM', 5: 'EV'}"
 Auto VMT,step_2,column,network,vmt_auto,,(AB_Flow_Auto+BA_Flow_Auto) * Length
 Truck VMT,step_2,column,network,vmt_truck,,(AB_Flow_Truck+BA_Flow_Truck) * Length

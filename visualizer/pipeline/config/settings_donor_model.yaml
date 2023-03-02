@@ -1,90 +1,67 @@
-#######################################################################################
-#                                                                                     #
-#                                Data Pipeline Settings                               #
-#                                                                                     #
-#######################################################################################
-
-
-# Specify data to extract and load
 extract:
-    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/donor_model/report"
-      test_size: 
-      data:
-          - "households.csv"
-          - "individualTrips.csv"
-          - "jointTrips.csv"
-          - "transit_onoff.csv"
-          - "internalExternalTrips.csv"
-          - "airportCBXTrips.csv"
-          - "airportSANTrips.csv"
-          - "commercialVehicleTrips.csv"
-          - "crossBorderTrips.csv"
-          - "externalInternalTrips.csv"
-          - "externalExternalTrips.csv"
-          - "truckTrips.csv"
-          - "visitorTrips.csv"
-          - "hwyload_*.csv"
-          - "hwyTcad.csv"
-
-    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/donor_model/input"
-      test_size: 
-      data:
-
-          - "households_org.csv"
-
-    - filepath:  "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/external/shapefile"
-      test_size: 
-      data:          
-          - "mgra13_to_SRA.csv"
-
-          
-
-
-
-
-
-# Specify transformation steps
+- filepath: C:\projects\SimWrapper\final_test\visualizer\simwrapper\data\external\donor_model\report
+  test_size: null
+  data:
+  - households.csv
+  - individualTrips.csv
+  - jointTrips.csv
+  - transit_onoff.csv
+  - internalExternalTrips.csv
+  - airportCBXTrips.csv
+  - airportSANTrips.csv
+  - commercialVehicleTrips.csv
+  - crossBorderTrips.csv
+  - externalInternalTrips.csv
+  - externalExternalTrips.csv
+  - truckTrips.csv
+  - visitorTrips.csv
+  - hwyload_*.csv
+  - hwyTcad.csv
+- filepath: C:\projects\SimWrapper\final_test\visualizer\simwrapper\data\external\donor_model\input
+  test_size: null
+  data:
+  - households_org.csv
 transform:
-    processor: "config/processor_donor_model.csv"
-    summarizer: "config/expressions_donor_model.csv"
-    steps:
-        - name: step_1
-          concat:
-              - table_name: trips
-                include:
-                    - individualTrips
-                    - jointTrips
-                    - internalExternalTrips
-                    - airportCBXTrips
-                    - airportSANTrips
-                    - commercialVehicleTrips
-                    - crossBorderTrips
-                    - externalInternalTrips
-                    - externalExternalTrips
-                    - truckTrips
-                    - visitorTrips
-
-              - table_name: highway_load
-                include:
-                    - 'hwyload_*'
-          process: True           
-
-        - name: step_2
-          merge:
-              - table_name: network
-                include:
-                    - highway_network
-                    - highway_load
-                merge_cols:
-                    - ["ID", "timePeriod"]
-                    - ["ID1", "timePeriod"]
-                merge_type: left
-          process: True
-
-
-        - name: step_3
-          summarize: True
-          process: True
+  processor: config/processor_donor_model.csv
+  summarizer: config/expressions_donor_model.csv
+  steps:
+  - name: step_0
+    process: true
+  - name: step_1
+    concat:
+    - table_name: trips
+      include:
+      - individualTrips
+      - jointTrips
+      - internalExternalTrips
+      - airportCBXTrips
+      - airportSANTrips
+      - commercialVehicleTrips
+      - crossBorderTrips
+      - externalInternalTrips
+      - externalExternalTrips
+      - truckTrips
+      - visitorTrips
+    - table_name: highway_load
+      include:
+      - hwyload_*
+    process: true
+  - name: step_2
+    merge:
+    - table_name: network
+      include:
+      - highway_network
+      - highway_load
+      merge_cols:
+      - - ID
+        - timePeriod
+      - - ID1
+        - timePeriod
+      merge_type: left
+    process: true
+  - name: step_3
+    summarize: true
+    process: true
 load:
-    outdir: "C:/projects/SimWrapper/RSM_main/visualizer/SimWrapper/data/processed/donor_model"
-    empty_fill: 0
+  outdir: C:\projects\SimWrapper\final_test\visualizer\simwrapper\data\processed\donor_model\
+  empty_fill: 0

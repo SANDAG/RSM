@@ -12,9 +12,11 @@ Trips by TOD and Purpose,trip_tod_purpose_summary,AM,trips,departTimeFiveTod == 
 Trips by TOD and Purpose,trip_tod_purpose_summary,MD,trips,departTimeFiveTod == 'MD',weightTrip,sum,tripPurposeDestination
 Trips by TOD and Purpose,trip_tod_purpose_summary,PM,trips,departTimeFiveTod == 'PM',weightTrip,sum,tripPurposeDestination
 Trips by TOD and Purpose,trip_tod_purpose_summary,EV,trips,departTimeFiveTod == 'EV',weightTrip,sum,tripPurposeDestination
-Trips by Origin and Destination,trip_od_summary,flows,trips,,weightTrip,sum,"originSRA,destinationSRA"
+Trips by Origin and Destination,trip_od_summary,flows,trips,,weightTrip,sum,"originMGRA,destinationMGRA"
 Zero Car Households,zero_car_households_summary,household_numbers,households,autos == 0,hhId,count,homeMGRA
-Network Summaries,network_summary,vmt_total,network,,vmt_total,sum,ID
-Network Summaries,network_summary,flow_total,network,,flow_total,sum,ID
-Network Summaries,network_summary,voc,network,,voc,sum,ID
-VMT by Class,vmt_summary,vmt_total,network,ifc_desc != 'Zone Connector',vmt_total,sum,ifc_desc
+Network Summaries,network_summary,vmt_total,network,ifc_desc == 'Freeway',vmt_total,sum,ID
+Network Summaries,network_summary,flow_total,network,ifc_desc == 'Freeway',flow_total,sum,ID
+Network Summaries,network_summary,voc,network,ifc_desc == 'Freeway',voc,sum,ID
+VMT by Class,vmt_summary,vmt_total,network,,vmt_total,sum,ifc_desc
+VMT Auto by Class,vmt_summary,vmt_auto,network,,vmt_auto,sum,ifc_desc
+VMT Truck by Class,vmt_summary,vmt_truck,network,,vmt_truck,sum,ifc_desc
