@@ -711,6 +711,10 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
 
             # Check that setup files were generated
             self.run_proc("CheckOutput.bat", [drive + path_no_drive, 'Setup'], "Check for outputs")
+            
+            if run_rsm_setup == 1:
+                # this is to aggregate the EE, EI and Truck matrices from emme databank
+                emmebank_aggregator(main_directory, orig_full_model_dir, taz_crosswalk_file)
 
         # Note: iteration indexes from 0, msa_iteration indexes from 1
         for iteration in range(startFromIteration - 1, end_iteration):
@@ -808,10 +812,6 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         "runSandagAbm_SDRM.cmd",
                         [drive, drive + path_forward_slash, sample_rate[iteration], msa_iteration],
                         "Java-Run CT-RAMP", capture_output=True)
-
-                if run_rsm == 1:
-                    # this is to aggregate the EE, EI and Truck matrices from emme databank
-                    emmebank_aggregator(main_directory, orig_full_model_dir, taz_crosswalk_file)
 
                 if not skipOtherSimulateModel[iteration]:
                     self.remove_prev_iter_files(smm_abm_files, output_dir, iteration)
