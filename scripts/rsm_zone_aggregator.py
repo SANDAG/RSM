@@ -68,7 +68,7 @@ logging.info("start logging rsm_zone_aggregator")
 logging.info("loading mgra data")
 mgra = load_mgra_data(
     shapefilename=FULL_ABM_MGRA_SHAPEFILE,
-    supplemental_features=FULL_ABM_MGRA,
+    supplemental_features=FULL_ABM_MGRA_FILE,
     simplify_tolerance=10,
     topo=True,
 )

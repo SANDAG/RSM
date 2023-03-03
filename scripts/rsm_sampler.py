@@ -40,9 +40,9 @@ OUTPUT_RSM_SAMPLED_PERSONS = os.path.join(rsm_dir, "input", "sampled_person.csv"
 logging_start(
     filename=os.path.join(rsm_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
 )
-logging.info(f"start logging rsm_sampler for {iteration}")
+logging.info(f"start logging rsm_sampler for iteration {iteration}")
 
-run_rsm_sampling = get_property(ABM_PROPERTIES, "run.rsm.sampling")
+run_rsm_sampling = int(get_property(ABM_PROPERTIES, "run.rsm.sampling"))
 sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
 min_sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.min.sampling.rate"))
 baseline_run_dir = get_property(ABM_PROPERTIES, "rsm.baseline.run.dir")
@@ -66,6 +66,9 @@ else:
     PREV_ITER_ACCESS = None
     CURR_ITER_ACCESS = None
 
+logging.info(f"Current Iteration Accessibility File: {CURR_ITER_ACCESS}")
+logging.info(f"Previous Iteration Accessibility File: {PREV_ITER_ACCESS}")
+
 rsm_household_sampler(
     input_dir=rsm_dir,
     output_dir=rsm_dir,
@@ -81,4 +84,4 @@ rsm_household_sampler(
     output_person=OUTPUT_RSM_SAMPLED_PERSONS,
 )
 
-logging.info(f"finished logging rsm_sampler for {iteration}")
+logging.info(f"finished logging rsm_sampler for iteration {iteration}")

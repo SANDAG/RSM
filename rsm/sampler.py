@@ -40,13 +40,10 @@ def rsm_household_sampler(
     prev_iter_access : Path-like or pandas.DataFrame
         Accessibility in an old (default, no treatment, etc) run is given (preloaded)
         or read in from here. Give as a relative path (from `input_dir`) or an
-        absolute path.  If given as a path and the file does not exist, assume no delta-accessibility update info
-        is available and ignore this aspect of sampling.
+        absolute path.
     curr_iter_access : Path-like or pandas.DataFrame
         Accessibility in the latest run is given (preloaded) or read in from here.
-        Give as a relative path (from `input_dir`) or an absolute path.  If given as a
-        path and the file does not exist, assume no delta-accessibility update info
-        is available and ignore this aspect of sampling.
+        Give as a relative path (from `input_dir`) or an absolute path.
     study_area : array-like
         Array of RSM zone id's in the study area.  These zones are sampled at 100%.
     input_household : Path-like or pandas.DataFrame
@@ -79,7 +76,7 @@ def rsm_household_sampler(
     logger.debug(f"  {input_dir=}")
     logger.debug(f"  {output_dir=}")
 
-    def _resolve_df(x, directory, must_exist=True, make_index=None):
+    def _resolve_df(x, directory, make_index=None):
         if isinstance(x, (str, Path)):
             # read in the file to a pandas DataFrame
             x = Path(x).expanduser()
@@ -88,13 +85,10 @@ def rsm_household_sampler(
             try:
                 result = pd.read_csv(x)
             except FileNotFoundError:
-                if must_exist:
-                    raise
-                else:
-                    result = None
+                raise
         elif isinstance(x, pd.DataFrame):
             result = x
-        elif x is None and not must_exist:
+        elif x is None:
             result = None
         else:
             raise TypeError("must be path-like or DataFrame")
@@ -114,10 +108,10 @@ def rsm_household_sampler(
         return x
 
     prev_iter_access_df = _resolve_df(
-        prev_iter_access, input_dir, must_exist=False, make_index="MGRA"
+        prev_iter_access, input_dir, make_index="MGRA"
     )
     curr_iter_access_df = _resolve_df(
-        curr_iter_access, input_dir, must_exist=False, make_index="MGRA"
+        curr_iter_access, input_dir, make_index="MGRA"
     )
     rsm_zones = _resolve_df(taz_crosswalk, input_dir)
     dict_clusters = dict(zip(rsm_zones["taz"], rsm_zones["cluster_id"]))
