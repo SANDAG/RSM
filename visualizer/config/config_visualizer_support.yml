@@ -1,9 +1,9 @@
 inputs:
-  shapefile_dir: SimWrapper\data\external\shapefile
+  shapefile_dir: simwrapper\data\external\shapefile
   cross_reference_mgra_file_name: mgra_crosswalk.csv
   mode_summary_file_name: trip_mode_summary.csv
   vmt_summary_file_name: vmt_summary.csv
-  compared_scenarios_dir: SimWrapper\data\processed\all_runs
+  compared_scenarios_dir: simwrapper\data\processed\all_runs
   intrazonal_distance_mode_file_name: intrazonal_distance_by_mode_summary.csv
   trip_od_summary_file_name: trip_od_summary.csv
 parameters:

@@ -1,9 +1,8 @@
 @echo on
 
-SET arg1=%1
-SET arg2=%2
-:: set paths
-SET DATA_PIPELINE_PATH=%arg2%
+SET SETTINGS_FILE=%1
+SET DATA_PIPELINE_PATH=%2
+
 :: change the directory to data-pipeline-tool folder
 cd /d %DATA_PIPELINE_PATH%
 
@@ -14,7 +13,4 @@ CALL conda env create -f environment.yml
 CALL conda activate sandag-rsm-visualizer
 
 :: run the script for data pipeline tool 
-python run.py %arg1%
-
-
-
+python run.py %SETTINGS_FILE%

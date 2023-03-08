@@ -1,5 +1,5 @@
 extract:
-- filepath: C:\projects\SimWrapper\final_test\visualizer\simwrapper\data\external\donor_model\report
+- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\donor_model\report
   test_size: null
   data:
   - households.csv
@@ -17,7 +17,7 @@ extract:
   - visitorTrips.csv
   - hwyload_*.csv
   - hwyTcad.csv
-- filepath: C:\projects\SimWrapper\final_test\visualizer\simwrapper\data\external\donor_model\input
+- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\donor_model\input
   test_size: null
   data:
   - households_org.csv
@@ -63,5 +63,5 @@ transform:
     summarize: true
     process: true
 load:
-  outdir: C:\projects\SimWrapper\final_test\visualizer\simwrapper\data\processed\donor_model\
+  outdir: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\processed\donor_model\
   empty_fill: 0

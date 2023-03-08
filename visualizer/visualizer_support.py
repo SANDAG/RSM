@@ -60,7 +60,9 @@ def generate_rsm_shapefile(mgra_shapefile_dir, cross_reference_mgra_name, rsm_sc
 
 def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary_file_name, intrazonal_vmt_file_name, trip_od_summary_file_name, out_dir):
 
-    
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+        
     temp1 = pd.DataFrame()
     for scenario in scenario_list:
         scenario_dir = os.path.join("SimWrapper\\data\\processed", scenario)  
@@ -165,7 +167,7 @@ if __name__ == "__main__":
     with open(config_filename, "r") as yml_file:
         config = yaml.safe_load(yml_file)
 
-    print("Running Visulizer Support Script")
+    print("Running Visualizer Support Script")
 
     # read config: 
     shapefile_dir = config['inputs']['shapefile_dir']
