@@ -1,0 +1,51 @@
+header:
+  tab: "RSM Sample Rate Maps"
+  title: "SANDAG RSM VISUALIZATION"
+  description: "RSM Visualization Dashboard"
+
+layout:      
+      
+
+                                                             
+  rsm base:
+    - type: map
+      title: "Sample Rate for RSMAZ Base RSM"
+      description: "Sample Rate for RSMAZ Base RSM "
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/processed/rsm_base/MGRA13_gcs_rsm_base.shp"
+        join: cluster_id
+      datasets:
+        sample-rate:
+          file: "data/processed/rsm_base/households_sample_mgra_summary.csv"
+          join: mgra
+      display:
+        fill:
+          dataset: sample-rate
+          columnName: sample_rate
+          colorRamp:
+            ramp: Plasma
+            steps: 7
+
+  rsm new:
+    - type: map
+      title: "Sample Rate for RSMAZ New RSM"
+      description: "Sample Rate for New RSM."
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/processed/rsm_new/MGRA13_gcs_rsm_new.shp"
+        join: cluster_id
+      datasets:
+        sample-rate:
+          file: "data/processed/rsm_new/households_sample_mgra_summary.csv"
+          join: mgra
+      display:
+        fill:
+          dataset: sample-rate
+          columnName: sample_rate
+          colorRamp:
+            ramp: Plasma
+            steps: 7
+

@@ -1,0 +1,115 @@
+2023-03-08 15:14:00,329 - INFO (extract_data): Loading households
+2023-03-08 15:14:02,238 - INFO (extract_data): Loading individualTrips
+2023-03-08 15:15:05,940 - INFO (extract_data): Loading jointTrips
+2023-03-08 15:15:12,091 - INFO (extract_data): Loading transit_onoff
+2023-03-08 15:15:12,411 - INFO (extract_data): Loading internalExternalTrips
+2023-03-08 15:15:13,058 - INFO (extract_data): Loading airportCBXTrips
+2023-03-08 15:15:13,097 - INFO (extract_data): Loading airportSANTrips
+2023-03-08 15:15:13,286 - INFO (extract_data): Loading commercialVehicleTrips
+2023-03-08 15:15:17,367 - INFO (extract_data): Loading crossBorderTrips
+2023-03-08 15:15:19,395 - INFO (extract_data): Loading externalInternalTrips
+2023-03-08 15:15:21,323 - INFO (extract_data): Loading externalExternalTrips
+2023-03-08 15:15:21,346 - INFO (extract_data): Loading truckTrips
+2023-03-08 15:15:21,668 - INFO (extract_data): Loading visitorTrips
+2023-03-08 15:15:22,420 - INFO (extract_data): Loading hwyload_AM
+2023-03-08 15:15:22,693 - INFO (extract_data): Loading hwyload_EA
+2023-03-08 15:15:22,916 - INFO (extract_data): Loading hwyload_EV
+2023-03-08 15:15:23,167 - INFO (extract_data): Loading hwyload_MD
+2023-03-08 15:15:23,441 - INFO (extract_data): Loading hwyload_PM
+2023-03-08 15:15:23,718 - INFO (extract_data): Loading hwyTcad
+2023-03-08 15:15:25,502 - INFO (extract_data): Loading mgra_crosswalk
+2023-03-08 15:15:25,515 - INFO (extract_data): Loading households_org
+2023-03-08 15:15:26,674 - INFO (process): Renaming airportCBXTrips columns using {'tripPurpose': 'tripPurposeDestination'}
+2023-03-08 15:15:26,679 - INFO (process): Renaming airportSANTrips columns using {'tripPurpose': 'tripPurposeDestination'}
+2023-03-08 15:15:26,692 - INFO (process): Adding column 'tripPurposeDestination' to internalExternalTrips
+2023-03-08 15:15:26,714 - INFO (process): Adding column 'tripPurposeDestination' to externalExternalTrips
+2023-03-08 15:15:26,717 - INFO (process): Renaming externalInternalTrips columns using {'tripPurpose': 'tripPurposeDestination'}
+2023-03-08 15:15:26,770 - INFO (process): Adding column 'tripPurposeDestination' to truckTrips
+2023-03-08 15:15:26,775 - INFO (process): Renaming visitorTrips columns using {'tripPurpose': 'tripPurposeDestination'}
+2023-03-08 15:15:26,807 - INFO (concat): Concatenating tables ['individualTrips', 'jointTrips', 'internalExternalTrips', 'airportCBXTrips', 'airportSANTrips', 'commercialVehicleTrips', 'crossBorderTrips', 'externalInternalTrips', 'externalExternalTrips', 'truckTrips', 'visitorTrips'] into trips
+2023-03-08 15:15:35,955 - INFO (concat): Concatenating tables ['hwyload_AM.csv', 'hwyload_EA.csv', 'hwyload_EV.csv', 'hwyload_MD.csv', 'hwyload_PM.csv'] into highway_load
+2023-03-08 15:15:35,998 - INFO (merge): Merging tables households_org, mgra_crosswalk into households_org
+2023-03-08 15:15:36,259 - INFO (merge): Merging tables households, mgra_crosswalk into households
+2023-03-08 15:15:36,745 - INFO (process): Replacing MODE values in transit_onoff using {'PREM': 'Premium Transit', 'BUS': 'Local Bus', 'ALLPEN': 'Local Bus and Premium Transit'}
+2023-03-08 15:15:36,784 - INFO (process): Replacing ACCESSMODE values in transit_onoff using {'KNR': 'Kiss and Ride to Transit', 'PNR': 'Park and Ride to Transit', 'WLK': 'Walk to Transit'}
+2023-03-08 15:15:36,824 - INFO (process): Renaming trips columns using {'table': 'model'}
+2023-03-08 15:15:50,408 - INFO (process): Raw evaluating trips['model'] = trips['model'].str.replace('Trips', '')
+2023-03-08 15:16:01,611 - INFO (process): Replacing tripMode values in trips using {'Light Heavy Duty Truck': 'Truck', 'Medium Heavy Duty Truck': 'Truck', 'Heavy Heavy Duty Truck': 'Truck'}
+2023-03-08 15:16:03,499 - INFO (process): Raw evaluating trips['tripMode'] = np.select([(trips['tripMode'].str.contains('to Transit'))], ['Transit'], default=trips['tripMode'])
+2023-03-08 15:16:10,506 - INFO (process): Replacing table values in highway_load using {"hwyload_EA": "EA","hwyload_AM": "AM","hwyload_MD": "MD","hwyload_PM": "PM","hwyload_EV": "EV"}
+2023-03-08 15:16:10,556 - INFO (process): Raw evaluating highway_network = pd.wide_to_long(df=hwyTcad,stubnames=["ABTM","BATM","ABTX","BATX","ABPRELOAD","BAPRELOAD"],i=["ID","Length","IFC"],j="timePeriod",sep="_",suffix="\w+").reset_index()
+2023-03-08 15:16:31,509 - INFO (process): Raw evaluating highway_network = highway_network.fillna(0)
+2023-03-08 15:16:32,468 - INFO (process): Replacing IFC values in highway_network using {1:"Freeway",2:"Prime Arterial",3:"Major Arterial",4:"Collector",5:"Local Collector",6:"Rural Coolector",7:"Local Road",8:"Freeway Connector Ramp",9:"Local Ramp",10:"Zone Connector"}
+2023-03-08 15:16:32,482 - INFO (process): Adding column 'AB_Flow_Auto' to highway_load
+2023-03-08 15:16:32,518 - INFO (process): Adding column 'BA_Flow_Auto' to highway_load
+2023-03-08 15:16:32,538 - INFO (process): Adding column 'AB_Flow_Truck' to highway_load
+2023-03-08 15:16:32,545 - INFO (process): Adding column 'BA_Flow_Truck' to highway_load
+2023-03-08 15:16:32,553 - INFO (process): Adding column 'AB_Flow' to highway_load
+2023-03-08 15:16:32,559 - INFO (process): Adding column 'BA_flow' to highway_load
+2023-03-08 15:16:32,567 - INFO (process): Raw evaluating highway_load = highway_load.fillna(0)
+2023-03-08 15:16:32,810 - INFO (process): Replacing departTimeFiveTod values in trips using {1: 'EA', 2: 'AM', 3: 'MD', 4: 'PM', 5: 'EV'}
+2023-03-08 15:16:37,056 - INFO (merge): Merging tables highway_network, highway_load into network
+2023-03-08 15:16:57,596 - INFO (process): Adding column 'vmt_auto' to network
+2023-03-08 15:16:57,622 - INFO (process): Adding column 'vmt_truck' to network
+2023-03-08 15:16:57,653 - INFO (process): Adding column 'vmt_bus' to network
+2023-03-08 15:16:57,684 - INFO (process): Adding column 'vmt_total' to network
+2023-03-08 15:16:57,714 - INFO (process): Adding column 'flow_total' to network
+2023-03-08 15:16:57,729 - INFO (process): Adding column 'voc' to network
+2023-03-08 15:16:57,760 - INFO (eval_expressions): Evaluating trips.groupby(['tripMode'], dropna=False)['weightTrip'].sum()
+2023-03-08 15:16:58,839 - INFO (eval_expressions): Evaluating trips.query("originMGRA == destinationMGRA", engine="python").groupby(['tripMode'], dropna=False)['distanceDrive'].sum()
+2023-03-08 15:17:03,061 - INFO (eval_expressions): Evaluating transit_onoff.query("TOD=='EA'", engine="python").groupby(['MODE'], dropna=False)['BOARDINGS'].sum()
+2023-03-08 15:17:03,083 - INFO (eval_expressions): Evaluating transit_onoff.query("TOD=='AM'", engine="python").groupby(['MODE'], dropna=False)['BOARDINGS'].sum()
+2023-03-08 15:17:03,105 - INFO (eval_expressions): Evaluating transit_onoff.query("TOD=='MD'", engine="python").groupby(['MODE'], dropna=False)['BOARDINGS'].sum()
+2023-03-08 15:17:03,145 - INFO (eval_expressions): Evaluating transit_onoff.query("TOD=='PM'", engine="python").groupby(['MODE'], dropna=False)['BOARDINGS'].sum()
+2023-03-08 15:17:03,168 - INFO (eval_expressions): Evaluating transit_onoff.query("TOD=='EV'", engine="python").groupby(['MODE'], dropna=False)['BOARDINGS'].sum()
+2023-03-08 15:17:03,210 - INFO (eval_expressions): Evaluating trips.query("departTimeFiveTod == 'EA'", engine="python").groupby(['tripPurposeDestination'], dropna=False)['weightTrip'].sum()
+2023-03-08 15:17:04,220 - INFO (eval_expressions): Evaluating trips.query("departTimeFiveTod == 'AM'", engine="python").groupby(['tripPurposeDestination'], dropna=False)['weightTrip'].sum()
+2023-03-08 15:17:06,960 - INFO (eval_expressions): Evaluating trips.query("departTimeFiveTod == 'MD'", engine="python").groupby(['tripPurposeDestination'], dropna=False)['weightTrip'].sum()
+2023-03-08 15:17:10,859 - INFO (eval_expressions): Evaluating trips.query("departTimeFiveTod == 'PM'", engine="python").groupby(['tripPurposeDestination'], dropna=False)['weightTrip'].sum()
+2023-03-08 15:17:14,031 - INFO (eval_expressions): Evaluating trips.query("departTimeFiveTod == 'EV'", engine="python").groupby(['tripPurposeDestination'], dropna=False)['weightTrip'].sum()
+2023-03-08 15:17:16,463 - INFO (eval_expressions): Evaluating trips.groupby(['originMGRA', 'destinationMGRA'], dropna=False)['weightTrip'].sum()
+2023-03-08 15:17:18,319 - INFO (eval_expressions): Evaluating households.query("autos == 0", engine="python").groupby(['cluster_id'], dropna=False)['hhId'].count()
+2023-03-08 15:17:18,510 - INFO (eval_expressions): Evaluating households.groupby(['cluster_id'], dropna=False)['hhId'].count()
+2023-03-08 15:17:18,545 - INFO (eval_expressions): Evaluating households_org.groupby(['cluster_id'], dropna=False)['hhid'].count()
+2023-03-08 15:17:18,615 - INFO (eval_expressions): Evaluating network.query("ifc_desc == 'Freeway'", engine="python").groupby(['ID'], dropna=False)['vmt_total'].sum()
+2023-03-08 15:17:19,283 - INFO (eval_expressions): Evaluating network.query("ifc_desc == 'Freeway'", engine="python").groupby(['ID'], dropna=False)['flow_total'].sum()
+2023-03-08 15:17:19,332 - INFO (eval_expressions): Evaluating network.query("ifc_desc == 'Freeway'", engine="python").groupby(['ID'], dropna=False)['voc'].sum()
+2023-03-08 15:17:19,370 - INFO (eval_expressions): Evaluating network.groupby(['ifc_desc'], dropna=False)['vmt_total'].sum()
+2023-03-08 15:17:19,388 - INFO (eval_expressions): Evaluating network.groupby(['ifc_desc'], dropna=False)['vmt_auto'].sum()
+2023-03-08 15:17:19,427 - INFO (eval_expressions): Evaluating network.groupby(['ifc_desc'], dropna=False)['vmt_truck'].sum()
+2023-03-08 15:17:19,465 - INFO (coalesce_expressions): Coalescing summary table trip_mode_summary
+2023-03-08 15:17:19,466 - INFO (coalesce_expressions): Coalescing summary table intrazonal_distance_by_mode_summary
+2023-03-08 15:17:19,468 - INFO (coalesce_expressions): Coalescing summary table transit_summary
+2023-03-08 15:17:19,470 - INFO (coalesce_expressions): Coalescing summary table trip_tod_purpose_summary
+2023-03-08 15:17:19,473 - INFO (coalesce_expressions): Coalescing summary table trip_od_summary
+2023-03-08 15:17:19,539 - INFO (coalesce_expressions): Coalescing summary table zero_car_households_summary
+2023-03-08 15:17:19,540 - INFO (coalesce_expressions): Coalescing summary table households_sample_mgra_summary
+2023-03-08 15:17:19,542 - INFO (coalesce_expressions): Coalescing summary table households_mgra_summary
+2023-03-08 15:17:19,543 - INFO (coalesce_expressions): Coalescing summary table network_summary
+2023-03-08 15:17:19,545 - INFO (coalesce_expressions): Coalescing summary table vmt_summary
+2023-03-08 15:17:19,548 - INFO (process): Raw evaluating transit_summary['PCT_EA'] = transit_summary['EA']/transit_summary['EA'].sum()
+2023-03-08 15:17:19,550 - INFO (process): Raw evaluating transit_summary['PCT_AM'] = transit_summary['AM']/transit_summary['AM'].sum()
+2023-03-08 15:17:19,552 - INFO (process): Raw evaluating transit_summary['PCT_MD'] = transit_summary['MD']/transit_summary['MD'].sum()
+2023-03-08 15:17:19,553 - INFO (process): Raw evaluating transit_summary['PCT_PM'] = transit_summary['PM']/transit_summary['PM'].sum()
+2023-03-08 15:17:19,555 - INFO (process): Raw evaluating transit_summary['PCT_EV'] = transit_summary['EV']/transit_summary['EV'].sum()
+2023-03-08 15:17:19,556 - INFO (process): Raw evaluating trip_mode_summary['share'] = trip_mode_summary['num_trips']/trip_mode_summary['num_trips'].sum()
+2023-03-08 15:17:19,558 - INFO (process): Raw evaluating trip_tod_purpose_summary['PCT_EA'] = trip_tod_purpose_summary['EA']/trip_tod_purpose_summary['EA'].sum()
+2023-03-08 15:17:19,559 - INFO (process): Raw evaluating trip_tod_purpose_summary['PCT_AM'] = trip_tod_purpose_summary['AM']/trip_tod_purpose_summary['AM'].sum()
+2023-03-08 15:17:19,560 - INFO (process): Raw evaluating trip_tod_purpose_summary['PCT_MD'] = trip_tod_purpose_summary['MD']/trip_tod_purpose_summary['MD'].sum()
+2023-03-08 15:17:19,562 - INFO (process): Raw evaluating trip_tod_purpose_summary['PCT_PM'] = trip_tod_purpose_summary['PM']/trip_tod_purpose_summary['PM'].sum()
+2023-03-08 15:17:19,563 - INFO (process): Raw evaluating trip_tod_purpose_summary['PCT_EV'] = trip_tod_purpose_summary['EV']/trip_tod_purpose_summary['EV'].sum()
+2023-03-08 15:17:19,568 - INFO (process): Raw evaluating households_mgra_summary = pd.merge(households_mgra_summary, households_sample_mgra_summary,left_on='cluster_id', right_on='cluster_id')
+2023-03-08 15:17:19,570 - INFO (process): Raw evaluating households_sample_mgra_summary['sample_rate'] = households_mgra_summary['sampled_households'] / households_mgra_summary['original_households']
+2023-03-08 15:17:19,571 - INFO (process): Renaming vmt_summary columns using {'ifc_desc': 'class'}
+2023-03-08 15:17:19,572 - INFO (process): Renaming zero_car_households_summary columns using {'cluster_id': 'mgra'}
+2023-03-08 15:17:19,573 - INFO (process): Renaming households_sample_mgra_summary columns using {'cluster_id': 'mgra'}
+2023-03-08 15:17:19,574 - INFO (write_results): Writing trip_mode_summary.csv
+2023-03-08 15:17:19,578 - INFO (write_results): Writing intrazonal_distance_by_mode_summary.csv
+2023-03-08 15:17:19,582 - INFO (write_results): Writing transit_summary.csv
+2023-03-08 15:17:19,585 - INFO (write_results): Writing trip_tod_purpose_summary.csv
+2023-03-08 15:17:19,587 - INFO (write_results): Writing trip_od_summary.csv
+2023-03-08 15:17:20,979 - INFO (write_results): Writing zero_car_households_summary.csv
+2023-03-08 15:17:20,982 - INFO (write_results): Writing households_sample_mgra_summary.csv
+2023-03-08 15:17:20,989 - INFO (write_results): Writing households_mgra_summary.csv
+2023-03-08 15:17:20,996 - INFO (write_results): Writing network_summary.csv
+2023-03-08 15:17:21,016 - INFO (write_results): Writing vmt_summary.csv
