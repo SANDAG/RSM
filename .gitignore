@@ -8,3 +8,4 @@ _version.py
 test/data/*
 notebooks/**/*.omx
 visualizer/simwrapper/data/processed/pipeline.log
+visualizer/simwrapper/data/external
