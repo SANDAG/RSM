@@ -6,9 +6,9 @@ header:
 
 
 layout:
-  base RSM:
+  RSM Baseline:
     - title: 'Network Summaries'
-      description: 'Network Measures Comparison for Base RSM'
+      description: 'Network Measures Comparison for RSM Baseline'
       type: links
       height: 8
       props:
@@ -27,9 +27,9 @@ layout:
               ramp: Viridis
               steps: 9
 
-  new RSM:
+  RSM Scenario:
     - title: 'Network Summaries'
-      description: 'Network Measures Comparison for New RSM'
+      description: 'Network Measures Comparison for RSM Scenario'
       type: links
       height: 8
       props:
@@ -38,7 +38,7 @@ layout:
         zoom: 9
         showDifferences: true
         datasets:
-          csvFile: 'data/processed/rsm_new/network_summary.csv'
+          csvFile: 'data/processed/rsm_scen/network_summary.csv'
           csvBase: 'data/processed/donor_model/network_summary.csv'
         display:
           color:

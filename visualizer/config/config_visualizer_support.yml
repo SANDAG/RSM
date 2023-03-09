@@ -9,7 +9,7 @@ inputs:
 parameters:
   rsm_scenario_list:
   - rsm_base
-  - rsm_new
+  - rsm_scen
   base_scenario_list:
   - donor_model
 outputs:

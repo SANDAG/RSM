@@ -1,5 +1,5 @@
 extract:
-- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\rsm_new\report
+- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\rsm_scen\report
   test_size: null
   data:
   - households.csv
@@ -17,7 +17,7 @@ extract:
   - visitorTrips.csv
   - hwyload_*.csv
   - hwyTcad.csv
-- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\rsm_new\input
+- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\rsm_scen\input
   test_size: null
   data:
   - mgra_crosswalk.csv
@@ -84,5 +84,5 @@ transform:
     summarize: true
     process: true
 load:
-  outdir: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\processed\rsm_new\
+  outdir: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\processed\rsm_scen\
   empty_fill: 0

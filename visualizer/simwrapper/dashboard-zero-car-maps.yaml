@@ -6,7 +6,7 @@ header:
 layout:
   rsm base:
     - type: map
-      title: 'Zero Car Households Base RSM'
+      title: 'Zero Car Households RSM Baseline'
       description: 'Distribution of Zero Car Households'
       height: 10
       zoom: 10
@@ -25,18 +25,18 @@ layout:
             ramp: Plasma
             steps: 7
 
-  rsm new:
+  rsm scen:
     - type: map
-      title: 'Zero Car Households New RSM'
+      title: 'Zero Car Households RSM Scenario'
       description: 'Distribution of Zero Car Households'
       height: 10
       zoom: 10
       shapes:
-        file: "data/processed/rsm_new/MGRA13_gcs_rsm_new.shp"
+        file: "data/processed/rsm_scen/MGRA13_gcs_rsm_scen.shp"
         join: cluster_id
       datasets:
         zero-cars:
-          file: "data/processed/rsm_new/zero_car_households_summary.csv"
+          file: "data/processed/rsm_scen/zero_car_households_summary.csv"
           join: homeMGRA
       display:
         fill:

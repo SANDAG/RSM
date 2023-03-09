@@ -1,8 +1,8 @@
-title: 'New RSM OD Flows'
-description: 'New RSM OD Flows'
+title: 'RSM Scenario OD Flows'
+description: 'RSM Scenario OD Flows'
 shpFile: 'data/external/shapefile/SRA.shp'
 dbfFile: 'data/external/shapefile/SRA.dbf'
-csvFile: 'data/processed/rsm_new/trip_od_summary.csv'
+csvFile: 'data/processed/rsm_scen/trip_od_summary.csv'
 projection: EPSG:31468
 scaleFactor: 0.1
 idColumn: 'SRA'

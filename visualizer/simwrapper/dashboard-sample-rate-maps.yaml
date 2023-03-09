@@ -9,8 +9,8 @@ layout:
                                                              
   rsm base:
     - type: map
-      title: "Sample Rate for RSMAZ Base RSM"
-      description: "Sample Rate for RSMAZ Base RSM "
+      title: "Sample Rate for RSMAZ RSM Baseline"
+      description: "Sample Rate for RSMAZ RSM Baseline"
       height: 10
       zoom: 10
       shapes:
@@ -28,18 +28,18 @@ layout:
             ramp: Plasma
             steps: 7
 
-  rsm new:
+  rsm scen:
     - type: map
-      title: "Sample Rate for RSMAZ New RSM"
-      description: "Sample Rate for New RSM."
+      title: "Sample Rate for RSMAZ RSM Scen"
+      description: "Sample Rate for RSM Scen."
       height: 10
       zoom: 10
       shapes:
-        file: "data/processed/rsm_new/MGRA13_gcs_rsm_new.shp"
+        file: "data/processed/rsm_scen/MGRA13_gcs_rsm_scen.shp"
         join: cluster_id
       datasets:
         sample-rate:
-          file: "data/processed/rsm_new/households_sample_mgra_summary.csv"
+          file: "data/processed/rsm_scen/households_sample_mgra_summary.csv"
           join: mgra
       display:
         fill:

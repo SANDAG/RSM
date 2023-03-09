@@ -1,5 +1,5 @@
-title: 'Base RSM OD Flows'
-description: 'Base RSM OD Flows'
+title: 'RSM Baseline OD Flows'
+description: 'RSM Baseline OD Flows'
 shpFile: 'data/external/shapefile/SRA.shp'
 dbfFile: 'data/external/shapefile/SRA.dbf'
 csvFile: 'data/processed/rsm_base/trip_od_summary.csv'
