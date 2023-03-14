@@ -45,7 +45,7 @@ def rsm_household_sampler(
         Accessibility in the latest run is given (preloaded) or read in from here.
         Give as a relative path (from `input_dir`) or an absolute path.
     study_area : array-like
-        Array of RSM zone id's in the study area.  These zones are sampled at 100%.
+        Array of RSM zone (these are numbered 1 to N in the RSM) in the study area. These zones are sampled at 100%.
     input_household : Path-like or pandas.DataFrame
         Complete synthetic household file.  This data will be filtered to match the
         sampling of households and written out to a new CSV file.
@@ -126,7 +126,7 @@ def rsm_household_sampler(
     input_household_df["mgra"] = input_household_df["mgra"].map(dict_clusters_mgra)
     input_household_df["count"] = 1
 
-    taz_hh = input_household_df.groupby(["taz"]).size().rename("n_hh").to_frame()
+    mgra_hh = input_household_df.groupby(["mgra"]).size().rename("n_hh").to_frame()
 
     if curr_iter_access_df is None or prev_iter_access_df is None:
 
@@ -136,17 +136,17 @@ def rsm_household_sampler(
             logger.warning(f"missing prev_iter_access_df from {prev_iter_access}")
         # true when sampler is turned off. default_sampling_rate should be set to 1
 
-        taz_hh["sampling_rate"] = default_sampling_rate
+        mgra_hh["sampling_rate"] = default_sampling_rate
         if study_area is not None:
-            taz_hh.loc[taz_hh.index.isin(study_area), "sample_rate"] = 1
+            mgra_hh.loc[mgra_hh.index.isin(study_area), "sample_rate"] = 1
 
         sample_households = []
 
-        for taz_id, row in taz_hh.iterrows():
-            df = input_household_df.loc[input_household_df["taz"] == taz_id]
+        for mgra_id, row in mgra_hh.iterrows():
+            df = input_household_df.loc[input_household_df["mgra"] == mgra_id]
             sampling_rate = row["sampling_rate"]
-            logger.info(f"{taz_id=} {sampling_rate=}")
-            df = df.sample(frac=sampling_rate, random_state=taz_id + random_seed)
+            logger.info(f"Sampling rate of RSM zone {mgra_id}: {sampling_rate}")
+            df = df.sample(frac=sampling_rate, random_state=mgra_id + random_seed)
             sample_households.append(df)
 
         # combine study are and non-study area households into single dataframe
@@ -155,10 +155,10 @@ def rsm_household_sampler(
     else:
         # restrict to rows only where TAZs have households
         prev_iter_access_df = prev_iter_access_df[
-            prev_iter_access_df.index.isin(taz_hh.index)
+            prev_iter_access_df.index.isin(mgra_hh.index)
         ].copy()
         curr_iter_access_df = curr_iter_access_df[
-            curr_iter_access_df.index.isin(taz_hh.index)
+            curr_iter_access_df.index.isin(mgra_hh.index)
         ].copy()
 
         # compare accessibility columns
@@ -191,11 +191,11 @@ def rsm_household_sampler(
                 sample_rate_df.index.isin(study_area), "sampling_rate"
             ] = 1
 
-        for taz_id, row in sample_rate_df.iterrows():
-            df = input_household_df.loc[input_household_df["taz"] == taz_id]
+        for mgra_id, row in sample_rate_df.iterrows():
+            df = input_household_df.loc[input_household_df["mgra"] == mgra_id]
             sampling_rate = row["sampling_rate"]
-            logger.info(f"Sampling rate of {taz_id}: {sampling_rate}")
-            df = df.sample(frac=sampling_rate, random_state=taz_id + random_seed)
+            logger.info(f"Sampling rate of RSM zone {mgra_id}: {sampling_rate}")
+            df = df.sample(frac=sampling_rate, random_state=mgra_id + random_seed)
             sample_households.append(df)
 
         # combine study are and non-study area households into single dataframe
