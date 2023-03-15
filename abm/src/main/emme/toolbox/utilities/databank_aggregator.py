@@ -70,7 +70,12 @@ class EmmebankAggregator(_m.Tool()):
             return output_mtx
         
         connected = False
-        while not connected: 
+        n_attempt = 0
+        MAX_ATTEMPT = 100
+        
+        while not connected and n_attempt <= MAX_ATTEMPT: 
+            n_attempt = n_attempt + 1
+            
             try:
                 orig_emmebank = _eb.Emmebank(orig_emmebank_path)
                 connected = True
@@ -80,6 +85,9 @@ class EmmebankAggregator(_m.Tool()):
                 # can connect to the original model databank. 
                 time.sleep(60)
         
+        if not connected:
+            raise Exception("Error Connecting to the Donor Model Emmebank")
+            
         for core in emmebank_cores_to_aggregate: 
             matrix = orig_emmebank.matrix(core).get_data()
             matrix_array = matrix.to_numpy()
