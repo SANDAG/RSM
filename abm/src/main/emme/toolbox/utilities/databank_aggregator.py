@@ -16,6 +16,7 @@ import inro.modeller as _m
 import os
 import sys
 import pandas as pd
+import time
 
 class EmmebankAggregator(_m.Tool()):
 
@@ -27,7 +28,6 @@ class EmmebankAggregator(_m.Tool()):
         #self.emmebank = emmebank 
         
         orig_emmebank_path = os.path.join(orig_model_dir, "emme_project", "Database", "emmebank")
-        orig_emmebank = _eb.Emmebank(orig_emmebank_path)
         
         agg_zone_mapping_path = os.path.join(main_dir, agg_zone_mapping_file)
 
@@ -68,6 +68,17 @@ class EmmebankAggregator(_m.Tool()):
             output_mtx = matrix_agg_df.to_numpy()
     
             return output_mtx
+        
+        connected = False
+        while not connected: 
+            try:
+                orig_emmebank = _eb.Emmebank(orig_emmebank_path)
+                connected = True
+            except:
+                # waiting for 60 seconds before attempting to connect again
+                # this is done so that multiple RSM runs (started at the similar time)
+                # can connect to the original model databank. 
+                time.sleep(60)
         
         for core in emmebank_cores_to_aggregate: 
             matrix = orig_emmebank.matrix(core).get_data()
