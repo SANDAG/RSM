@@ -16,6 +16,7 @@ main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
 sys.path.append(main_path)
 from rsm.logging import logging_start
 from rsm.assembler import rsm_assemble
+from rsm.utility import *
 
 rsm_dir = sys.argv[1]
 org_model_dir = sys.argv[2]
@@ -38,14 +39,21 @@ MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_abm_"+ str(iteration) + ".csv"))
 shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_abm_"+ str(iteration) + ".csv"))
 
+ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
+ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
+RUN_ASSEMBLER = int(get_property(ABM_PROPERTIES, "rum.rsm.assembler"))
+SAMPLE_RATE = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
+
 #RSM Assembler
-final_trips_rsm, combined_trips_by_zone, final_ind, final_jnt = rsm_assemble(
+final_ind, final_jnt = rsm_assemble(
     ORG_INDIV_TRIPS,
     ORG_JOINT_TRIPS,
     RSM_INDIV_TRIPS,
     RSM_JOINT_TRIPS,
     HOUSEHOLDS,
-    MGRA_CROSSWALK
+    MGRA_CROSSWALK,
+    SAMPLE_RATE,
+    RUN_ASSEMBLER
 )
 
 #save as csv files

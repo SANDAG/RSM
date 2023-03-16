@@ -353,6 +353,10 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         taz_crosswalk_file = props["taz.to.cluster.crosswalk.file"]
         mgra_crosswalk_file = props["mgra.to.cluster.crosswalk.file"]
         cluster_zone_file = props["cluster.zone.centroid.file"]
+        
+        run_rsm_sampler = int(props["run.rsm.sampling"])
+        run_rsm_assembler = int(props["rum.rsm.assembler"])
+        rsm_default_sample_rate = props["rsm.default.sampling.rate"]
 
         #check if visualizer.reference.path is valid in filesbyyears.csv
         if not os.path.exists(visualizer_reference_path):
@@ -404,6 +408,19 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                           "Checking if AT and Transit Networks are consistent")
             self.check_for_fatal(_join(self._path, "logFiles", "AtTransitCheck_event.log"),
                                  "AT and Transit network consistency checking failed! Open AtTransitCheck_event.log for details.")
+            
+            # check few rsm setup properties to validate that the
+            # user specified properties for the RSM are acceptable
+            if run_rsm == 1:
+                # if sampler is on then assembler can not be off
+                if run_rsm_sampler == 1 and run_rsm_assembler == 0:
+                    raise Exception("If Sampler is turned on then Assembler cannot be turned off. run.rsm.sampling = 1 and rum.rsm.assembler = 0 is not allowed option")
+                
+                # if assembler is off then scale factor (1/default_sample_rate) should be integer
+                if run_rsm_assembler == 0:
+                    scale_factor = 1/rsm_default_sample_rate
+                    if isinstance(scale_factor, float):
+                        raise Exception("If Assembler is turned off, default sample rate should be such that 1/(sample rate) is integer value")
             
             if run_rsm_setup == 1: 
             
