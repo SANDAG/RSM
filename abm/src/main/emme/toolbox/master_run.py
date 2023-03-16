@@ -418,8 +418,8 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 
                 # if assembler is off then scale factor (1/default_sample_rate) should be integer
                 if run_rsm_assembler == 0:
-                    scale_factor = 1/rsm_default_sample_rate
-                    if isinstance(scale_factor, float):
+                    scale_factor = 1.0/rsm_default_sample_rate
+                    if not scale_factor.is_integer():
                         raise Exception("If Assembler is turned off, default sample rate should be such that 1/(sample rate) is integer value")
             
             if run_rsm_setup == 1: 
