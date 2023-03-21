@@ -41,7 +41,7 @@ shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_abm_
 
 ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
 ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
-RUN_ASSEMBLER = int(get_property(ABM_PROPERTIES, "rum.rsm.assembler"))
+RUN_ASSEMBLER = int(get_property(ABM_PROPERTIES, "run.rsm.assembler"))
 SAMPLE_RATE = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
 
 #RSM Assembler

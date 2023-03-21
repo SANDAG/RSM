@@ -355,7 +355,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
         cluster_zone_file = props["cluster.zone.centroid.file"]
         
         run_rsm_sampler = int(props["run.rsm.sampling"])
-        run_rsm_assembler = int(props["rum.rsm.assembler"])
+        run_rsm_assembler = int(props["run.rsm.assembler"])
         rsm_default_sample_rate = props["rsm.default.sampling.rate"]
 
         #check if visualizer.reference.path is valid in filesbyyears.csv
@@ -414,7 +414,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
             if run_rsm == 1:
                 # if sampler is on then assembler can not be off
                 if run_rsm_sampler == 1 and run_rsm_assembler == 0:
-                    raise Exception("If Sampler is turned on then Assembler cannot be turned off. run.rsm.sampling = 1 and rum.rsm.assembler = 0 is not allowed option")
+                    raise Exception("If Sampler is turned on then Assembler cannot be turned off. run.rsm.sampling = 1 and run.rsm.assembler = 0 is not allowed option")
                 
                 # if assembler is off then scale factor (1/default_sample_rate) should be integer
                 if run_rsm_assembler == 0:
