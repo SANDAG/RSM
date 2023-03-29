@@ -76,7 +76,6 @@ mgra = load_mgra_data(
 logging.info("loading trip file")
 trips = load_trip_list(trips_filename = "indivTripData_3.csv", data_dir = FULL_ABM_TRIP_DIR)
 
-
 tazs = merge_zone_data(mgra, cluster_id="taz")
 
 logging.info("getting mode shares")
@@ -122,20 +121,8 @@ agglom3full.insert(0, 'mgra', agglom3full.pop('mgra'))
 agglom3full.insert(1, 'taz', agglom3full.pop('taz'))
 
 #for school enrollments and high school enrollments - checks
-ech_check = agglom3full.groupby(['ech_dist'])['enrollgradekto8'].sum().reset_index()
-ech_dist_df = ech_check.loc[ech_check['enrollgradekto8']==0]
-if len(ech_dist_df) > 0:
-    ech_dist_mod = list(ech_dist_df['ech_dist'])
-    print(ech_dist_mod)
-    agglom3full.loc[agglom3full['ech_dist'].isin(ech_dist_mod), 'enrollgradekto8'] = 99999
-    
-hch_check = agglom3full.groupby(['hch_dist'])['enrollgrade9to12'].sum().reset_index()
-hch_dist_df = hch_check.loc[hch_check['enrollgrade9to12']==0]
-if len(hch_dist_df) > 0:
-    hch_dist_mod = list(hch_dist_df['hch_dist'])
-    print(hch_dist_mod)
-    agglom3full.loc[agglom3full['hch_dist'].isin(ech_dist_mod), 'enrollgrade9to12'] = 99999
 
+agglom3full = adjust_enrollments(agglom3full)
 
 ext_zones_df = pd.DataFrame({'taz':range(1,NUM_EXT_ZONES+1), 'cluster_id': range(1,NUM_EXT_ZONES+1)})
 
@@ -147,6 +134,6 @@ mgra_crosswalk['cluster_id'] = mgra_crosswalk['cluster_id'] - NUM_EXT_ZONES
 mgra_crosswalk.to_csv(OUTPUT_MGRA_CROSSWALK, index=False)
 taz_crosswalk.to_csv(OUTPUT_TAZ_CROSSWALK, index=False)
 cluster_centroids.to_csv(OUTPUT_CLUSTER_CENTROIDS, index=False)
-agglom3full.to_csv(OUTPUT_RSM_ZONE_FILE, index=False)
+# agglom3full.to_csv(OUTPUT_RSM_ZONE_FILE, index=False)
 
 logging.info("Finished logging rsm_zone_aggregator")

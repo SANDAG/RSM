@@ -25,13 +25,23 @@ def merge_zone_data(
         # we add this small value to each weighting, so that if the desired weighting values
         # are all zero for any weighted average, the geographic area becomes the backup
         # weight ... and if any are non-zero, then these areas round off to effectively nil.
-        gdf_area_small = gdf.area / gdf.area.mean() / 1000
+        
+        if "geometry" in gdf.columns:
+            gdf_area_small = gdf.area / gdf.area.mean() / 1000
+        else:
+            gdf_area_small = 0.000000001
 
         def wgt_avg_by(x, c):
             try:
-                return np.average(
-                    x, weights=gdf.loc[x.index, c] + gdf_area_small.loc[x.index]
-                )
+                if "geometry" in gdf.columns:
+                    return np.average(
+                        x, weights=gdf.loc[x.index, c] + gdf_area_small.loc[x.index]
+                    )
+                else:
+                    return np.average(
+                        x, weights=gdf.loc[x.index, c] + gdf_area_small
+                    )
+                    
             except ZeroDivisionError:
                 return np.average(x)
 
@@ -46,12 +56,21 @@ def merge_zone_data(
 
         def wgt_avg_peden(x):
             try:
-                return np.average(
-                    x,
-                    weights=gdf.loc[x.index, "emp_total"]
-                    + gdf.loc[x.index, "pop"]
-                    + gdf_area_small.loc[x.index],
-                )
+                if "geometry" in gdf.columns:
+                    return np.average(
+                        x,
+                        weights=gdf.loc[x.index, "emp_total"]
+                        + gdf.loc[x.index, "pop"]
+                        + gdf_area_small.loc[x.index],
+                    )
+                else:
+                    return np.average(
+                        x,
+                        weights=gdf.loc[x.index, "emp_total"]
+                        + gdf.loc[x.index, "pop"]
+                        + gdf_area_small,
+                    )
+                    
             except ZeroDivisionError:
                 return np.average(x)
 
@@ -162,10 +181,13 @@ def merge_zone_data(
             # "dudenbin": "sum", #bins in original data  0, 5, 10
             "PopEmpDenPerMi": wgt_avg_peden,
         }
-
-    dissolved = gdf[[cluster_id, "geometry"]].dissolve(by=cluster_id)
-    other_data = gdf.groupby(cluster_id).agg(agg_instruction)
-    dissolved = dissolved.join(other_data)
+    
+    if "geometry" in gdf.columns:
+        dissolved = gdf[[cluster_id, "geometry"]].dissolve(by=cluster_id)
+        other_data = gdf.groupby(cluster_id).agg(agg_instruction)
+        dissolved = dissolved.join(other_data)
+    else:
+        dissolved = gdf.groupby(cluster_id).agg(agg_instruction)
 
     # adding bins
     dissolved["totintbin"] = 1

@@ -14,6 +14,7 @@
 import sys
 import os
 import logging
+import pandas as pd
 main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
 sys.path.append(main_path)
 from rsm.data_load.zones import load_mgra_data
@@ -26,6 +27,7 @@ from rsm.zone_agg import (
     merge_zone_data,
 )
 from rsm.input_agg import agg_input_files
+from rsm.utility import *
 
 rsm_main_dir = sys.argv[1]
 org_model_dir = sys.argv[2]
@@ -37,8 +39,30 @@ logging_start(
 )
 logging.info("start logging rsm_input_aggregator")
 
+RSM_ABM_PROPERTIES = os.path.join(rsm_main_dir, "conf", "sandag_abm.properties")
+INPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, "input", get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
+INPUT_MGRA_CROSSWALK = os.path.join(rsm_main_dir, "input", get_property(RSM_ABM_PROPERTIES, "mgra.to.cluster.crosswalk.file"))
+OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, "input", get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
 
-#   Input Aggregation
+#merge crosswalks with input mgra file
+mgra = pd.read_csv(INPUT_RSM_ZONE_FILE)
+rsm_cwk = pd.read_csv(INPUT_MGRA_CROSSWALK)
+rsm_cwk_dict = dict(zip(rsm_cwk['MGRA'], rsm_cwk['cluster_id']))
+mgra['cluster_id'] = mgra['mgra'].map(rsm_cwk_dict)
+
+mgra_agg  = merge_zone_data(mgra, cluster_id="cluster_id")
+mgra_agg  = mgra_agg.reset_index()
+mgra_agg  = mgra_agg.rename(columns = {"cluster_id" : "taz"})
+mgra_agg['mgra'] = range(1, len(mgra_agg )+1)
+mgra_agg.insert(0, 'mgra', mgra_agg.pop('mgra'))
+mgra_agg.insert(1, 'taz', mgra_agg.pop('taz'))
+
+#for school enrollments and high school enrollments - checks
+mgra_agg  = fix_zero_enrollment(mgra_agg)
+mgra_agg['taz'] = mgra_agg['taz'] + num_ext_zones
+mgra_agg.to_csv(OUTPUT_RSM_ZONE_FILE, index=False)
+
+# Input Aggregation
 agg_input_files(
     model_dir = org_model_dir, 
     rsm_dir = rsm_main_dir,
