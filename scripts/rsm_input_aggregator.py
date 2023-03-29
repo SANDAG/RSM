@@ -50,7 +50,7 @@ rsm_cwk = pd.read_csv(INPUT_MGRA_CROSSWALK)
 rsm_cwk_dict = dict(zip(rsm_cwk['MGRA'], rsm_cwk['cluster_id']))
 mgra['cluster_id'] = mgra['mgra'].map(rsm_cwk_dict)
 
-agg_df = merge_zone_data(mgra, cluster_id="taz")
+agg_df = merge_zone_data(mgra, cluster_id="cluster_id")
 agg_df = agg_df.reset_index()
 agg_df = agg_df.rename(columns = {"cluster_id" : "taz"})
 agg_df['mgra'] = range(1, len(agg_df)+1)
