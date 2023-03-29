@@ -184,7 +184,7 @@ def merge_zone_data(
     
     if "geometry" in gdf.columns:
         dissolved = gdf[[cluster_id, "geometry"]].dissolve(by=cluster_id)
-        dis = gdf.groupby(cluster_id).agg(agg_instruction)
+        other_data = gdf.groupby(cluster_id).agg(agg_instruction)
         dissolved = dissolved.join(other_data)
     else:
         dissolved = gdf.groupby(cluster_id).agg(agg_instruction)
