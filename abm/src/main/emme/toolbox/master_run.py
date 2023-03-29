@@ -430,7 +430,6 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones],
                         "Zone Aggregator")
                 else:
-                    _shutil.copy(_join(rsm_baseline_run_dir, mgra_lu_input_file), _join(main_directory, mgra_lu_input_file))
                     _shutil.copy(_join(rsm_baseline_run_dir, taz_crosswalk_file), _join(main_directory, taz_crosswalk_file))
                     _shutil.copy(_join(rsm_baseline_run_dir, mgra_crosswalk_file), _join(main_directory, mgra_crosswalk_file))
                     _shutil.copy(_join(rsm_baseline_run_dir, cluster_zone_file), _join(main_directory, cluster_zone_file))
