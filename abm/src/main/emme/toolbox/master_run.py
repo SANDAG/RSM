@@ -428,7 +428,7 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                     self.run_proc(
                         "runRSMZoneAggregator.cmd", 
                         [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones],
-                        "Zone Aggregator")
+                        "Zone Aggregator", capture_output=True)
                 else:
                     _shutil.copy(_join(rsm_baseline_run_dir, taz_crosswalk_file), _join(main_directory, taz_crosswalk_file))
                     _shutil.copy(_join(rsm_baseline_run_dir, mgra_crosswalk_file), _join(main_directory, mgra_crosswalk_file))
@@ -437,12 +437,12 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 self.run_proc(
                 "runRSMInputAggregator.cmd", 
                 [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones], 
-                "Input Files Aggregator")
+                "Input Files Aggregator", capture_output=True)
                 
                 self.run_proc(
                 "runRSMTripMatrixAggregator.cmd", 
                 [main_directory, rsm_python2_venv_path, orig_full_model_dir, rsm_script_path, taz_crosswalk_file], 
-                "Input Trip Matrix files Aggregator")
+                "Input Trip Matrix files Aggregator", capture_output=True)
 
 
             if startFromIteration == 1:  # only run the setup / init steps if starting from iteration 1
