@@ -84,3 +84,26 @@ def set_property(properties_file, property_name, property_value):
 
     with open(properties_file, 'wt') as f:
         f.write(y)
+
+def adjust_enrollments(agg_df):
+
+    """
+    adjusts the elementary and high school enrollments for RSM
+
+    """
+    
+    ech_check = agg_df.groupby(['ech_dist'])['enrollgradekto8'].sum().reset_index()
+    ech_dist_df = ech_check.loc[ech_check['enrollgradekto8']==0]
+    if len(ech_dist_df) > 0:
+        ech_dist_mod = list(ech_dist_df['ech_dist'])
+        # print(ech_dist_mod)
+        agg_df.loc[agg_df['ech_dist'].isin(ech_dist_mod), 'enrollgradekto8'] = 99999
+
+    hch_check = agg_df.groupby(['hch_dist'])['enrollgrade9to12'].sum().reset_index()
+    hch_dist_df = hch_check.loc[hch_check['enrollgrade9to12']==0]
+    if len(hch_dist_df) > 0:
+        hch_dist_mod = list(hch_dist_df['hch_dist'])
+        # print(hch_dist_mod)
+        agg_df.loc[agg_df['hch_dist'].isin(ech_dist_mod), 'enrollgrade9to12'] = 99999
+        
+    return agg_df
