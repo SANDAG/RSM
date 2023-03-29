@@ -25,8 +25,8 @@ for scenario in config["rsm_scenarios"]:
     path_output = os.path.join(base_path + config["rsm_scenarios"][scenario]["output"])
     path_shapefile = os.path.join(base_path + config["shapefiles"])
 
-    for scenario in config["base_scenarios"]:
-        path_input_base = os.path.join(base_path + config["base_scenarios"][scenario]["input"])
+    for base_scenario in config["base_scenarios"]:
+        path_input_base = os.path.join(base_path + config["base_scenarios"][base_scenario]["input"])
     
     with open(os.path.join("pipeline\\config", settings_file_rsm), 'r') as f:
         settings = yml.safe_load(f)
