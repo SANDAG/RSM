@@ -6,7 +6,7 @@ Model Results Visualizer using SimWrapper for Rapid Strategic Model (RSM)
 
 - The visualizer is set up to compare three scenarios - Donor (full) Model, RSM Baseline and RSM Scenario. Each scenario folder in the external directory should have 'input' and 'report' as sub-folders. 
 
-- For each of the scenario folder, 'report' folder has the files that are generated as part of the data exporter step in the model and 'input' folder only needs to have mgra_crosswalk.csv file for RSM scenarios. 
+- For each of the scenario folder, 'report' folder has the files that are generated as part of the data exporter step in the model and 'input' folder only needs to have mgra_crosswalk.csv and households.csv file for RSM scenarios. 
 
 ## Configuration
 - 'config/scenarios.yaml' file specifies the user configuration for the three scenarios. This file does not need to be modified unless config changes are desired by the user. 
