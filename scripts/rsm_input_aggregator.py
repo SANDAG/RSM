@@ -31,8 +31,8 @@ from rsm.utility import *
 
 rsm_main_dir = sys.argv[1]
 org_model_dir = sys.argv[2]
-num_rsm_zones = sys.argv[3]
-num_ext_zones = sys.argv[4]
+num_rsm_zones = int(sys.argv[3])
+num_ext_zones = int(sys.argv[4])
 
 logging_start(
     filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO

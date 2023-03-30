@@ -122,7 +122,7 @@ agglom3full.insert(1, 'taz', agglom3full.pop('taz'))
 
 #for school enrollments and high school enrollments - checks
 
-agglom3full = adjust_enrollments(agglom3full)
+agglom3full = fix_zero_enrollment(agglom3full)
 
 ext_zones_df = pd.DataFrame({'taz':range(1,NUM_EXT_ZONES+1), 'cluster_id': range(1,NUM_EXT_ZONES+1)})
 
