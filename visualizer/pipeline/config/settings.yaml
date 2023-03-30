@@ -1,5 +1,5 @@
 extract:
-- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\rsm_scen\report
+- filepath: C:\projects\SimWrapper\Ashish_test\visualizer\simwrapper\data\external\rsm_before_calibration\report
   test_size: null
   data:
   - households.csv
@@ -17,14 +17,11 @@ extract:
   - visitorTrips.csv
   - hwyload_*.csv
   - hwyTcad.csv
-- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\rsm_scen\input
+- filepath: C:\projects\SimWrapper\Ashish_test\visualizer\simwrapper\data\external\rsm_before_calibration\input
   test_size: null
   data:
   - mgra_crosswalk.csv
-- filepath: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\external\donor_model\input
-  test_size: null
-  data:
-  - households_org.csv
+  - households_orig.csv
 transform:
   processor: config/processor.csv
   summarizer: config/expressions.csv
@@ -50,9 +47,9 @@ transform:
       include:
       - hwyload_*
     merge:
-    - table_name: households_org
+    - table_name: households_orig
       include:
-      - households_org
+      - households_orig
       - mgra_crosswalk
       merge_cols:
       - - mgra
@@ -84,5 +81,5 @@ transform:
     summarize: true
     process: true
 load:
-  outdir: D:\Models\RSM_Visualizer\visualizer\simwrapper\data\processed\rsm_scen\
+  outdir: C:\projects\SimWrapper\Ashish_test\visualizer\simwrapper\data\processed\rsm_before_calibration\
   empty_fill: 0

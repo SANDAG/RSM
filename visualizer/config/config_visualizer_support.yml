@@ -6,10 +6,11 @@ inputs:
   compared_scenarios_dir: simwrapper\data\processed\all_runs
   intrazonal_distance_mode_file_name: intrazonal_distance_by_mode_summary.csv
   trip_od_summary_file_name: trip_od_summary.csv
+  zero_car_summary_file_name: zero_car_households_summary.csv
 parameters:
   rsm_scenario_list:
-  - rsm_base
-  - rsm_scen
+  - rsm_before_calibration
+  - rsm_calibrated
   base_scenario_list:
   - donor_model
 outputs:

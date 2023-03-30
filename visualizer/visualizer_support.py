@@ -88,6 +88,17 @@ def combine_scenarios_summary(scenario_list, mode_summary_file_name, vmt_summary
 
     temp3.to_csv(os.path.join(out_dir, intrazonal_vmt_file_name), index=False)
 
+def zero_car_share(zero_car_summary_file_name, scenario):
+
+    processed_dir = os.path.join("SimWrapper\\data\\processed", scenario) 
+    external_dir = os.path.join("SimWrapper\\data\\external", scenario)
+    households_df = pd.read_csv(os.path.join(external_dir, "report", "households.csv"))
+    zero_car_df = pd.read_csv(os.path.join(processed_dir, zero_car_summary_file_name))
+    total_household = households_df.shape[0]
+    tota_zero_car_households = zero_car_df["household_numbers"].sum()
+    zero_car_share = tota_zero_car_households / total_household
+    output_df = pd.DataFrame([zero_car_share], columns=["share of zero cars household"])
+    output_df.to_csv(os.path.join(processed_dir, "zero_car_share.csv"), index=False)
 
 def trip_od_summary (rsm_scenario_list, base_scenario, trip_od_summary_file_name):
 
@@ -174,6 +185,7 @@ if __name__ == "__main__":
     cross_reference_mgra_file_name = config['inputs']['cross_reference_mgra_file_name']
     mode_summary_file_name = config['inputs']['mode_summary_file_name']
     vmt_summary_file_name = config['inputs']['vmt_summary_file_name']
+    zero_car_summary_file_name = config['inputs']['zero_car_summary_file_name']
     compared_scenarios_dir = config['inputs']['compared_scenarios_dir']
     intrazonal_distance_mode_file_name = config['inputs']['intrazonal_distance_mode_file_name']
     rsm_scenario_list = config['parameters']['rsm_scenario_list']
@@ -185,13 +197,9 @@ if __name__ == "__main__":
     
     for scenario in (rsm_scenario_list):
         generate_rsm_shapefile(shapefile_dir, cross_reference_mgra_file_name, scenario)
-   
-    for scenario in (rsm_scenario_list):
         shapefile_to_json(shapefile_dir, scenario)      
-
-    for scenario in (rsm_scenario_list):
         rsm_geo_post_processing(scenario)
-
+        zero_car_share(zero_car_summary_file_name, scenario)
 
     for scenario in (rsm_scenario_list + base_scenario_list):
         intrazonal_vmt_aggregation(vmt_summary_file_name, intrazonal_distance_mode_file_name, total_vmt_file_name, scenario)

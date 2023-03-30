@@ -25,15 +25,22 @@ for scenario in config["rsm_scenarios"]:
     path_output = os.path.join(base_path + config["rsm_scenarios"][scenario]["output"])
     path_shapefile = os.path.join(base_path + config["shapefiles"])
 
-    for base_scenario in config["base_scenarios"]:
-        path_input_base = os.path.join(base_path + config["base_scenarios"][base_scenario]["input"])
+## rename the household file in input file 
+    original_hh_file = os.path.join(path_input, "households.csv") 
+    new_hh_file = os.path.join(path_input, "households_orig.csv")
+
+    if (os.path.exists(original_hh_file)) :
+        os.rename(original_hh_file, new_hh_file)
+    
+#    for base_scenario in config["base_scenarios"]:
+#        path_input_base = os.path.join(base_path + config["base_scenarios"][base_scenario]["input"])
     
     with open(os.path.join("pipeline\\config", settings_file_rsm), 'r') as f:
         settings = yml.safe_load(f)
         
     settings['extract'][0]['filepath'] = path_report
     settings['extract'][1]['filepath'] = path_input
-    settings['extract'][2]['filepath'] = path_input_base
+#    settings['extract'][2]['filepath'] = path_input_base
     settings['load']['outdir'] = path_output
     f.close()
 
@@ -64,7 +71,7 @@ for scenario in config["base_scenarios"]:
     with open(os.path.join("pipeline\\config", settings_file_base), 'r') as f:
         settings = yml.safe_load(f)
     settings['extract'][0]['filepath'] = path_report
-    settings['extract'][1]['filepath'] = path_input
+#   settings['extract'][1]['filepath'] = path_input
     settings['load']['outdir'] = path_output
     f.close()
 
