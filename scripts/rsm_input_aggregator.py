@@ -46,6 +46,7 @@ OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIE
 
 #merge crosswalks with input mgra file
 mgra = pd.read_csv(INPUT_RSM_ZONE_FILE)
+mgra = add_intersection_count(rsm_main_dir, mgra)
 rsm_cwk = pd.read_csv(INPUT_MGRA_CROSSWALK)
 rsm_cwk_dict = dict(zip(rsm_cwk['MGRA'], rsm_cwk['cluster_id']))
 mgra['cluster_id'] = mgra['mgra'].map(rsm_cwk_dict)

@@ -11,6 +11,7 @@ import pyproj
 from scipy.optimize import minimize_scalar
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.preprocessing import OneHotEncoder
+from rsm.utility import *
 
 logger = logging.getLogger(__name__)
 
@@ -167,7 +168,7 @@ def merge_zone_data(
             "milestocoast": wgt_avg_by_pop,
             # "acres": "sum",
             # "effective_acres": "sum",
-            # "land_acres": "sum",
+            "land_acres": "sum",
             "MicroAccessTime": wgt_avg_by_pop,
             "remoteAVParking": "max",
             "refueling_stations": "sum",
@@ -180,7 +181,14 @@ def merge_zone_data(
             # "empdenbin": "sum", #bins in original data 0, 10, 30
             # "dudenbin": "sum", #bins in original data  0, 5, 10
             "PopEmpDenPerMi": wgt_avg_peden,
-        }
+        }  
+    
+    # in the original model, these variables are computed in the 4Ds module
+    gdf['empDen'] = np.where(gdf['land_acres'] > 0 , gdf['emp_total']/gdf['land_acres'], 0)
+    gdf['retDen'] = np.where(gdf['land_acres'] > 0 , gdf['emp_retail']/gdf['land_acres'], 0)
+    gdf['duDen'] = np.where(gdf['land_acres'] > 0 , gdf['hh']/gdf['land_acres'], 0)
+    gdf['popDen'] = np.where(gdf['land_acres'] > 0 , gdf['pp']/gdf['land_acres'], 0)
+    gdf['popEmpDenPerMi'] = (gdf['emp_total'] + gdf['pop'])/(gdf['land_acres']/640) #Acres to miles
     
     if "geometry" in gdf.columns:
         dissolved = gdf[[cluster_id, "geometry"]].dissolve(by=cluster_id)
@@ -207,7 +215,7 @@ def merge_zone_data(
         (dissolved["duden"] >= 5) & (dissolved["duden"] < 10), "dudenbin"
     ] = 2
     dissolved.loc[(dissolved["duden"] >= 10), "dudenbin"] = 3
-
+                    
     return dissolved
 
 
