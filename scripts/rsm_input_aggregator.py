@@ -46,7 +46,11 @@ OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIE
 
 #merge crosswalks with input mgra file
 mgra = pd.read_csv(INPUT_RSM_ZONE_FILE)
+
+# in the original model, these variables are computed in the 4Ds module
 mgra = add_intersection_count(rsm_main_dir, mgra)
+mgra = add_density_variables(org_model_dir, mgra)
+
 rsm_cwk = pd.read_csv(INPUT_MGRA_CROSSWALK)
 rsm_cwk_dict = dict(zip(rsm_cwk['MGRA'], rsm_cwk['cluster_id']))
 mgra['cluster_id'] = mgra['mgra'].map(rsm_cwk_dict)
@@ -80,6 +84,6 @@ agg_input_files(
     "internalExternalTrips.csv", "visitorTours.csv", "visitorTrips.csv", "householdAVTrips.csv", 
     "crossBorderTrips.csv", "TNCTrips.csv", "airport_out.SAN.csv", "airport_out.CBX.csv", 
     "TNCtrips.csv"]
-	)
+)
 
 logging.info("finished logging rsm_input_aggregator")

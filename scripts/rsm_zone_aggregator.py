@@ -76,7 +76,10 @@ mgra = load_mgra_data(
 logging.info("loading trip file")
 trips = load_trip_list(trips_filename = "indivTripData_3.csv", data_dir = FULL_ABM_TRIP_DIR)
 
+# in the original model, these variables are computed in the 4Ds module
 mgra = add_intersection_count(rsm_main_dir, mgra)
+mgra = add_density_variables(full_model_dir, mgra)
+
 tazs = merge_zone_data(mgra, cluster_id="taz")
 
 logging.info("getting mode shares")

@@ -4,6 +4,8 @@ import shutil
 import os
 import logging
 import geopandas as gpd
+import pandas as pd
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -60,17 +62,20 @@ def get_property(properties_file, property_name):
     """
     with open(properties_file, "r") as f:
         lines = f.readlines()
+        key_found = False
         for line in lines:
             if property_name in line:
-                final_line = line
+                key = line.split("=")[0].strip()
+                value = line.split("=")[1].strip()
 
-    if final_line:
-        property_value = final_line.split()[2]
+                if property_name == key:
+                    key_found = True
+                    break
 
-    else:
-        raise Exception("{} not found in sandag_agbm.properties file".format(property_name))
+    if not key_found:
+        raise Exception("{} not found in sandag_abm.properties file".format(property_name))
 
-    return property_value
+    return value
 
 def set_property(properties_file, property_name, property_value):
     """
@@ -163,12 +168,65 @@ def add_intersection_count(model_dir, mgra_data):
         int_dict[int[1][0]] = mgra_nodes.loc[mgra_nodes['dist'] == mgra_nodes['dist'].min()]['mgra'].values[0]
 
     intersections['near_mgra'] = intersections['N'].map(int_dict)
-    intersections = intersections.groupby('near_mgra', as_index = False).count()[['near_mgra','N']].rename(columns = {'near_mgra':'mgra','N':'totint'})
+    intersections = intersections.groupby('near_mgra', as_index = False).count()[['near_mgra','N']].rename(columns = {'near_mgra':'mgra','N':'icnt'})
     
     try:
-        mgra_data = mgra_data.drop('totint',axis = 1).merge(intersections, how = 'outer', on = "mgra")
+        mgra_data = mgra_data.drop('icnt',axis = 1).merge(intersections, how = 'outer', on = "mgra")
     except:
         mgra_data = mgra_data.merge(intersections, how = 'outer', on = "mgra")
         
     return mgra_data
+
+def add_density_variables(model_dir, mgra_data):
+    #new_cols = ['totint','duden','empden','popden','retempden','totintbin','empdenbin','dudenbin','PopEmpDenPerMi']
+    new_cols = ['totint', 'duden', 'empden', 'popden', 'retempden', 'PopEmpDenPerMi']
+
+    for col in new_cols:
+        if col in mgra_data.columns.tolist():
+            mgra_data = mgra_data.drop(col, axis=1)
+
+    #all street distance
+    RSM_ABM_PROPERTIES = os.path.join(model_dir, "conf", "sandag_abm.properties")
+    equivmins_file = get_property(RSM_ABM_PROPERTIES, "active.logsum.matrix.file.walk.mgra")
+    equiv_min = pd.read_csv(os.path.join(model_dir, "output", equivmins_file))
+
+    equiv_min['dist'] = equiv_min['actual']/60*3
+
+    def _density_function(mgra_in):
+        int_radius = 0.65 #mile
+        oth_radius = 0.65 #mile
+        eqmn = equiv_min[equiv_min['i'] == mgra_in]
+        mgra_circa_int = eqmn[eqmn['dist'] < int_radius]['j'].unique()
+        mgra_circa_oth = eqmn[eqmn['dist'] < oth_radius]['j'].unique()
+        totEmp = mgra_data[mgra_data.mgra.isin(mgra_circa_oth)]['emp_total'].sum()
+        totRet = mgra_data[mgra_data.mgra.isin(mgra_circa_oth)]['emp_retail'].sum() + mgra_data[mgra_data.mgra.isin(mgra_circa_oth)]['emp_personal_svcs_retail'].sum() + mgra_data[mgra_data.mgra.isin(mgra_circa_oth)]['emp_restaurant_bar'].sum()
+        totHH = mgra_data[mgra_data.mgra.isin(mgra_circa_oth)]['hh'].sum()
+        totPop = mgra_data[mgra_data.mgra.isin(mgra_circa_oth)]['pop'].sum()
+        totAcres = mgra_data[mgra_data.mgra.isin(mgra_circa_oth)]['land_acres'].sum()
+        totInt = mgra_data[mgra_data.mgra.isin(mgra_circa_int)]['icnt'].sum()
+        if(totAcres>0):
+            empDen = totEmp/totAcres
+            retDen = totRet/totAcres
+            duDen = totHH/totAcres
+            popDen = totPop/totAcres
+            popEmpDenPerMi = (totEmp+totPop)/(totAcres/640) #Acres to miles
+            tot_icnt = totInt
+        else:
+            empDen = 0
+            retDen = 0
+            duDen = 0
+            popDen = 0
+            popEmpDenPerMi = 0
+            tot_icnt = 0
         
+        return tot_icnt,duDen,empDen,popDen,retDen,popEmpDenPerMi
+        
+    mgra_data["totint"],mgra_data["duden"],mgra_data["empden"],mgra_data["popden"],mgra_data["retempden"],mgra_data["PopEmpDenPerMi"] = zip(*mgra_data['mgra'].map(_density_function))
+
+    # mgra_data["totintbin"] = np.where(mgra_data["totint"] < 80, 1, np.where(mgra_data["totint"] < 130, 2, 3))
+    # mgra_data["empdenbin"] = np.where(mgra_data["empden"] < 10, 1, np.where(mgra_data["empden"] < 30, 2,3))
+    # mgra_data["dudenbin"] = np.where(mgra_data["duden"] < 5, 1, np.where(mgra_data["duden"] < 10, 2,3))
+
+    mgra_data = mgra_data.fillna(0)
+
+    return mgra_data

@@ -177,18 +177,8 @@ def merge_zone_data(
             "empden": wgt_avg_empden,
             "popden": wgt_avg_popden,
             "retempden": wgt_avg_rtempden,
-            # "totintbin": "sum", #bins in original data 0, 80, 130
-            # "empdenbin": "sum", #bins in original data 0, 10, 30
-            # "dudenbin": "sum", #bins in original data  0, 5, 10
             "PopEmpDenPerMi": wgt_avg_peden,
         }  
-    
-    # in the original model, these variables are computed in the 4Ds module
-    gdf['empDen'] = np.where(gdf['land_acres'] > 0 , gdf['emp_total']/gdf['land_acres'], 0)
-    gdf['retDen'] = np.where(gdf['land_acres'] > 0 , gdf['emp_retail']/gdf['land_acres'], 0)
-    gdf['duDen'] = np.where(gdf['land_acres'] > 0 , gdf['hh']/gdf['land_acres'], 0)
-    gdf['popDen'] = np.where(gdf['land_acres'] > 0 , gdf['pp']/gdf['land_acres'], 0)
-    gdf['popEmpDenPerMi'] = (gdf['emp_total'] + gdf['pop'])/(gdf['land_acres']/640) #Acres to miles
     
     if "geometry" in gdf.columns:
         dissolved = gdf[[cluster_id, "geometry"]].dissolve(by=cluster_id)
@@ -198,23 +188,9 @@ def merge_zone_data(
         dissolved = gdf.groupby(cluster_id).agg(agg_instruction)
 
     # adding bins
-    dissolved["totintbin"] = 1
-    dissolved.loc[
-        (dissolved["totint"] >= 80) & (dissolved["totint"] < 130), "totintbin"
-    ] = 2
-    dissolved.loc[(dissolved["totint"] >= 130), "totintbin"] = 3
-
-    dissolved["empdenbin"] = 1
-    dissolved.loc[
-        (dissolved["empden"] >= 10) & (dissolved["empden"] < 30), "empdenbin"
-    ] = 2
-    dissolved.loc[(dissolved["empden"] >= 30), "empdenbin"] = 3
-
-    dissolved["dudenbin"] = 1
-    dissolved.loc[
-        (dissolved["duden"] >= 5) & (dissolved["duden"] < 10), "dudenbin"
-    ] = 2
-    dissolved.loc[(dissolved["duden"] >= 10), "dudenbin"] = 3
+    dissolved["totintbin"] = np.where(dissolved["totint"] < 80, 1, np.where(dissolved["totint"] < 130, 2, 3))
+    dissolved["empdenbin"] = np.where(dissolved["empden"] < 10, 1, np.where(dissolved["empden"] < 30, 2, 3))
+    dissolved["dudenbin"] = np.where(dissolved["duden"] < 5, 1, np.where(dissolved["duden"] < 10, 2,3))
                     
     return dissolved
 
