@@ -42,7 +42,7 @@ logging.info("start logging rsm_input_aggregator")
 RSM_ABM_PROPERTIES = os.path.join(rsm_main_dir, "conf", "sandag_abm.properties")
 INPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
 INPUT_MGRA_CROSSWALK = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.to.cluster.crosswalk.file"))
-OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
+OUTPUT_RSM_ZONE_FILE = INPUT_RSM_ZONE_FILE.replace(".csv", "_agg.csv")
 
 #merge crosswalks with input mgra file
 mgra = pd.read_csv(INPUT_RSM_ZONE_FILE)

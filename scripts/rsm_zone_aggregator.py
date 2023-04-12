@@ -54,7 +54,6 @@ RSM_ABM_PROPERTIES = os.path.join(rsm_main_dir, "conf", "sandag_abm.properties")
 OUTPUT_MGRA_CROSSWALK = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.to.cluster.crosswalk.file"))
 OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "taz.to.cluster.crosswalk.file"))
 OUTPUT_CLUSTER_CENTROIDS = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "cluster.zone.centroid.file"))
-OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
 
 logging_start(
     filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
@@ -138,6 +137,5 @@ mgra_crosswalk['cluster_id'] = mgra_crosswalk['cluster_id'] - NUM_EXT_ZONES
 mgra_crosswalk.to_csv(OUTPUT_MGRA_CROSSWALK, index=False)
 taz_crosswalk.to_csv(OUTPUT_TAZ_CROSSWALK, index=False)
 cluster_centroids.to_csv(OUTPUT_CLUSTER_CENTROIDS, index=False)
-# agglom3full.to_csv(OUTPUT_RSM_ZONE_FILE, index=False)
 
 logging.info("Finished logging rsm_zone_aggregator")

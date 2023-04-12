@@ -423,7 +423,13 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                         raise Exception("If Assembler is turned off, default sample rate should be such that 1/(sample rate) is integer value")
             
             if run_rsm_setup == 1: 
-            
+                # reset the property 'mgra.socec.file' to use original csv file
+                self.run_proc(
+                "runRSMSetProperty.cmd", 
+                [main_directory, rsm_venv_path, rsm_script_path, 'mgra.socec.file', props["mgra.socec.file"].replace("_agg.csv", ".csv")],
+                "Set Property", capture_output=True)   
+                
+                
                 if run_zone_aggregator == 1:
                     self.run_proc(
                         "runRSMZoneAggregator.cmd", 
@@ -438,6 +444,12 @@ class MasterRun(props_utils.PropertiesSetter, _m.Tool(), gen_utils.Snapshot):
                 "runRSMInputAggregator.cmd", 
                 [main_directory, rsm_venv_path, rsm_script_path, orig_full_model_dir, num_rsm_zones, num_external_zones], 
                 "Input Files Aggregator", capture_output=True)
+                 
+                # change the property 'mgra.socec.file' to use _agg.csv file
+                self.run_proc(
+                "runRSMSetProperty.cmd", 
+                [main_directory, rsm_venv_path, rsm_script_path, 'mgra.socec.file', props["mgra.socec.file"].replace(".csv", "_agg.csv")],
+                "Set Property", capture_output=True) 
                 
                 self.run_proc(
                 "runRSMTripMatrixAggregator.cmd", 
