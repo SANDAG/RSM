@@ -15,6 +15,7 @@ import sys
 import os
 import logging
 import pandas as pd
+import shutil
 main_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
 sys.path.append(main_path)
 from rsm.data_load.zones import load_mgra_data
@@ -42,7 +43,10 @@ logging.info("start logging rsm_input_aggregator")
 RSM_ABM_PROPERTIES = os.path.join(rsm_main_dir, "conf", "sandag_abm.properties")
 INPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
 INPUT_MGRA_CROSSWALK = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.to.cluster.crosswalk.file"))
-OUTPUT_RSM_ZONE_FILE = INPUT_RSM_ZONE_FILE.replace(".csv", "_agg.csv")
+OUTPUT_RSM_ZONE_FILE = os.path.join(rsm_main_dir, get_property(RSM_ABM_PROPERTIES, "mgra.socec.file"))
+
+# save a copy of the orig mgra landuse data
+shutil.copy(INPUT_RSM_ZONE_FILE, INPUT_RSM_ZONE_FILE.replace(".csv", "_orig.csv"))
 
 #merge crosswalks with input mgra file
 mgra = pd.read_csv(INPUT_RSM_ZONE_FILE)
