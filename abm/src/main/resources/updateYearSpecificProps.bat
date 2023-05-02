@@ -1,0 +1,6 @@
+set PROJECT_DRIVE=%1
+set PROJECT_DIRECTORY=%2
+
+%PROJECT_DRIVE%
+cd %PROJECT_DRIVE%%PROJECT_DIRECTORY%\python
+python.exe parameterUpdate.py

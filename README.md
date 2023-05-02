@@ -1,6 +1,16 @@
 # RSM
 Rapid Strategic Model for the San Diego Association of Governments
 
+## Source Code Access
+
+The source code for the RSM is stored in this repository.  You can access it
+via GitHub, or check out the repository using Git.  Some larger files (especially
+for testing) are stored using [git-lfs](https://git-lfs.github.com/) (large file
+storage).  This is mostly transparent, but for best results you do need to make
+sure that the LFS extension is installed before you clone the repository.  Visit
+[git-lfs](https://git-lfs.github.com/) for platform-specific instructions.
+
+
 ## Installing
 
 To install, activate the python or conda environment you want to use,
@@ -9,6 +19,13 @@ the cd into the repository directory and run:
 ```shell
 python -m pip install -e .
 ```
+
+This will make the `sandag_rsm` package available, so you can `import sandag_rsm`
+to access the functions in this tool, without regard for the current working
+directory or pointing the python path to the right place(s).  Using the `-e` flag
+installs in `editable` mode, so if you make changes or pull updates from GitHub,
+those updates will be available to Python without re-installing.
+
 
 ## Code Formatting
 
@@ -34,7 +51,8 @@ with `git commit --no-verify`.
 
 ## Developing with Docker
 
-To build the docker container, change into the repository root and run:
+This project uses [Docker](https://www.docker.com/).  For development, to build
+the docker container, change into the repository root and run:
 
 ```shell
 docker build --tag sandag_rsm .
@@ -42,11 +60,19 @@ docker build --tag sandag_rsm .
 
 ### Jupyter Notebook for Development
 
-On the host machine, run:
+On the host machine, on linux or macOS run:
 
 ```shell
 docker run -v $(pwd):/home/mambauser/sandag_rsm -p 8899:8899 \
-  -it sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root \
+  -it --rm sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root \
+  --port 8899 --notebook-dir=/home/mambauser
+```
+
+or in `cwd` on Windows, run:
+
+```shell
+docker run -v %cd%:/home/mambauser/sandag_rsm -p 8899:8899 ^
+  -it --rm sandag_rsm jupyter notebook --ip 0.0.0.0 --no-browser --allow-root ^
   --port 8899 --notebook-dir=/home/mambauser
 ```
 
