@@ -1,0 +1,22 @@
+
+rsm_scenarios:
+  rsm_base:
+      name: "run_base"
+      input: \simwrapper\data\external\rsm_base\input
+      report: \simwrapper\data\external\rsm_base\report
+      output: \simwrapper\data\processed\rsm_base\
+  
+  rsm_scen:
+      name: "rsm_scen"
+      input: \simwrapper\data\external\rsm_scen\input
+      report: \simwrapper\data\external\rsm_scen\report
+      output: \simwrapper\data\processed\rsm_scen\
+
+base_scenarios:
+  donor_model:
+      name: "donor_model"
+      input: \simwrapper\data\external\donor_model\input
+      report: \simwrapper\data\external\donor_model\report
+      output: \simwrapper\data\processed\donor_model\
+
+shapefiles: \simwrapper\data\external\shapefile

@@ -1,0 +1,69 @@
+header:
+  tab: "RSM Zero Car Households Maps"
+  title: "RSM Zero Car Households Maps"
+  description: "RSM Visualization Dashboard"
+
+layout:
+  rsm base:
+    - type: map
+      title: 'Zero Car Households RSM Baseline'
+      description: 'Distribution of Zero Car Households'
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/processed/rsm_base/MGRA13_gcs_rsm_base.shp"
+        join: cluster_id
+      datasets:
+        zero-cars:
+          file: "data/processed/rsm_base/zero_car_households_summary.csv"
+          join: homeMGRA
+      display:
+        fill:
+          dataset: zero-cars
+          columnName: household_numbers
+          colorRamp:
+            ramp: Plasma
+            steps: 7
+
+  rsm scen:
+    - type: map
+      title: 'Zero Car Households RSM Scenario'
+      description: 'Distribution of Zero Car Households'
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/processed/rsm_scen/MGRA13_gcs_rsm_scen.shp"
+        join: cluster_id
+      datasets:
+        zero-cars:
+          file: "data/processed/rsm_scen/zero_car_households_summary.csv"
+          join: homeMGRA
+      display:
+        fill:
+          dataset: zero-cars
+          columnName: household_numbers
+          colorRamp:
+            ramp: Plasma
+            steps: 7
+
+  donor model:
+    - type: map
+      title: 'Zero Car Households Donor Model'
+      description: 'Distribution of Zero Car Households'
+      height: 10
+      zoom: 10
+      shapes:
+        file: "data/external/shapefile/MGRA13_gcs.shp"
+        join: MGRA
+      datasets:
+        zero-cars:
+          file: "data/processed/donor_model/zero_car_households_summary.csv"
+          join: homeMGRA
+      display:
+        fill:
+          dataset: zero-cars
+          columnName: household_numbers
+          colorRamp:
+            ramp: Plasma
+            steps: 7
+                                                

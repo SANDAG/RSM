@@ -1,0 +1,48 @@
+Description,Step,Type,Table,Out Col,In Col,Func
+Rename purpose,step_0,rename,airportCBXTrips,,,{'tripPurpose': 'tripPurposeDestination'}
+Rename purpose,step_0,rename,airportSANTrips,,,{'tripPurpose': 'tripPurposeDestination'}
+Define purpose (NA),step_0,column,internalExternalTrips,tripPurposeDestination,,"""Other"""
+Define purpose (NA),step_0,column,externalExternalTrips,tripPurposeDestination,,"""Other"""
+Rename purpose,step_0,rename,externalInternalTrips,,,{'tripPurpose': 'tripPurposeDestination'}
+Rename purpose,step_0,column,truckTrips,tripPurposeDestination,,"""Other"""
+Rename purpose,step_0,rename,visitorTrips,,,{'tripPurpose': 'tripPurposeDestination'}
+Map transit mode values,step_1,replace,transit_onoff,MODE,MODE,"{'PREM': 'Premium Transit', 'BUS': 'Local Bus', 'ALLPEN': 'Local Bus and Premium Transit'}"
+Map transit access mode values,step_1,replace,transit_onoff,ACCESSMODE,ACCESSMODE,"{'KNR': 'Kiss and Ride to Transit', 'PNR': 'Park and Ride to Transit', 'WLK': 'Walk to Transit'}"
+Rename default table column to model,step_1,rename,trips,,,{'table': 'model'}
+Clean model values,step_1,raw,trips,,,"trips['model'] = trips['model'].str.replace('Trips', '')"
+Aggregate truck mode values,step_1,replace,trips,tripMode,tripMode,"{'Light Heavy Duty Truck': 'Truck', 'Medium Heavy Duty Truck': 'Truck', 'Heavy Heavy Duty Truck': 'Truck'}"
+Aggregate transit mode values,step_1,raw,trips,,,"trips['tripMode'] = np.select([(trips['tripMode'].str.contains('to Transit'))], ['Transit'], default=trips['tripMode'])"
+Add time period to highway network,step_1,replace,highway_load,timePeriod,table,"{""hwyload_EA"": ""EA"",""hwyload_AM"": ""AM"",""hwyload_MD"": ""MD"",""hwyload_PM"": ""PM"",""hwyload_EV"": ""EV""}"
+Restructure highway network by TOD,step_1,raw,,,,"highway_network = pd.wide_to_long(df=hwyTcad,stubnames=[""ABTM"",""BATM"",""ABTX"",""BATX"",""ABPRELOAD"",""BAPRELOAD""],i=[""ID"",""Length"",""IFC""],j=""timePeriod"",sep=""_"",suffix=""\w+"").reset_index()"
+Fill any null values in highway network,step_1,raw,,,,highway_network = highway_network.fillna(0)
+Map IFC values,step_1,replace,highway_network,ifc_desc,IFC,"{1:""Freeway"",2:""Prime Arterial"",3:""Major Arterial"",4:""Collector"",5:""Local Collector"",6:""Rural Coolector"",7:""Local Road"",8:""Freeway Connector Ramp"",9:""Local Ramp"",10:""Zone Connector""}"
+otal A-B Auto flow,step_1,column,highway_load,AB_Flow_Auto,,AB_Flow_SOV_NTPL+AB_Flow_SOV_TPL+AB_Flow_SR2L+AB_Flow_SR3L+AB_Flow_SOV_NTPM+AB_Flow_SOV_TPM+AB_Flow_SR2M+AB_Flow_SR3M+AB_Flow_SOV_NTPH+AB_Flow_SOV_TPH+AB_Flow_SR2H+AB_Flow_SR3H
+Total A-B Auto flow,step_1,column,highway_load,BA_Flow_Auto,,BA_Flow_SOV_NTPL+BA_Flow_SOV_TPL+BA_Flow_SR2L+BA_Flow_SR3L+BA_Flow_SOV_NTPM+BA_Flow_SOV_TPM+BA_Flow_SR2M+BA_Flow_SR3M+BA_Flow_SOV_NTPH+BA_Flow_SOV_TPH+BA_Flow_SR2H+BA_Flow_SR3H
+Total A-B Truck flow,step_1,column,highway_load,AB_Flow_Truck,,AB_Flow_lhd+AB_Flow_mhd+AB_Flow_hhd
+Total B-A Truck flow,step_1,column,highway_load,BA_Flow_Truck,,BA_Flow_lhd+BA_Flow_mhd+BA_Flow_hhd
+Total A-B flow,step_1,column,highway_load,AB_Flow,,AB_Flow_Auto+AB_Flow_Truck
+Total B-A flow,step_1,column,highway_load,BA_flow,,BA_Flow_Auto+BA_Flow_Truck
+Fill any null values in highway load,step_1,raw,highway_load,,,highway_load = highway_load.fillna(0)
+Map TOD values,step_1,replace,trips,departTimeFiveTod,departTimeFiveTod,"{1: 'EA', 2: 'AM', 3: 'MD', 4: 'PM', 5: 'EV'}"
+Auto VMT,step_2,column,network,vmt_auto,,(AB_Flow_Auto+BA_Flow_Auto) * Length
+Truck VMT,step_2,column,network,vmt_truck,,(AB_Flow_Truck+BA_Flow_Truck) * Length
+Bus VMT,step_2,column,network,vmt_bus,,(ABPRELOAD+BAPRELOAD) * Length
+Total VMT,step_2,column,network,vmt_total,,vmt_auto+vmt_truck+vmt_bus
+Total Flow,step_2,column,network,flow_total,,AB_Flow + BA_Flow
+VOC ratio,step_2,column,network,voc,,(AB_VOC + BA_VOC)/2
+Summary post-processing,step_3,raw,,,,transit_summary['PCT_EA'] = transit_summary['EA']/transit_summary['EA'].sum()
+Summary post-processing,step_3,raw,,,,transit_summary['PCT_AM'] = transit_summary['AM']/transit_summary['AM'].sum()
+Summary post-processing,step_3,raw,,,,transit_summary['PCT_MD'] = transit_summary['MD']/transit_summary['MD'].sum()
+Summary post-processing,step_3,raw,,,,transit_summary['PCT_PM'] = transit_summary['PM']/transit_summary['PM'].sum()
+Summary post-processing,step_3,raw,,,,transit_summary['PCT_EV'] = transit_summary['EV']/transit_summary['EV'].sum()
+Summary post-processing,step_3,raw,,,,trip_mode_summary['share'] = trip_mode_summary['num_trips']/trip_mode_summary['num_trips'].sum()
+Summary post-processing,step_3,raw,,,,trip_tod_purpose_summary['PCT_EA'] = trip_tod_purpose_summary['EA']/trip_tod_purpose_summary['EA'].sum()
+Summary post-processing,step_3,raw,,,,trip_tod_purpose_summary['PCT_AM'] = trip_tod_purpose_summary['AM']/trip_tod_purpose_summary['AM'].sum()
+Summary post-processing,step_3,raw,,,,trip_tod_purpose_summary['PCT_MD'] = trip_tod_purpose_summary['MD']/trip_tod_purpose_summary['MD'].sum()
+Summary post-processing,step_3,raw,,,,trip_tod_purpose_summary['PCT_PM'] = trip_tod_purpose_summary['PM']/trip_tod_purpose_summary['PM'].sum()
+Summary post-processing,step_3,raw,,,,trip_tod_purpose_summary['PCT_EV'] = trip_tod_purpose_summary['EV']/trip_tod_purpose_summary['EV'].sum()
+Summary post-processing,step_3,raw,,,,"households_mgra_summary = pd.merge(households_mgra_summary, households_sample_mgra_summary,left_on='cluster_id', right_on='cluster_id')"
+Summary post-processing,step_3,raw,,,,households_sample_mgra_summary['sample_rate'] = households_mgra_summary['sampled_households'] / households_mgra_summary['original_households']
+Rename Class,step_3,rename,vmt_summary,,,{'ifc_desc': 'class'}
+Rename cluster_id,step_3,rename,zero_car_households_summary,,,{'cluster_id': 'mgra'}
+Rename cluster_id,step_3,rename,households_sample_mgra_summary,,,{'cluster_id': 'mgra'}

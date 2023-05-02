@@ -1,0 +1,4 @@
+Notes/TODO:
+  - Modularize source code, especially src/pipeline.py/process()
+  - Expand tool to support other pipeline requirements -- keep the tradeoff between flexibility and user experience in mind!
+  - Update README and document code
