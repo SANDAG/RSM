@@ -32,6 +32,12 @@ ORG_INDIV_TRIPS = os.path.join(org_model_dir, "output", "indivTripData_3.csv")
 ORG_JOINT_TRIPS = os.path.join(org_model_dir, "output", "jointTripData_3.csv")
 RSM_INDIV_TRIPS = os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv")
 RSM_JOINT_TRIPS = os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv")
+
+RSM_INDIV_TOURS = os.path.join(rsm_dir, "output", "indivTourData_" + str(iteration) + ".csv")
+RSM_JOINT_TOURS = os.path.join(rsm_dir, "output", "jointTourData_" + str(iteration) + ".csv")
+RSM_HOUSEHOLD = os.path.join(rsm_dir, "output", "householdData_" + str(iteration) + ".csv")
+RSM_PERSON = os.path.join(rsm_dir, "output", "personData_" + str(iteration) + ".csv")
+
 HOUSEHOLDS = os.path.join(org_model_dir, "input", "households.csv")
 MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 
@@ -39,17 +45,29 @@ MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_abm_"+ str(iteration) + ".csv"))
 shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_abm_"+ str(iteration) + ".csv"))
 
+#creating copy of individual and joint tours file
+shutil.copy(RSM_INDIV_TOURS, os.path.join(rsm_dir, "output", "indivTourData_abm_"+ str(iteration) + ".csv"))
+shutil.copy(RSM_JOINT_TOURS, os.path.join(rsm_dir, "output", "jointTourData_abm_"+ str(iteration) + ".csv"))
+
+#creating copy of person and household file
+shutil.copy(RSM_HOUSEHOLD, os.path.join(rsm_dir, "output", "householdData_abm_"+ str(iteration) + ".csv"))
+shutil.copy(RSM_PERSON, os.path.join(rsm_dir, "output", "personData_abm_"+ str(iteration) + ".csv"))
+
 ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
 ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
 RUN_ASSEMBLER = int(get_property(ABM_PROPERTIES, "run.rsm.assembler"))
 SAMPLE_RATE = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
 
 #RSM Assembler
-final_ind, final_jnt = rsm_assemble(
+final_ind_trips, final_jnt_trips, final_ind_tours, final_jnt_tours, final_household, final_person  = rsm_assemble(
     ORG_INDIV_TRIPS,
     ORG_JOINT_TRIPS,
     RSM_INDIV_TRIPS,
     RSM_JOINT_TRIPS,
+    RSM_INDIV_TOURS,
+    RSM_JOINT_TOURS,
+    RSM_HOUSEHOLD,
+    RSM_PERSON,
     HOUSEHOLDS,
     MGRA_CROSSWALK,
     SAMPLE_RATE,
@@ -57,7 +75,13 @@ final_ind, final_jnt = rsm_assemble(
 )
 
 #save as csv files
-final_ind.to_csv(os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv"), index = False)
-final_jnt.to_csv(os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv"), index = False)
+final_ind_trips.to_csv(os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv"), index = False)
+final_jnt_trips.to_csv(os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv"), index = False)
+
+final_ind_tours.to_csv(os.path.join(rsm_dir, "output", "indivTourData_" + str(iteration) + ".csv"), index = False)
+final_jnt_tours.to_csv(os.path.join(rsm_dir, "output", "jointTourData_" + str(iteration) + ".csv"), index = False)
+
+final_household.to_csv(os.path.join(rsm_dir, "output", "householdData_" + str(iteration) + ".csv"), index = False)
+final_person.to_csv(os.path.join(rsm_dir, "output", "personData_" + str(iteration) + ".csv"), index = False)
 
 logging.info("finished logging rsm_assembler")

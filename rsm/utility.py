@@ -230,3 +230,16 @@ def add_density_variables(model_dir, mgra_data):
     mgra_data = mgra_data.fillna(0)
 
     return mgra_data
+
+
+def scaleup_to_rsm_samplingrate(df, scale_factor):
+    """
+    scales up the tour, trips, household, person data files based on the sampling rate. 
+    
+    """
+    final_df = pd.DataFrame(
+            np.repeat(df.values, scale_factor, axis=0),
+            columns=df.columns
+        )
+
+    return final_df
