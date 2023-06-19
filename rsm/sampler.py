@@ -138,7 +138,7 @@ def rsm_household_sampler(
 
         mgra_hh["sampling_rate"] = default_sampling_rate
         if study_area is not None:
-            mgra_hh.loc[mgra_hh.index.isin(study_area), "sample_rate"] = 1
+            mgra_hh.loc[mgra_hh.index.isin(study_area), "sampling_rate"] = 1
 
         sample_households = []
 

@@ -230,3 +230,62 @@ def add_density_variables(model_dir, mgra_data):
     mgra_data = mgra_data.fillna(0)
 
     return mgra_data
+
+
+def scaleup_to_rsm_samplingrate(df, scale_factor):
+    """
+    scales up the tour, trips, household, person data files based on the sampling rate. 
+    
+    """
+    final_df = pd.DataFrame(
+            np.repeat(df.values, scale_factor, axis=0),
+            columns=df.columns
+        )
+
+    return final_df
+
+def check_column_names(df, columns):
+    """
+    Check column names of study area file 
+    """
+    df_columns = df.columns.tolist()
+    if set(columns) != set(df_columns):
+        raise ValueError("Column names do not match the expected column names : taz and group. Please fix the column names")
+    return True
+
+def create_list_study_area_taz(study_area_file):
+    """
+    Creates list[int or list] based on the values of the group column
+    """
+
+    try:
+        df = pd.read_csv(study_area_file)
+        columns_to_check = ['taz', 'group']
+        match = check_column_names(df, columns_to_check)
+
+    except ValueError as e:
+        print("Error:", str(e))
+        logger.info("Error:", str(e))
+        return None
+        
+    grouped_taz = df.groupby('group')['taz'].apply(list).values.tolist()
+
+    return grouped_taz
+
+
+def find_rsm_zone_of_study_area(study_area_file, taz_crosswalk):
+    """
+    finds the RSM zones for the study area using the TAZ crosswalks
+    """
+
+    try:
+        df = pd.read_csv(study_area_file)
+        taz_cwk = pd.read_csv(taz_crosswalk)
+        study_area_taz = set(df['taz'])
+        rsm_zone = set(taz_cwk.loc[taz_cwk['taz'].isin(study_area_taz), 'cluster_id'])
+
+    except Exception as e:
+        logger.info("Error in identifying RSM zone for study area:", str(e))
+        return None
+
+    return list(rsm_zone)

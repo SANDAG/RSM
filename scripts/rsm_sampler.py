@@ -31,6 +31,7 @@ OUTPUT_TAZ_CROSSWALK = os.path.join(rsm_dir, "input", "taz_crosswalk.csv")
 ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
 ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
 INPUT_RSM_DIR = os.path.join(rsm_dir, "input")
+EXPILICT_AGG_TAZ = os.path.join(rsm_dir, "input", "study_area.csv")
 
 # output files
 OUTPUT_RSM_DIR = os.path.join(rsm_dir, "output")
@@ -69,11 +70,28 @@ else:
 logging.info(f"Current Iteration Accessibility File: {CURR_ITER_ACCESS}")
 logging.info(f"Previous Iteration Accessibility File: {PREV_ITER_ACCESS}")
 
+if os.path.exists(EXPILICT_AGG_TAZ):
+    logging.info(f"Study Area file: {EXPILICT_AGG_TAZ}")
+    study_area_taz = find_rsm_zone_of_study_area(EXPILICT_AGG_TAZ, OUTPUT_TAZ_CROSSWALK)
+    if study_area_taz is not None:
+        # Process the result
+        sa_taz = study_area_taz
+        logger.info(f"RSM Zone identified for the Study area are : {sa_taz}", )
+    else:
+        # Handle the error
+        logger.info("Please check the study area file. 'taz' column is expected in the file to find the corresponding RSM zone.")
+        sa_taz = None
+
+else:
+    sa_taz = None
+
+
 rsm_household_sampler(
     input_dir=rsm_dir,
     output_dir=rsm_dir,
     prev_iter_access=PREV_ITER_ACCESS,
     curr_iter_access=CURR_ITER_ACCESS,
+    study_area=sa_taz,
     input_household=FULL_ABM_SYNTH_HOUSHOLDS,
     input_person=FULL_ABM_SYNTH_PERSONS,
     taz_crosswalk=OUTPUT_TAZ_CROSSWALK,
