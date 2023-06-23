@@ -7,3 +7,5 @@ _version.py
 .DS_Store
 test/data/*
 *.pyc
+sandag_rsm.egg-info/*
+site/*
