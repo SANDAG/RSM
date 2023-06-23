@@ -6,4 +6,4 @@ TODO: Add Welcome and navigation here
 
 [Application Programming Interface](api.md)
 
-Examples -- TODO: create example notebooks you want to include in the documentation in the docs folder, add navigation to them in mkdocs.yml
+TODO: Examples -- create example notebooks you want to include in the documentation in the docs folder, add navigation to them in mkdocs.yml
