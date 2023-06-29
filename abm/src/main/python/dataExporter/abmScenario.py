@@ -284,6 +284,10 @@ class ScenarioData(object):
             "year": {
                 "line": "scenarioYear=",
                 "type": "int",
+                "value": None},
+            "rsmSamplingRate":{
+                "line": "rsm.default.sampling.rate=",
+                "type" : "float",
                 "value": None}
         }
 
@@ -637,7 +641,7 @@ class LandUse(ScenarioData):
                      "adultschenrl",
                      "ech_dist",
                      "hch_dist",
-                     "pseudomsa",
+                     #"pseudomsa",
                      "parkarea",
                      "hstallsoth",
                      "hstallssam",
@@ -649,7 +653,7 @@ class LandUse(ScenarioData):
                      "mstallsoth",
                      "mstallssam",
                      "mparkcost",
-                     "zip09",
+                     #"zip09",
                      "parkactive",
                      "openspaceparkpreserve",
                      "beachactive",
@@ -657,9 +661,9 @@ class LandUse(ScenarioData):
                      "truckregiontype",
                      "district27",
                      "milestocoast",
-                     "acres",
-                     "effective_acres",
-                     "land_acres",
+                     #"acres",
+                     #"effective_acres",
+                     #"land_acres",
                      "MicroAccessTime",
                      "remoteAVParking",
                      "refueling_stations",
@@ -2833,9 +2837,9 @@ class TripLists(ScenarioData):
                    1 / self.properties["pooledTNCPassengers"]]
 
         trips["weightTrip"] = pd.Series(
-            np.select(conditions, choices, default=1) / self.properties["sampleRate"],
+            np.select(conditions, choices, default=1) / self.properties["rsmSamplingRate"],
             dtype="float32")
-        trips["weightPersonTrip"] = 1 / self.properties["sampleRate"]
+        trips["weightPersonTrip"] = 1 / self.properties["rsmSamplingRate"]
         trips["weightPersonTrip"] = trips["weightPersonTrip"].astype("float32")
 
         # rename columns to standard/generic ABM naming conventions

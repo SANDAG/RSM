@@ -29,10 +29,6 @@ def rsm_assemble(
     orig_joint,
     rsm_indiv,
     rsm_joint,
-    rsm_indiv_tour,
-    rsm_joint_tour,
-    rsm_household,
-    rsm_person,
     households,
     mgra_crosswalk=None,
     sample_rate=0.25,
@@ -56,17 +52,6 @@ def rsm_assemble(
         Trips table from RSM model run, should be a simulation of all joint
         trips for potentially only a subset of all synthetic households (the
         same sampled households as in `rsm_indiv`).
-    rsm_indiv_tour : path-like
-        Tours table from RSM model run, should be a simulation of all individual
-        tous for potentially only a subset of all synthetic households.
-    rsm_joint_tour : path-like
-        Tours table from RSM model run, should be a simulation of all joint
-        tous for potentially only a subset of all synthetic households (the
-        same sampled households as in `rsm_indiv_tour`).
-    rsm_household: path-like
-        Households from RSM model run, should be sumulation of all sampled households.
-    rsm_person: path-like
-        Persons from RSM mdoel run, should be simulation of all sampled persons. 
     households : path-like
         Synthetic household file, used to get home zones for households.
     mgra_crosswalk : path-like, optional
@@ -96,10 +81,6 @@ def rsm_assemble(
     orig_joint = Path(orig_joint).expanduser()
     rsm_indiv = Path(rsm_indiv).expanduser()
     rsm_joint = Path(rsm_joint).expanduser()
-    rsm_indiv_tour = Path(rsm_indiv_tour).expanduser()
-    rsm_joint_tour = Path(rsm_joint_tour).expanduser()
-    rsm_household = Path(rsm_household).expanduser()
-    rsm_person = Path(rsm_person).expanduser()
     households = Path(households).expanduser()
 
     assert os.path.isfile(orig_indiv)
@@ -117,22 +98,8 @@ def rsm_assemble(
     ind_trips_rsm = pd.read_csv(rsm_indiv)
     logger.info("reading jnt_trips_rsm")
     jnt_trips_rsm = pd.read_csv(rsm_joint)
-    logger.info("reading ind_tours_rsm")
-    ind_tours_rsm = pd.read_csv(rsm_indiv_tour)
-    logger.info("reading jnt_tours_rsm")
-    jnt_tours_rsm = pd.read_csv(rsm_joint_tour)
-    logger.info("reading household_rsm")
-    household_rsm = pd.read_csv(rsm_household)
-    logger.info("reading person_rsm")
-    person_rsm = pd.read_csv(rsm_person)
 
     scale_factor = int(1.0/sample_rate)
-
-    # tours, household and person file are scaled up based on sampling rate
-    final_ind_tours = scaleup_to_rsm_samplingrate(ind_tours_rsm, scale_factor)
-    final_jnt_tours = scaleup_to_rsm_samplingrate(jnt_tours_rsm, scale_factor)
-    final_household = scaleup_to_rsm_samplingrate(household_rsm, scale_factor)
-    final_person = scaleup_to_rsm_samplingrate(person_rsm, scale_factor)
 
     if run_assembler == 1:
         # load trip data - full simulation of residual/source model
@@ -252,4 +219,4 @@ def rsm_assemble(
         final_ind_trips = scaleup_to_rsm_samplingrate(ind_trips_rsm, scale_factor)
         final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, scale_factor) 
                      
-    return final_ind_trips, final_jnt_trips, final_ind_tours, final_jnt_tours, final_household, final_person
+    return final_ind_trips, final_jnt_trips
