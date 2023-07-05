@@ -2836,10 +2836,11 @@ class TripLists(ScenarioData):
                    1 / self.properties["nonPooledTNCPassengers"],
                    1 / self.properties["pooledTNCPassengers"]]
 
+        scale_factor = self.properties["rsmSamplingRate"]
         trips["weightTrip"] = pd.Series(
-            np.select(conditions, choices, default=1) / self.properties["rsmSamplingRate"],
+            np.select(conditions, choices, default=1) / (scale_factor*scale_factor),
             dtype="float32")
-        trips["weightPersonTrip"] = 1 / self.properties["rsmSamplingRate"]
+        trips["weightPersonTrip"] = 1 / (scale_factor*scale_factor)
         trips["weightPersonTrip"] = trips["weightPersonTrip"].astype("float32")
 
         # rename columns to standard/generic ABM naming conventions
