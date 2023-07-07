@@ -65,7 +65,7 @@ logging.info("start logging rsm_zone_aggregator")
 # prepare list of MGRA that should not be aggregated or grouped together 
 logging.info("Check if the study area file exists in the RSM input folder")
 if os.path.exists(EXPILICT_AGG_TAZ):
-    EXPLICIT_ZONE_AGG = create_list_study_area_mgra(EXPILICT_AGG_TAZ)
+    EXPLICIT_ZONE_AGG = create_list_study_area_taz(EXPILICT_AGG_TAZ)
 else:
     EXPLICIT_ZONE_AGG = []
 
