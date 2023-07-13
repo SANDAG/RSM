@@ -35,6 +35,23 @@ RSM_JOINT_TRIPS = os.path.join(rsm_dir, "output", "jointTripData_" + str(iterati
 
 HOUSEHOLDS = os.path.join(org_model_dir, "input", "households.csv")
 MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
+TAZ_CROSSWALK = os.path.join(rsm_dir, "input", "taz_crosswalk.csv")
+STUDY_AREA = os.path.join(rsm_dir, "input", "study_area.csv")
+
+if os.path.exists(STUDY_AREA):
+    logging.info(f"Study Area file: {STUDY_AREA}")
+    study_area_taz = find_rsm_zone_of_study_area(STUDY_AREA, TAZ_CROSSWALK)
+    if study_area_taz is not None:
+        # Process the result
+        SA_TAZ = study_area_taz
+        logger.info(f"RSM Zone identified for the Study area are : {SA_TAZ}", )
+    else:
+        # Handle the error
+        logger.info("Please check the study area file. 'taz' column is expected in the file to find the corresponding RSM zone.")
+        SA_TAZ = None
+
+else:
+    SA_TAZ = None
 
 #creating copy of individual and joint trips file
 shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_abm_"+ str(iteration) + ".csv"))
@@ -54,6 +71,7 @@ final_ind_trips, final_jnt_trips = rsm_assemble(
     HOUSEHOLDS,
     MGRA_CROSSWALK,
     SAMPLE_RATE,
+    SA_TAZ,
     RUN_ASSEMBLER
 )
 

@@ -32,6 +32,7 @@ def rsm_assemble(
     households,
     mgra_crosswalk=None,
     sample_rate=0.25,
+    study_area_taz=None,
     run_assembler=1
 ):
     """
@@ -65,6 +66,8 @@ def rsm_assemble(
     sample_rate : float
         default/fixed sample rate if sampler was turned off
         this is used to scale the trips if run_assembler is 0
+    study_area_rsm_zones :  list
+        it is list of study area RSM zones
     
     Returns
     -------
@@ -210,13 +213,18 @@ def rsm_assemble(
         # then scale the trips in the trip list using the fixed sample rate 
         # trips in the final trip lists will be 100%
         scale_factor = int(1.0/sample_rate)
-        
+
+        if study_area_taz:
+            sa_rsm = study_area_taz
+        else:
+            sa_rsm = None
+
         # concat is slow
         # https://stackoverflow.com/questions/50788508/how-can-i-replicate-rows-of-a-pandas-dataframe
         #final_ind_trips = pd.concat([ind_trips_rsm]*scale_factor, ignore_index=True)
         #final_jnt_trips = pd.concat([jnt_trips_rsm]*scale_factor, ignore_index=True)
         
-        final_ind_trips = scaleup_to_rsm_samplingrate(ind_trips_rsm, scale_factor)
-        final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, scale_factor) 
+        final_ind_trips = scaleup_to_rsm_samplingrate(ind_trips_rsm, households, scale_factor, study_area_tazs=sa_rsm)
+        final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, households, scale_factor, study_area_tazs=sa_rsm) 
                      
     return final_ind_trips, final_jnt_trips

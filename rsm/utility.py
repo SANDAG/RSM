@@ -232,15 +232,28 @@ def add_density_variables(model_dir, mgra_data):
     return mgra_data
 
 
-def scaleup_to_rsm_samplingrate(df, scale_factor):
+def scaleup_to_rsm_samplingrate(df, household, scale_factor, study_area_tazs=None):
     """
-    scales up the tour, trips, household, person data files based on the sampling rate. 
+    scales up the trips based on the sampling rate. 
     
     """
+    
+    hh = pd.read_csv(household)
+    hh = hh[['hhid', 'taz']]
+    
+    hh['scale_factor'] = scale_factor
+    
+    if study_area_tazs:
+        hh.loc[hh['taz'].isin(study_area_tazs), 'scale_factor'] = 1
+    
+    df = pd.merge(df, hh, left_on='hh_id', right_on='hhid', how='left')
+    
     final_df = pd.DataFrame(
-            np.repeat(df.values, scale_factor, axis=0),
+            np.repeat(df.values, df.scale_factor, axis=0),
             columns=df.columns
         )
+    
+    final_df = final_df.drop(columns=['hhid', 'scale_factor', 'taz'])
 
     return final_df
 
