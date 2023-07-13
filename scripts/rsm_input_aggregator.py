@@ -87,7 +87,7 @@ agg_input_files(
     "TripMatrices.csv", "transponderModelAccessibilities.csv", "crossBorderTours.csv", 
     "internalExternalTrips.csv", "visitorTours.csv", "visitorTrips.csv", "householdAVTrips.csv", 
     "crossBorderTrips.csv", "TNCTrips.csv", "airport_out.SAN.csv", "airport_out.CBX.csv", 
-    "TNCtrips.csv"]
+    "TNCtrips.csv", "households.csv"]
 )
 
 logging.info("finished logging rsm_input_aggregator")
