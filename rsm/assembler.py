@@ -223,7 +223,8 @@ def rsm_assemble(
         # https://stackoverflow.com/questions/50788508/how-can-i-replicate-rows-of-a-pandas-dataframe
         #final_ind_trips = pd.concat([ind_trips_rsm]*scale_factor, ignore_index=True)
         #final_jnt_trips = pd.concat([jnt_trips_rsm]*scale_factor, ignore_index=True)
-        
+
+
         final_ind_trips = scaleup_to_rsm_samplingrate(ind_trips_rsm, households, scale_factor, study_area_tazs=sa_rsm)
         final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, households, scale_factor, study_area_tazs=sa_rsm) 
                      
