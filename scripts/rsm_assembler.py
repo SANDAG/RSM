@@ -33,7 +33,7 @@ ORG_JOINT_TRIPS = os.path.join(org_model_dir, "output", "jointTripData_3.csv")
 RSM_INDIV_TRIPS = os.path.join(rsm_dir, "output", "indivTripData_" + str(iteration) + ".csv")
 RSM_JOINT_TRIPS = os.path.join(rsm_dir, "output", "jointTripData_" + str(iteration) + ".csv")
 
-HOUSEHOLDS = os.path.join(org_model_dir, "input", "households.csv")
+HOUSEHOLDS = os.path.join(rsm_dir, "input", "households.csv")
 MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 TAZ_CROSSWALK = os.path.join(rsm_dir, "input", "taz_crosswalk.csv")
 STUDY_AREA = os.path.join(rsm_dir, "input", "study_area.csv")
