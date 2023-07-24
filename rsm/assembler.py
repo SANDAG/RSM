@@ -31,6 +31,7 @@ def rsm_assemble(
     rsm_joint,
     households,
     mgra_crosswalk=None,
+    taz_crosswalk=None,
     sample_rate=0.25,
     study_area_taz=None,
     run_assembler=1
@@ -95,6 +96,10 @@ def rsm_assemble(
     if mgra_crosswalk is not None:
         mgra_crosswalk = Path(mgra_crosswalk).expanduser()
         assert os.path.isfile(mgra_crosswalk)
+
+    if taz_crosswalk is not None:
+        taz_crosswalk = Path(taz_crosswalk).expanduser()
+        assert os.path.isfile(taz_crosswalk)
 
     # load trip data - partial simulation of RSM model
     logger.info("reading ind_trips_rsm")
@@ -225,7 +230,16 @@ def rsm_assemble(
         #final_jnt_trips = pd.concat([jnt_trips_rsm]*scale_factor, ignore_index=True)
 
 
-        final_ind_trips = scaleup_to_rsm_samplingrate(ind_trips_rsm, households, scale_factor, study_area_tazs=sa_rsm)
-        final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, households, scale_factor, study_area_tazs=sa_rsm) 
+        final_ind_trips = scaleup_to_rsm_samplingrate(ind_trips_rsm, 
+                                                      households, 
+                                                      taz_crosswalk, 
+                                                      scale_factor, 
+                                                      study_area_tazs=sa_rsm)
+
+        final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, 
+                                                      households, 
+                                                      taz_crosswalk, 
+                                                      scale_factor, 
+                                                      study_area_tazs=sa_rsm) 
                      
     return final_ind_trips, final_jnt_trips

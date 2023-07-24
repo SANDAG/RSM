@@ -232,7 +232,11 @@ def add_density_variables(model_dir, mgra_data):
     return mgra_data
 
 
-def scaleup_to_rsm_samplingrate(df, household, scale_factor, study_area_tazs=None):
+def scaleup_to_rsm_samplingrate(df, 
+                                household, 
+                                taz_crosswalk, 
+                                scale_factor, 
+                                study_area_tazs=None):
     """
     scales up the trips based on the sampling rate. 
     
@@ -240,14 +244,20 @@ def scaleup_to_rsm_samplingrate(df, household, scale_factor, study_area_tazs=Non
     
     hh = pd.read_csv(household)
     hh = hh[['hhid', 'taz']]
+
+    rsm_zones = pd.read_csv(taz_crosswalk)
+    dict_clusters = dict(zip(rsm_zones["taz"], rsm_zones["cluster_id"]))
+
+    hh["taz"] = hh["taz"].map(dict_clusters)
     hh['scale_factor'] = scale_factor
     
-    if study_area_tazs:
+    if study_area_tazs:       
         hh.loc[hh['taz'].isin(study_area_tazs), 'scale_factor'] = 1
     
     df = pd.merge(df, hh, left_on='hh_id', right_on='hhid', how='left')
     final_df = df.loc[np.repeat(df.index, df['scale_factor'])]
     final_df = final_df.drop(columns=['hhid', 'scale_factor', 'taz'])
+    
     return final_df
 
 def check_column_names(df, columns):

@@ -70,6 +70,7 @@ final_ind_trips, final_jnt_trips = rsm_assemble(
     RSM_JOINT_TRIPS,
     HOUSEHOLDS,
     MGRA_CROSSWALK,
+    TAZ_CROSSWALK,
     SAMPLE_RATE,
     SA_TAZ,
     RUN_ASSEMBLER
