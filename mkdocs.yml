@@ -29,7 +29,6 @@ theme:
 
 plugins:
   - autorefs
-  - awesome-pages
   - mike
   - mkdocs-jupyter:
       include_source: True
@@ -47,7 +46,9 @@ plugins:
 
 nav:
   - Home: home.md
-  - Design: design.md
+  - Development: development.md
+  - Assessment: assessment.md
+  - User Guide: userguide.md
   - API: api.md
 
 extra:
@@ -62,7 +63,6 @@ markdown_extensions:
   - admonition
   - codehilite:
       linenums: true
-  - fontawesome_markdown
   - meta
   - pymdownx.inlinehilite
   - pymdownx.tasklist:
