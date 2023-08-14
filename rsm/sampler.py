@@ -35,36 +35,38 @@ def rsm_household_sampler(
 
     Parameters
     ----------
-    input_dir : Path-like, default "."
-    output_dir : Path-like, default "."
-    prev_iter_access : Path-like or pandas.DataFrame
+    input_dir : input_dir 
+        default "."
+    output_dir : output_dir 
+        default "."
+    prev_iter_access : prev_iter_access
         Accessibility in an old (default, no treatment, etc) run is given (preloaded)
         or read in from here. Give as a relative path (from `input_dir`) or an
         absolute path.
-    curr_iter_access : Path-like or pandas.DataFrame
+    curr_iter_access : curr_iter_access
         Accessibility in the latest run is given (preloaded) or read in from here.
         Give as a relative path (from `input_dir`) or an absolute path.
-    study_area : array-like
+    study_area : study_area
         Array of RSM zone (these are numbered 1 to N in the RSM) in the study area. These zones are sampled at 100%.
-    input_household : Path-like or pandas.DataFrame
+    input_household : input_household
         Complete synthetic household file.  This data will be filtered to match the
         sampling of households and written out to a new CSV file.
-    input_person : Path-like or pandas.DataFrame
+    input_person : input_person
         Complete synthetic persons file.  This data will be filtered to match the
         sampling of households and written out to a new CSV file.
-    compare_access_columns : Collection[str]
+    compare_access_columns : compare_access_columns
         Column names in the accessibility file to use for comparing accessibility.
         Only changes in the values in these columns will be evaluated.
-    default_sampling_rate : float
+    default_sampling_rate : default_sampling_rate
         The default sampling rate, in the range (0,1]
-    lower_bound_sampling_rate : float
+    lower_bound_sampling_rate : lower_bound_sampling_rate
         Sampling rates by zone will be truncated so they are never lower than this.
-    upper_bound_sampling_rate : float
+    upper_bound_sampling_rate : upper_bound_sampling_rate
         Sampling rates by zone will be truncated so they are never higher than this.
 
     Returns
     -------
-    sample_households_df, sample_persons_df : pandas.DataFrame
+    sample_households_df, sample_persons_df : sample_households_df, sample_persons_df
         These are the sampled population to resimulate.  They are also written to
         the output_dir
     """

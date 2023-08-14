@@ -37,29 +37,32 @@ def attach_poi_taz_skims(
 
     Parameters
     ----------
-    gdf : GeoDataFrame
+    gdf : gdf
         The skimmed values will be added as columns to this [geo]dataframe.
         If the POI's are given explicitly, this could be a regular pandas
         DataFrame, otherwise the geometry is used to find the TAZ's of the
         points of interest.
-    skims_omx : path-like or openmatrix.File
-    names : str or Mapping
+    skims_omx : skims_omx
+        Openmatrix.File of skimmed values.
+    names : names
         Keys give the names of matrix tables to load out of the skims file.
         Values give the relative weight for each table (used later in
         clustering).
-    poi : Mapping
+    poi : poi
         Maps named points of interest to the 'taz' id of each.  If not given,
         these will be computed based on the `gdf`.
-    data_dir : path-like, optional
+    data_dir : data_dir, optional
         Directory where the `skims_omx` file can be found, if not the current
         working directory.
-    cluster_factors : Mapping, optional
+    cluster_factors : cluster_factors, optional
         Existing cluster_factors, to which the new factors are added.
 
     Returns
     -------
-    gdf : GeoDataFrame
-    cluster_factors : Mapping
+    gdf : gdf
+        [geo]dataframe to which the TAZ's of the points of interest were added.
+    cluster_factors : cluster_factors
+        Resulting cluster_factors.
     """
     if poi is None:
         poi = poi_taz_mgra(gdf)

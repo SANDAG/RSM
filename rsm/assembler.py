@@ -38,43 +38,45 @@ def rsm_assemble(
 
     Parameters
     ----------
-    orig_indiv : path-like
+    orig_indiv : orig_indiv
         Trips table from "original" model run, should be comprehensive simulation
         of all individual trips for all synthetic households.
-    orig_joint : path-like
+    orig_joint : orig_joint 
         Joint trips table from "original" model run, should be comprehensive simulation
         of all joint trips for all synthetic households.
-    rsm_indiv : path-like
+    rsm_indiv : rsm_indiv 
         Trips table from RSM model run, should be a simulation of all individual
         trips for potentially only a subset of all synthetic households.
-    rsm_joint : path-like
+    rsm_joint : rsm_joint 
         Trips table from RSM model run, should be a simulation of all joint
         trips for potentially only a subset of all synthetic households (the
         same sampled households as in `rsm_indiv`).
-    households : path-like
+    households : households 
         Synthetic household file, used to get home zones for households.
-    mgra_crosswalk : path-like, optional
+    mgra_crosswalk : mgra_crosswalk 
         Crosswalk from original MGRA to clustered zone ids.  Provide this crosswalk
         if the `orig_indiv` and `orig_joint` files reference the original MGRA system
         and those id's need to be converted to aggregated values before merging.
-    run_assembler : boolean 
-        flag to indicate whether to run RSM assembler or not. 
+    sample_rate : sample_rate
+        Default/fixed sample rate if sampler was turned off
+        this is used to scale the trips if run_assembler is 0
+    run_assembler : run_assembler 
+        Flag to indicate whether to run RSM assembler or not. 
         1 is to run assembler, 0 is to turn if off
         setting this to 0 is only an option if sampler is turned off       
-    sample_rate : float
-        default/fixed sample rate if sampler was turned off
-        this is used to scale the trips if run_assembler is 0
     
     Returns
     -------
-    #final_trips_rsm : pd.DataFrame
-    #    Assembled trip table for RSM run, filling in archived trip values for
-    #    non-resimulated households.
-    #combined_trips_by_zone : pd.DataFrame
-    #    Summary table of changes in trips by mode, by household home zone.
-    #    Used to check whether undersampled zones have stable travel behavior.
-    final_ind, final_jnt
-        Separate tables for individual and joint trips, as required by java.
+    final_trips_rsm : final_ind_trips
+        Assembled trip table for RSM run, filling in archived trip values for
+        non-resimulated households.
+    combined_trips_by_zone : final_jnt_trips
+        Summary table of changes in trips by mode, by household home zone.
+        Used to check whether undersampled zones have stable travel behavior.
+    
+    Separate tables for individual and joint trips, as required by java.
+    
+    
     """
     orig_indiv = Path(orig_indiv).expanduser()
     orig_joint = Path(orig_joint).expanduser()
