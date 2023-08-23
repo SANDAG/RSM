@@ -76,3 +76,8 @@ markdown_extensions:
   - toc:
       # insert a blank space before the character
       permalink: " ¶"
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde

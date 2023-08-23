@@ -3,7 +3,7 @@
 The time needed to configure, run, and summarize results from ABM2+ is too slow to support a nimble, challenging, and engagement-oriented planning process. SANDAG needs a tool that quickly approximates the outcomes of ABM2+. The rapid strategic model, or RSM, was built for this purpose.
 
 ABM2+ Schematic is shown below
-![](images\abm2plus_schematic.PNG)
+![](images\development\abm2plus_schematic.PNG)
 
 ## Design
 ### Reducing the number of zones reduces model runtime. 
@@ -30,3 +30,23 @@ ABM2+ Schematic is shown below
 * Higher rate in zones with large changes in accessibiility
 * Lower rates in zones with small changes in accessibility
 * This attempts to mitigate the impact of reducing the number of global iterations from 3 to 2.     
+
+## Integration Plan
+A challenge in the RSM development is that the model is intended to approximate the outcomes of ABM3. The design plan therefore assumes that ABM3 outcomes will be used to inform an RSM model run. ABM3 is, however, also under development. We must therefore approach the RSM development carefully, designing around what we expect ABM3 to produce and testing with, initially, dummy files that represent ABM3 output.
+
+For the MVP, the key outputs of interest from ABM3 are as follows:
+
+* Disaggregate accessibilities
+* MGRA and TAZ boundaries
+* MGRA data
+* Zone connectors (if a one-zone approach to transit skimming/assignment is used) - drive, walk access to transit, drive access to transit
+* Trip list
+* Non-resident passenger demand, e.g., commercial vehicle, cross border, airport access
+
+Mechanically, the WSP team will request illustrative ABM3 files from SANDAG that can be used to build the RSM components. We will then conduct preliminary (i.e., those needed for development) tests of the procedures using these demonstration files. Formal testing of the procedures will come after an operational version of ABM3 is complete (see [Sample Test Procedure in Visualizer](visualizer.md#Sample-Test-Procedure)).
+
+## User Experience
+The RSM will repurpose the ABM3 Emme-based GUI. The options will be updated to reflect the RSM options, as will the input file locations and other parameters. The RSM user experience will, therefore, be nearly the same as the ABM3 user experience.
+
+Because the RSM will be a standalone Python package, it can also be run from a Jupyter Notebook, if desired.
+
