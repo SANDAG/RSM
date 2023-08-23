@@ -3,9 +3,7 @@
 The time needed to configure, run, and summarize results from ABM2+ is too slow to support a nimble, challenging, and engagement-oriented planning process. SANDAG needed a tool that quickly approximates the outcomes of ABM2+. The rapid strategic model, or RSM, was built for this purpose.
 
 ABM2+ Schematic is shown below
-![](images\abm2plus_schematic.PNG)
-
-
+![](images\development\abm2plus_schematic.PNG)
 
 ## Design Considerations
 
@@ -24,16 +22,14 @@ Reducing the number of model components reduces runtime.
 
 Reducing the number of global iterations reduces runtime.
 
-- If the RSM results are in the same ballpark as ABM2+, reduce the number of global iterations from 3 to 2 for the model. 
+* If the RSM results are in the same ballpark as ABM2+, reduce the number of global iterations from 3 to 2 for the model. 
 
 Reducing sample rate reduces runtime.
 
-- Runtime of the resident model will reduce if less population is simulated. 
-- ABM2+ simulates population as 25 percent (first iteration), 50 percent (second iteration) and 100 percent (third iteration). 
-- RSM will attempt to intelligently sample population and vary it by TAZ with higher sample rate in zones with large changes in accessibility and lower rates in zones with small changes in accessibility. 
-- RSM could also have higher sampling in zones around the analysis project and lower elsewhere. 
-
-
+* Runtime of the resident model will reduce if less population is simulated. 
+* ABM2+ simulates population as 25 percent (first iteration), 50 percent (second iteration) and 100 percent (third iteration). 
+* RSM will attempt to intelligently sample population and vary it by TAZ with higher sample rate in zones with large changes in accessibility and lower rates in zones with small changes in accessibility. 
+* RSM could also have higher sampling in zones around the analysis project and lower elsewhere. 
 
 ## Architecture
 
@@ -86,7 +82,7 @@ Each of the above files has its own aggregation methodology. In some cases, the 
 
 #### Translate Demand
 
-The translate demand module of the RSM aggregated the demand files (*.omx) based on the new RSM zone structure. The inputs of this module includes the path to the RSM model directory, donor model directory and crosswalks. In particular the module aggregates the demand from auto, transit, non-motorized, other trips from the airport, cross border, internal external and visitor model. It also aggregated TNC vehicle trips and empty AV trips. 
+The translate demand module of the RSM aggregates the non-resident demand matrices and trip tables based on the new RSM zone structure. The inputs of this module includes the path to the RSM model directory, donor model directory and crosswalks. In particular the module aggregates the demand from auto, transit, non-motorized, other trips from the airport, cross border, internal external and visitor model. It also aggregated TNC vehicle trips and empty AV trips. 
 
 #### Intelligent Sampler
 
@@ -134,7 +130,5 @@ In summary, the RSM assembler module takes multiple trip datasets and assembles 
 The RSM repurposes the ABM2+ Emme-based GUI. The options will be updated to reflect the
 RSM options, as will the input file locations and other parameters. The RSM user experience will,
 therefore, be nearly the same as the ABM2+ user experience.
-
-
 
 ## Calibration
