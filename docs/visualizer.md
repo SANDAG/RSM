@@ -1,8 +1,5 @@
-# visualizer
-
 ## Introduction
-The proposed MVP visualization tool is a SimWrapper dashboard. SimWrapper is an
-open-source simulation visualization software package that has recently been adapted for activity-based models and set up to work with ActivitySim software. The software works by creating a mini file server to host reduced data summaries of ActivitySim software. The dashboard is created via YAML files, which can be customized to automate interactive report summaries, such as charts and summary tables, while also enabling integration of the RSMAZ geographical component for an interactive map display. An example implementation of the YAML file setup is shown below.
+The proposed MVP visualization tool is a SimWrapper dashboard. SimWrapper is an open-source simulation visualization software package that has recently been adapted for activity-based models and set up to work with ActivitySim software. The software works by creating a mini file server to host reduced data summaries of ActivitySim software. The dashboard is created via YAML files, which can be customized to automate interactive report summaries, such as charts and summary tables, while also enabling integration of the RSMAZ geographical component for an interactive map display. An example implementation of the YAML file setup is shown below.
 
 ![](images\visualizer\YAML_example.PNG)
 
@@ -66,5 +63,3 @@ As the final step, you need to copy and rename couple of files:
 2. For both **build and base abm runs**, from the output folder of the corresponding source abm runs, copy **householdData_3.csv** into **abm2p_base\report** and **ab2p_build\report** folders in the external data folder.
 
 You can then follow the **README** file in the **rsm_visualizer** folder to run the process.
-
-    
