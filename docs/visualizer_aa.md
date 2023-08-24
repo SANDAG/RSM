@@ -54,7 +54,7 @@ These charts are for comparing flow and VMT on the network. You can compare any 
 
 <img align="center" width="600" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_9.PNG">
 
-For each network you need the csv files for two scenario summaries and an underlying network file which should be in geojson format. The supporting [script](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/process_scenarios.py) creates the geojson files from the model outputs for the SimWrapper. For more info on network visualization specification see [here](https://simwrapper.github.io/docs/link-vols)
+For each network you need the csv files for two scenario summaries and an underlying network file which should be in geojson format. The supporting [script](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/process_scenarios.py) creates the geojson files from the model outputs for the SimWrapper. On this network you can see the comparison of flows between RSM and Donor models. For more info on network visualization specification see [here](https://simwrapper.github.io/docs/link-vols)
 
 <img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_10.PNG">
 
