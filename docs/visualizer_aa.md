@@ -40,45 +40,45 @@ Currently there are five default visualization summaries for user:
 ### Bar Charts:
 These charts are for comparing VMT, mode shares, transit boardings and trip purpose by time-of-day distribution. Here is a snapshot of sample YAML configuration [file](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/simwrapper/dashboard-charts.yaml) and how the visual looks on SimWrapper:
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_7.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_7.PNG">
 
 you can add as many charts as you want to the layout. each chart should specify a csv file for the summaries and columns should match the csv file column name. There are also other specifications for the bar charts which you learn about more [here](https://simwrapper.github.io/docs/bar-area-line)
 
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_8.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_8.PNG">
 
 
 ### Network Flows:
 
 These charts are for comparing flow and VMT on the network. You can compare any two scenarios on one network. Here is a snapshot of the configuration [file](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/simwrapper/dashboard-network.yaml) and how the visual looks on SimWrapper:
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_9.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_9.PNG">
 
 For each network you need the csv files for two scenario summaries and an underlying network file which should be in geojson format. The supporting [script](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/process_scenarios.py) creates the geojson files from the model outputs for the SimWrapper. For more info on network visualization specification see [here](https://simwrapper.github.io/docs/link-vols)
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_10.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_10.PNG">
 
 
 ### Sample Rate Map:
 
 This visual is a map for showing the RSM sample rates for each zone. Here is a snapshot of the configuration [file](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/simwrapper/dashboard-sample-rate-maps.yaml)  and how the map looks on SimWrapper.
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_11.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_11.PNG">
 
 For each map you need a csv file of sample rates and the map of zones in .shp format. For more info on network visualization specification see [here](https://simwrapper.github.io/docs/shapefiles)
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_12.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_12.PNG">
 
 
 
 ### Zero Car Map:
 This visual is a map for showing the zero-car household distribution. Here is a snapshot of the configuration [file](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/simwrapper/dashboard-zero-car-maps.yaml) and how it looks on SimWrapper.
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_13.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_13.PNG">
 
 For each map you need a csv file of household rates and the map of zones in .shp format. For more info on network visualization specification see [here](https://simwrapper.github.io/docs/shapefiles)
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_14.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_14.PNG">
 
 
 
@@ -86,18 +86,18 @@ For each map you need a csv file of household rates and the map of zones in .shp
 
 This chart is for showing OD trip flows. Here is a snapshot of the configuration [file](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/simwrapper/viz-od-donor-model.yaml) and how it looks on SimWrapper.
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_15.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_15.PNG">
 
 For each map you need a csv file of od trip flows and the map of zones in .shp format. For more info on network visualization specification see [here](https://simwrapper.github.io/docs/aggregate-od)
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_16.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_16.PNG">
 
 
 
 
 You can also modify the data and configuration of each visual on SimWrapper server. For each visual, there is a configuration button (see below), where you can add data, and modify all the map configurations. You can also export these configurations into a YAML file so you can use it in future.
 
-<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/updated_docs/docs/images/visualizer/image_17.PNG">
+<img align="center" width="1100" border=1 src="https://github.com/SANDAG/RSM/blob/update_docs/docs/images/visualizer/image_17.PNG">
 
 
 
