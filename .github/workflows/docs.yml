@@ -1,21 +1,22 @@
-name: Publish docs via GitHub Pages
+name: Publish documents
 on:
   push:
-    branches: [main]
-
+    branches: [main, develop]
 jobs:
   build:
-    name: Deploy docs
+    name: Deploy docs to GitHub Pages
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main
+      - name: Checkout 
         uses: actions/checkout@v2
-
-      - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_DOMAIN: sandag.github.io/rsm
-          CONFIG_FILE: mkdocs.yml
-          EXTRA_PACKAGES: build-base
-          REQUIREMENTS: docs_requirements.txt
+      - name: Build
+        uses: Tiryoh/actions-mkdocs@v0
+        with:
+          mkdocs_version: 'latest' 
+          requirements: 'docs_requirements.txt'
+          configfile: 'mkdocs.yml'
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
