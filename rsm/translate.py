@@ -33,14 +33,14 @@ def translate_omx_demand(
     
     Parameters
     ----------
-    matrix_names : matrix_names
+    matrix_names : matrix_names (list)
         omx matrix filenames to aggregate
-    agg_zone_mapping: agg_zone_mapping
+    agg_zone_mapping: agg_zone_mapping (path_like or pandas.DataFrame)
         zone number mapping between original and aggregated zones. 
         columns: original zones as 'taz' and aggregated zones as 'cluster_id'
-    input_dir : input_dir
+    input_dir : input_dir (path_like)
         default "."
-    output_dir : output_dir 
+    output_dir : output_dir (path_like) 
         default "."
     
     Returns
@@ -96,13 +96,13 @@ def translate_emmebank_demand(
     
     Parameters
     ----------
-    input_databank : input_databank
+    input_databank : input_databank (Emme databank)
         Emme databank
-    output_databank : output_databank
+    output_databank : output_databank (Emme databank)
         Emme databank
-    cores_to_aggregate : cores_to_aggregate
+    cores_to_aggregate : cores_to_aggregate (list)
         matrix corenames to aggregate
-    agg_zone_mapping: agg_zone_mapping
+    agg_zone_mapping: agg_zone_mapping (Path-like or pandas.DataFrame)
         zone number mapping between original and aggregated zones. 
         columns: original zones as 'taz' and aggregated zones as 'cluster_id'
     
@@ -138,11 +138,11 @@ def copy_transit_demand(
     
     Parameters
     ----------
-    matrix_names : matrix_names
+    matrix_names : matrix_names (list)
         omx matrix filenames to aggregate
-    input_dir : input_dir
+    input_dir : input_dir (Path-like) 
         default "."
-    output_dir : output_dir
+    output_dir : output_dir (Path-like)
         default "."
     
     Returns

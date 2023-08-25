@@ -38,39 +38,39 @@ def rsm_assemble(
 
     Parameters
     ----------
-    orig_indiv : orig_indiv
+    orig_indiv : orig_indiv (path_like)
         Trips table from "original" model run, should be comprehensive simulation
         of all individual trips for all synthetic households.
-    orig_joint : orig_joint 
+    orig_joint : orig_joint (path_like)
         Joint trips table from "original" model run, should be comprehensive simulation
         of all joint trips for all synthetic households.
-    rsm_indiv : rsm_indiv 
+    rsm_indiv : rsm_indiv (path_like)
         Trips table from RSM model run, should be a simulation of all individual
         trips for potentially only a subset of all synthetic households.
-    rsm_joint : rsm_joint 
+    rsm_joint : rsm_joint (path_like)
         Trips table from RSM model run, should be a simulation of all joint
         trips for potentially only a subset of all synthetic households (the
         same sampled households as in `rsm_indiv`).
-    households : households 
+    households : households (path_like)
         Synthetic household file, used to get home zones for households.
-    mgra_crosswalk : mgra_crosswalk 
+    mgra_crosswalk : mgra_crosswalk (path_like, optional)
         Crosswalk from original MGRA to clustered zone ids.  Provide this crosswalk
         if the `orig_indiv` and `orig_joint` files reference the original MGRA system
         and those id's need to be converted to aggregated values before merging.
-    sample_rate : sample_rate
+    sample_rate : sample_rate (float)
         Default/fixed sample rate if sampler was turned off
         this is used to scale the trips if run_assembler is 0
-    run_assembler : run_assembler 
+    run_assembler : run_assembler (boolean)
         Flag to indicate whether to run RSM assembler or not. 
         1 is to run assembler, 0 is to turn if off
         setting this to 0 is only an option if sampler is turned off       
     
     Returns
     -------
-    final_trips_rsm : final_ind_trips
+    final_trips_rsm : final_ind_trips (pd.DataFrame)
         Assembled trip table for RSM run, filling in archived trip values for
         non-resimulated households.
-    combined_trips_by_zone : final_jnt_trips
+    combined_trips_by_zone : final_jnt_trips (pd.DataFrame)
         Summary table of changes in trips by mode, by household home zone.
         Used to check whether undersampled zones have stable travel behavior.
     

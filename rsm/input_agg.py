@@ -43,17 +43,17 @@ def agg_input_files(
     """
         Parameters
         ----------
-        model_dir : model_dir 
-            default "."
-        rsm_dir : rsm_dir 
-            default "."
-        taz_cwk_file : taz_cwk_file 
+        model_dir : model_dir (path_like)
+            path to full model run, default "."
+        rsm_dir : rsm_dir (path_like)
+            path to RSM, default "."
+        taz_cwk_file : taz_cwk_file (csv file)
             default taz_crosswalk.csv
             taz to aggregated zones file. Should be located in RSM input folder
-        mgra_cwk_file : mgra_cwk_file 
+        mgra_cwk_file : mgra_cwk_file (csv file)
             default mgra_crosswalk.csv
             mgra to aggregated zones file. Should be located in RSM input folder
-        input_files : input_files
+        input_files : input_files (csv + other files)
             list of input files to be aggregated. 
             Should include the following files
                 "microMgraEquivMinutes.csv", "microMgraTapEquivMinutes.csv", 
