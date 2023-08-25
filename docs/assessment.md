@@ -81,21 +81,21 @@ RSM and ABM2+ shows similar sensitivities for the two tested scenarios with land
 
 #### Transit Fare
 
-
+TODO: Add some text to explain how this test was performed using the study area parameter
+TODO: Add outcome screenshot
 
 #### Transit Frequency
 
-
-
-
-
+TODO: Add some text to explain how this test was performed using the study area parameter
+TODO: Add outcome screenshot
 
 
 ### Local Highway Changes
 
 #### Managed Lane Conversion
 
-
+TODO: Add some text to explain how this test was performed using the study area parameter
+TODO: Add outcome screenshot
 
 
 
@@ -104,7 +104,6 @@ RSM and ABM2+ shows similar sensitivities for the two tested scenarios with land
 #### Rapid 637 BRT
 
 TODO: Add some text to explain how this test was performed using the study area parameter
-
 TODO: Add outcome screenshot
 
 
