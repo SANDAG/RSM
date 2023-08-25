@@ -89,7 +89,7 @@ The first step to run the visualizer is to bring in the scenario files. Currentl
 - Only for RSM scenarios, from the scenario input folder, copy **mgra_crosswalk.csv** and **households.csv** files and bring them to the input folder **(Simwrapper/data/external/[scenario_name]/input)**. Then change the name of the **households.csv**  to **households_orig.csv**. The [input](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/rsm_scen/input) folder on external folder for RSM scenarios should look like below after this step
 ![](images\visualizer\image_19.PNG)
 
-If you wish to add any more RSM scenarios you can do it by modifying the [scenarios.yaml](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml) file. Simply add the scenario configuration by copying the rsm_scenario portion and past it under and change "rsm_scen" to your scenario name. 
+If you wish to add any more RSM scenarios you can do it by modifying the [scenarios.yaml](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml) file. Simply add the scenario configuration by copying the rsm_scenario portion and paste it under and change "rsm_scen" to your scenario name. 
 ![](images\visualizer\image_18.PNG)
 
 ## How to run
