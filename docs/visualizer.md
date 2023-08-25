@@ -20,7 +20,7 @@ Lastly, the created summary files are consumed by SimWrapper to generate dashboa
 For setting up the visualization in SimWrapper, configuration files (in YAML format) are created that provide all the config details to get it up and running, such as which data to load, how to lay out the dashboard, what type of chart to create etc. Refer to SimWrapper documentation [here](https://simwrapper.github.io/docs/) to get more familiar with it.
 
 ## Setup
-The visualizer is currently deployed to compare 4 scenario runs at once. Running data pipeline and post-processing for each of those scenario is controlled thorugh the process_scenarios python [script](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/process_scenarios.py) and configuration for scenarios are specified using the [scenarios.yaml](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml) file. User will need to modify this yaml file to specify the scenarios they would like to compare using visualizer. There are two categories of scenarios to be specified - RSM and ABM (Donor Model) runs. For each of the scenario run, specify the directory of input and report folders in this configuration file. Files from input and report folder for the scenarios are then used in the data pipeline tool and post-processing step to create summaries in the processed folder of SimWrapper directory. Note that additional number of scenarios can be compared by extending the configuration in this file yaml file.
+The visualizer is currently deployed to compare 3 scenario runs at once. Running data pipeline and post-processing for each of those scenario is controlled thorugh the process_scenarios python [script](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/process_scenarios.py) and configuration for scenarios are specified using the [scenarios.yaml](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml) file. User will need to modify this yaml file to specify the scenarios they would like to compare using visualizer. There are two categories of scenarios to be specified - RSM and ABM (Donor Model) runs. For each of the scenario run, specify the directory of input and report folders in this configuration file. Files from input and report folder for the scenarios are then used in the data pipeline tool and post-processing step to create summaries in the processed folder of SimWrapper directory. Note that additional number of scenarios can be compared by extending the configuration in this file yaml file.
 
 ### Visualization
 Currently there are five default visualization summaries in the visualizer:
@@ -79,32 +79,31 @@ You can also modify the data and configuration of each visual on SimWrapper serv
 
 ![](images\visualizer\image_17.PNG)
 
-## How to Setup
+### How to Run
+The first step to run the visualizer is to bring in the scenario files. Currently the visualizer is setup to compare three scenarios: **donor_ model**, **rsm_base** and **rsm_scen**. donor_model is the ABM run, rsm_base is the baseline (no-action) RSM run and rsm_scen is the project (action) RSM run.
 
-The first step to run the visualizer is to bring in the scenario files. Currently the visualizer setup is able to compare three scenarios: **donor_ model** , **rsm_base** and **rsm_scen**. donor_model and rsm_base are usually the same runs unless you want to change the base runs. rsm_scen could be any new RSM run you want to compare to base runs. 
+- For each of the three scenarios, copy report folder from their respective scenario run to "visualizer/simwrapper/data/external/[scenario_name]/reports" folder. For instance, for donor_model copy the report folder [here](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/donor_model/report).
 
-- For all the scenarios, copy report folder from the scenario run to **Simwrapper/data/external/[scenario_name]/report**s. For instance, for donor_model copy the report folder [here](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/donor_model/report)
+- Only for the RSM scenarios, copy **mgra_crosswalk.csv** and **households.csv** files from the scenario input folder and bring them to the input folder "visualizer/simwrapper/data/external/[scenario_name]/input". Next, change the name of the "households.csv" to "households_orig.csv". At this point the [input](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/rsm_scen/input) folder for RSM scenarios in the simwrapper folder should look like below: 
 
+    ![](images\visualizer\image_19.PNG)
 
-- Only for RSM scenarios, from the scenario input folder, copy **mgra_crosswalk.csv** and **households.csv** files and bring them to the input folder **(Simwrapper/data/external/[scenario_name]/input)**. Then change the name of the **households.csv**  to **households_orig.csv**. The [input](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/rsm_scen/input) folder on external folder for RSM scenarios should look like below after this step
-![](images\visualizer\image_19.PNG)
+As mentioned earlier, if you wish to add any more RSM scenarios for comaprison, you can do it by modifying the [scenarios.yaml](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml) file. Simply add the scenario configuration by copying the rsm_scen section and paste it under and change "rsm_scen" to that new scenario name. Note that you will also need to add that another scenario config to the Data Pipeline and Post-Processing step.
 
-If you wish to add any more RSM scenarios you can do it by modifying the [scenarios.yaml](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml) file. Simply add the scenario configuration by copying the rsm_scenario portion and paste it under and change "rsm_scen" to your scenario name. 
 ![](images\visualizer\image_18.PNG)
 
-## How to run
+Once you have copied required scenario files and the configuration setup, you are ready to runt the visualizer. 
+
 - Open Anaconda prompt and change the directory to visualizer folder in your local RSM repository. 
 
 - Run the process scenario script by typing command below and then press enter.
 
-  `python process_scenarios.py`
+    `python process_scenarios.py`
 
-- Processing the scenario using pipeline will take some time. 
+- Processing all the scenario using pipeline will take some time. 
 
-- Next, open this link in the web browser
-  https://simwrapper.github.io/site/
+- Once this script is run successfully, it creates the summary files for each scenario to feed into simwrapper. 
+
+- Finally, open this link in the web browser - [https://simwrapper.github.io/site/](https://simwrapper.github.io/site/)
 
 - Click on 'Enter Site' button, then click on 'add local folder' and add simwrapper directory (visualizer\simwrapper) to run the SimWrapper Visualizer for RSM. 
-
-
-
