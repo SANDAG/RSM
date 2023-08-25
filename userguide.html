@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#user-guide" class="md-skip">
+        <a href="#rsm-setup" class="md-skip">
           Skip to content
         </a>
       
@@ -436,8 +436,17 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    User Guide
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="userguide.html" class="md-nav__link md-nav__link--active">
         
@@ -448,6 +457,99 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rsm-setup" class="md-nav__link">
+    RSM Setup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    Debugging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rsm-specific-changes" class="md-nav__link">
+    RSM Specific Changes
+  </a>
+  
+    <nav class="md-nav" aria-label="RSM Specific Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application" class="md-nav__link">
+    Application
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bin" class="md-nav__link">
+    Bin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emme_project" class="md-nav__link">
+    Emme_project
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    Input
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pythonemmetoolbox" class="md-nav__link">
+    Python\emme\toolbox
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-properties" class="md-nav__link">
+    New Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    New Files
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -508,8 +610,90 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rsm-setup" class="md-nav__link">
+    RSM Setup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    Debugging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rsm-specific-changes" class="md-nav__link">
+    RSM Specific Changes
+  </a>
+  
+    <nav class="md-nav" aria-label="RSM Specific Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application" class="md-nav__link">
+    Application
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bin" class="md-nav__link">
+    Bin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emme_project" class="md-nav__link">
+    Emme_project
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    Input
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pythonemmetoolbox" class="md-nav__link">
+    Python\emme\toolbox
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-properties" class="md-nav__link">
+    New Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    New Files
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -527,8 +711,236 @@
   
 
 
-<h1 id="user-guide">User Guide<a class="headerlink" href="#user-guide" title="Permanent link"> ¶</a></h1>
-<p>TODO: document user guide here</p>
+  <h1>User Guide</h1>
+
+<h2 id="rsm-setup">RSM Setup<a class="headerlink" href="#rsm-setup" title="Permanent link"> ¶</a></h2>
+<p>Below are the steps to setup an RSM scenario run:</p>
+<ol>
+<li>
+<p>Set up an ABM run on the server&rsquo;s C drive* by using the ABM2+ release 14.2.2 scenario creation GUI located at T:\ABM\release\ABM\version_14_2_2\dist\createStudyAndScenario.exe.</p>
+<p>*running the model on the T drive and setting it to run on the local drive causes an error. An issue has been created on GitHub</p>
+</li>
+<li>
+<p>Open Anaconda Prompt and type the following command:</p>
+<p><em>python T:\projects\RSM\setup\setup_rsm.py [MODEL_RUN_DIRECTORY]</em></p>
+<p>Specifying the model run directory in the command line is optional. If it is not specified a dialog box will open asking the user to specify the model run.</p>
+</li>
+<li>
+<p>Change the inputs and properties as needed. Be sure to check the following:</p>
+<ol>
+<li>If running a new network, make sure the network files are correct</li>
+<li>Check that the RSM properties were appended to the property file and make sure the RSM properties are correct</li>
+<li>Check that the updated Tour Mode Choice UEC was copied over</li>
+</ol>
+</li>
+<li>
+<p>After opening Emme using start_emme_with_virtual_env.bat and opening the SANDAG toolbox in Modeller as usual, set the steps to skip all of the special market models and to run only 2 iterations. Most of these should be set automatically, though you may need to set it to skip the EE model manually.</p>
+<p>Figure 1: Steps to run in SANDAG model GUI for RSM run</p>
+<p><img alt="" src="images\user_guide\figure_1.PNG" /></p>
+</li>
+</ol>
+<h2 id="debugging">Debugging<a class="headerlink" href="#debugging" title="Permanent link"> ¶</a></h2>
+<p>For crashes encountered in CT-RAMP, review the event log as usual. However, if it occurs during an RSM step, a new logfile called rsm-logging.log is created in the LogFiles folder.</p>
+<h2 id="rsm-specific-changes">RSM Specific Changes<a class="headerlink" href="#rsm-specific-changes" title="Permanent link"> ¶</a></h2>
+<h4 id="application">Application<a class="headerlink" href="#application" title="Permanent link"> ¶</a></h4>
+<ul>
+<li>sandag_abm.jar<ul>
+<li>New CT-RAMP jar file with few required Java code updates. </li>
+</ul>
+</li>
+</ul>
+<h4 id="bin">Bin<a class="headerlink" href="#bin" title="Permanent link"> ¶</a></h4>
+<ul>
+<li>runRSMAccessibility.cmd<ul>
+<li>Runs CT-RAMP to compute the accessibility of each zone</li>
+</ul>
+</li>
+<li>runRSMAssembler.cmd<ul>
+<li>Runs the intelligent assembler</li>
+</ul>
+</li>
+<li>runRSMEmmebankMatrixAggregator.cmd<ul>
+<li>Opens the Emmebank of the donor model and aggregates the truck and external trip tables</li>
+</ul>
+</li>
+<li>runRSMInputAggregator.cmd<ul>
+<li>Aggregates various model inputs into the aggregated zone system creating </li>
+</ul>
+</li>
+<li>runRSMSampler.cmd<ul>
+<li>Runs the intelligent sampler that combines the donor model trip diaries with the travel behavior of the resampled households</li>
+</ul>
+</li>
+<li>runRSMSandagABM.cmd<ul>
+<li>Runs CT-RAMP on the sampled households</li>
+</ul>
+</li>
+<li>runRSMSandagABMTripTables.cmd<ul>
+<li>Builds trip tables from assembled trip data</li>
+</ul>
+</li>
+<li>runRSMSetProperty.cmd<ul>
+<li>Updates property file to read the accessibility file instead of building it</li>
+</ul>
+</li>
+<li>runRSMSetupUpdate.cmd<ul>
+<li>Updates several properties</li>
+</ul>
+</li>
+<li>runRSMTripMatrixAggregator.cm<ul>
+<li>Aggregates trip tables stored in OMX files from donor model</li>
+</ul>
+</li>
+<li>runRSMZoneAggregator.cmd<ul>
+<li>Runs the zone aggregator</li>
+</ul>
+</li>
+</ul>
+<h4 id="emme_project">Emme_project<a class="headerlink" href="#emme_project" title="Permanent link"> ¶</a></h4>
+<ul>
+<li>start_emme_with_virtualenv.bat<ul>
+<li>New lines to call Python environments used in RSM scripts</li>
+</ul>
+</li>
+<li>scripts\sandag_toolbox.mtbx<ul>
+<li>Updated toolbox with a master run script to call RSM steps</li>
+</ul>
+</li>
+</ul>
+<h4 id="input">Input<a class="headerlink" href="#input" title="Permanent link"> ¶</a></h4>
+<ul>
+<li>MGRASHAPE.zip<ul>
+<li>Zipped shapefile of the MGRAs (used in zone aggregator)</li>
+</ul>
+</li>
+</ul>
+<h4 id="pythonemmetoolbox">Python\emme\toolbox<a class="headerlink" href="#pythonemmetoolbox" title="Permanent link"> ¶</a></h4>
+<ul>
+<li>master_run.py<ul>
+<li>Changed to include new model steps</li>
+</ul>
+</li>
+<li>import\import_auto_demand.py<ul>
+<li>Changes to how the trip tables are read into the Emmebank</li>
+</ul>
+</li>
+<li>utilities\databank_aggregator.py<ul>
+<li>Aggregates matrices stored in the Emmebank</li>
+</ul>
+</li>
+</ul>
+<h4 id="new-properties">New Properties<a class="headerlink" href="#new-properties" title="Permanent link"> ¶</a></h4>
+<ul>
+<li>run.rsm.setup<ul>
+<li>Set to 1 if running the RSM setup steps and 0 otherwise<ul>
+<li>Zone aggregator</li>
+<li>Input aggregator</li>
+<li>Matrix aggregator</li>
+<li>Emmebank aggregator</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>run.rsm<ul>
+<li>Set to 1 if running the RSM and 0 otherwise</li>
+</ul>
+</li>
+<li>run.rsm.zone.aggregator<ul>
+<li>If set to 1, the zone aggregator will be run. If set to 0, the zone system from a run specified in rsm.baseline.run.dir will be used.</li>
+</ul>
+</li>
+<li>rsm.baseline.run.dir<ul>
+<li>Baseline run to read in zone system from if not running zone aggregator</li>
+</ul>
+</li>
+<li>rsm.zones<ul>
+<li>Number of zones to use</li>
+</ul>
+</li>
+<li>External.zones<ul>
+<li>Number of external zones</li>
+</ul>
+</li>
+<li>Run.rsm.sampling<ul>
+<li>1 if running the intelligent sampler and 0 if not. If set to 0, every zone will have the default sampling rate</li>
+</ul>
+</li>
+<li>Rsm.default.sampling.rate<ul>
+<li>Default sampling rate to use when running the intelligent sampler</li>
+</ul>
+</li>
+<li>Rsm.centroid.connector.start.id<ul>
+<li>Starting value of tcovid for new zonal connectors to aggregated zones</li>
+</ul>
+</li>
+<li>Full.modelrun.dir<ul>
+<li>Filepath of donor model</li>
+</ul>
+</li>
+<li>Taz.to.cluster.crosswalk.file<ul>
+<li>Maps TAZs to aggregated zones</li>
+</ul>
+</li>
+<li>Mgra.to.cluster.crosswalk.file<ul>
+<li>Maps MGRAs to aggregated zones</li>
+</ul>
+</li>
+<li>Cluster.zone.centroid.file<ul>
+<li>Latitude and longitude coordinates of aggregated zone centroids</li>
+</ul>
+</li>
+</ul>
+<h4 id="new-files">New Files<a class="headerlink" href="#new-files" title="Permanent link"> ¶</a></h4>
+<ol>
+<li>
+<p>study_area.csv:</p>
+<p>This optional file specifies an explicit definition of how to aggregate certain zones, and consequentially, which zones to not aggregate. This is useful for project-level analysis as a modeler may want higher resolution close to a project but not be need the resolution further away. The file has two columns, taz and group. The taz column is the zone ID in the ABM zone system, and the group column indicates what RSM zone the ABM zone will be a part of. This will be the MGRA ID, and the TAZ ID being the MGRA ID added to the number of external zones. If a user doesn&rsquo;t want to aggregate any zones within the study area, the group ID should be distinct for all of them. Presently, all RSM zones defined in the study area are sampled at 100%, and the remaining zones are sampled at the sampling rate set in the property file. </p>
+<p>Any zones not within the study area will be aggregated using the standard RSM zone aggregating algorithm.</p>
+<p>An example of how the study area file works is shown below (assuming 12 external zones):</p>
+<p>Figure 2: ABM Zones
+<img alt="" src="images\user_guide\figure_2.PNG" /></p>
+<p>Table 1: study_area.csv</p>
+<table>
+<thead>
+<tr>
+<th>taz</th>
+<th>group</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<p>Figure 3: Resulting RSM Zones
+<img alt="" src="images\user_guide\figure_3.PNG" /></p>
+<p>For a practical example, see Figure 4, where a study area was defined as every zone within a half mile of a project. Note that within the study area, no zones were aggregated (as it was defined), but outside of the study area, aggregation occurred.</p>
+<p>Figure 4: Example Study Area
+<img alt="" src="images\user_guide\figure_4.PNG" /></p>
+</li>
+</ol>
 
 
 
