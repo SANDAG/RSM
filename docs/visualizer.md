@@ -79,22 +79,20 @@ You can also modify the data and configuration of each visual on SimWrapper serv
 
 ![](images\visualizer\image_17.PNG)
 
-### How to Setup
+## How to Setup
 
-## Input
+The first step to run the visualizer is to bring in the scenario files. Currently the visualizer setup is able to compare three scenarios: **donor_ model** , **rsm_base** and **rsm_scen**. donor_model and rsm_base are usually the same runs unless you want to change the base runs. rsm_scen could be any new RSM run you want to compare to base runs. 
 
-The first step to run the visualizer is to bring in the scenario files. Currently the visualizer is setup to compare three scenarios: **donor_ model** , **rsm_base** and **rsm_scen**. donor_model and rsm_base are usually the same runs unless you want to change the base runs. rsm_scen is the new RSM scenario to compare to base runs. 
-
-. For all the scenarios, copy report folder from the scenario run to Simwrapper/data/external/[scenario_name]/report. For instance, for donor_model copy the report folder to [here](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/donor_model/report)
+- For all the scenarios, copy report folder from the scenario run to **Simwrapper/data/external/[scenario_name]/report**s. For instance, for donor_model copy the report folder to [here](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/donor_model/report)
 
 
-. Only for RSM scenarios, From the scenario input folder, copy **mgra_crosswalk.csv**, **households.csv** files and bring them to the input folder (Simwrapper/data/external/[scenario_name]/input). Then change the name of the **households.csv**  to **households_orig.csv**. The input folder on external folder for RSM scenarios should look like below
+- Only for RSM scenarios, from the scenario input folder, copy **mgra_crosswalk.csv** and **households.csv** files and bring them to the input folder **(Simwrapper/data/external/[scenario_name]/input)**. Then change the name of the **households.csv**  to **households_orig.csv**. The input folder on external folder for RSM scenarios should look like below
 ![](images\visualizer\image_19.PNG)
 
-If you wish to add any more RSM scenarios you can do it by modifying the scenarios.yaml[https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml] file. Simply add the scenario by copying the rsm_scenario portion and past it under and change rsm_scen to your scenario name. 
+If you wish to add any more RSM scenarios you can do it by modifying the [scenarios.yaml](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml) file. Simply add the scenario by copying the rsm_scenario portion and past it under and change rsm_scen to your scenario name. 
 ![](images\visualizer\image_18.PNG)
 
-## How to run
+### How to run
 - Open Anaconda prompt and change the directory to visualizer folder in your local RSM repository. 
 
 - Run the process scenario script by typing command below and then press enter.
