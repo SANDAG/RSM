@@ -35,7 +35,6 @@ User can add as many charts as you want to the layout. For each chart, you shoul
 Here is how the how the visual looks in the dashboard:
 ![](images\visualizer\image_8.PNG)
 
-
 #### Network Flows
 These charts are for comparing flows and VMT on the network. You can compare any two scenarios on one network. [Here](https://github.com/SANDAG/RSM/blob/visualizer/visualizer/simwrapper/dashboard-network.yaml) is a snapshot of the configuration file: 
 
@@ -80,45 +79,34 @@ You can also modify the data and configuration of each visual on SimWrapper serv
 
 ![](images\visualizer\image_17.PNG)
 
-
 ### How to Setup
- 
-Copy **rsm_visualizer** from **T:\ABM\ETG_Space\visualizer\rsm_visualizer** folder into **RSM_ST_1** folder. The config files for ST1 are already set. 
 
-Add the model data into external folder as we talked before. You should have four folders for model runs in the external folder and then add the report and input folder from model run folders in each of these folders. **[Don't delete the shapefile folder.]**
+## Input
 
-![](images\visualizer\image_1.PNG)
+The first step to run the visualizer is to bring in the scenario files. Currently the visualizer is setup to compare three scenarios: **donor_ model** , **rsm_base** and **rsm_scen**. donor_model and rsm_base are usually the same runs unless you want to change the base runs. rsm_scen is the new RSM scenario to compare to base runs. 
 
-As the final step, you need to copy and rename couple of files:
-
-1.	For both **build and base abm runs** Copy the following highlighted files (hwyLoad shapefiles) from **:\ABM\ETG_Space\RSM_ST_1\report** to **abm2p_base\report** and **ab2p_build\report** folders in the external data folder.
-
-![](images\visualizer\image_2.PNG)
-
-2.	For both **build and base abm runs**, from the {++output++} folder of the corresponding source abm run, copy **householdData_3.csv, personData_3.csv** and **jointTourData_3.csv** into **abm2p_base\report** and **ab2p_build\report** folders in the external data folder.
-
-You can then follow the **README** file in the **rsm_visualizer** folder to run the process
-
-###For other sensitivity tests:
-
-Copy **rsm_visualizer** from **T:\ABM\ETG_Space\visualizer\rsm_visualizer** folder in the corresponding sensitivity test folder. Follow the same procedure as before to create four subfolders in the external folder. Follow the excel spreadsheet to find correct source directories for each four runs.
-
-In the **rsm_visualizer** folder you copied, go to **config\scenarios.yml**. Search for **rsm_build_st_1** and replace them by the corresponding sensitivity test name you picked as the folder name in the external folder (e.g. **rsm_build_st_2**)
-
-![](images\visualizer\image_3.PNG)
-
-In the **rsm_visualizer** folder you copied, go to **simwrapper\dashboard-charts.yml**. Search for **rsm_build_st_1** and replace them by corresponding sensitivity test name (e.g. **rsm_build_st_2**)
-
-![](images\visualizer\image_4.PNG)
-![](images\visualizer\image_5.PNG)
+. For all the scenarios, copy report folder from the scenario run to Simwrapper/data/external/[scenario_name]/report. For instance, for donor_model copy the report folder to [here](https://github.com/SANDAG/RSM/tree/visualizer/visualizer/simwrapper/data/external/donor_model/report)
 
 
-As the final step, you need to copy and rename couple of files:
+. Only for RSM scenarios, From the scenario input folder, copy **mgra_crosswalk.csv**, **households.csv** files and bring them to the input folder (Simwrapper/data/external/[scenario_name]/input). Then change the name of the **households.csv**  to **households_orig.csv**. The input folder on external folder for RSM scenarios should look like below
+![](images\visualizer\image_19.PNG)
 
-1. For both **build and base abm runs** Copy the following highlighted files (hwyLoad shapefiles) from **T:\ABM\ETG_Space\RSM_ST_1\report** to **abm2p_base\report** and **ab2p_build\report** folders in the external data folder.
+If you wish to add any more RSM scenarios you can do it by modifying the scenarios.yaml[https://github.com/SANDAG/RSM/blob/visualizer/visualizer/config/scenarios.yaml] file. Simply add the scenario by copying the rsm_scenario portion and past it under and change rsm_scen to your scenario name. 
+![](images\visualizer\image_18.PNG)
 
-![](images\visualizer\image_6.PNG)
+## How to run
+- Open Anaconda prompt and change the directory to visualizer folder in your local RSM repository. 
 
-2. For both **build and base abm runs**, from the output folder of the corresponding source abm runs, copy **householdData_3.csv** into **abm2p_base\report** and **ab2p_build\report** folders in the external data folder.
+- Run the process scenario script by typing command below and then press enter.
 
-You can then follow the **README** file in the **rsm_visualizer** folder to run the process.
+  `python process_scenarios.py`
+
+- Processing the scenario using pipeline will take some time. 
+
+- Next, open this link in the web browser
+  https://simwrapper.github.io/site/
+
+- Click on 'Enter Site' button, then click on 'add local folder' and add simwrapper directory (visualizer\simwrapper) to run the SimWrapper Visualizer for RSM. 
+
+
+
