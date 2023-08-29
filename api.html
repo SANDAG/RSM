@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.3">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.5">
     
     
       
@@ -1049,45 +1049,31 @@
   
       <p>Aggregate zones.</p>
 <h4 id="rsm.zone_agg.aggregate_zones--parameters">Parameters<a class="headerlink" href="#rsm.zone_agg.aggregate_zones--parameters" title="Permanent link"> ¶</a></h4>
-
-<details class="mgra_gdf-" open>
-  <summary>mgra_gdf (GeoDataFrame)</summary>
-  <p>Geometry and attibutes of MGRAs</p>
-</details>
-<details class="method-" open>
-  <summary>method (array)</summary>
-  <p>default {&lsquo;kmeans&rsquo;, &lsquo;agglom&rsquo;, &lsquo;agglom_adj&rsquo;}</p>
-</details>      <p>n_zones : n_zones (int)
+<p>mgra_gdf : mgra_gdf (GeoDataFrame)
+    Geometry and attibutes of MGRAs
+method : method (array)
+    default {&lsquo;kmeans&rsquo;, &lsquo;agglom&rsquo;, &lsquo;agglom_adj&rsquo;}
+n_zones : n_zones (int)
 random_state : random_state (RandomState or int)
 cluster_factors : cluster_factors (dict)
-cluster_factors_onehot : cluster_factors_onehot (dict)</p>
-
-<details class="use_xy-" open>
-  <summary>use_xy (bool or float)</summary>
-  <p>Use X and Y coordinates as a cluster factor, use a float to scale the
-x-y coordinates from the CRS if needed.</p>
-</details>
-<details class="explicit_agg-" open>
-  <summary>explicit_agg (list[int or list])</summary>
-  <p>A list containing integers (individual MGRAs that should not be aggregated)
-or lists of integers (groups of MGRAs that should be aggregated exactly as
-given, with no less and no more)</p>
-</details>
-<details class="explicit_col-" open>
-  <summary>explicit_col (str)</summary>
-  <p>The name of the column containing the ID&rsquo;s from <code>explicit_agg</code>, usually
-&lsquo;mgra&rsquo; or &lsquo;taz&rsquo;</p>
-</details>
-<details class="agg_instruction-" open>
-  <summary>agg_instruction (dict)</summary>
-  <p>Dictionary passed to pandas <code>agg</code> that says how to aggregate data columns.</p>
-</details>
-<details class="start_cluster_ids-" open>
-  <summary>start_cluster_ids (int, default 13)</summary>
-  <p>Cluster id&rsquo;s start at this value.  Can be 1, but typically SANDAG has the
-smallest id&rsquo;s reserved for external zones, so starting at a greater value
-is typical.</p>
-</details>      <h4 id="rsm.zone_agg.aggregate_zones--returns">Returns<a class="headerlink" href="#rsm.zone_agg.aggregate_zones--returns" title="Permanent link"> ¶</a></h4>
+cluster_factors_onehot : cluster_factors_onehot (dict)
+use_xy : use_xy (bool or float)
+    Use X and Y coordinates as a cluster factor, use a float to scale the
+    x-y coordinates from the CRS if needed.
+explicit_agg : explicit_agg (list[int or list])
+    A list containing integers (individual MGRAs that should not be aggregated)
+    or lists of integers (groups of MGRAs that should be aggregated exactly as
+    given, with no less and no more)
+explicit_col : explicit_col (str)
+    The name of the column containing the ID&rsquo;s from <code>explicit_agg</code>, usually
+    &lsquo;mgra&rsquo; or &lsquo;taz&rsquo;
+agg_instruction : agg_instruction (dict)
+    Dictionary passed to pandas <code>agg</code> that says how to aggregate data columns.
+start_cluster_ids : start_cluster_ids (int, default 13)
+    Cluster id&rsquo;s start at this value.  Can be 1, but typically SANDAG has the
+    smallest id&rsquo;s reserved for external zones, so starting at a greater value
+    is typical.</p>
+<h4 id="rsm.zone_agg.aggregate_zones--returns">Returns<a class="headerlink" href="#rsm.zone_agg.aggregate_zones--returns" title="Permanent link"> ¶</a></h4>
 <p>GeoDataFrame</p>
 
           <details class="quote">
@@ -1459,39 +1445,29 @@ is typical.</p>
   <div class="doc doc-contents ">
   
       <h4 id="rsm.input_agg.agg_input_files--parameters">Parameters<a class="headerlink" href="#rsm.input_agg.agg_input_files--parameters" title="Permanent link"> ¶</a></h4>
-
-<details class="model_dir-" open>
-  <summary>model_dir (path_like)</summary>
-  <p>path to full model run, default &ldquo;.&rdquo;</p>
-</details>
-<details class="rsm_dir-" open>
-  <summary>rsm_dir (path_like)</summary>
-  <p>path to RSM, default &ldquo;.&rdquo;</p>
-</details>
-<details class="taz_cwk_file-" open>
-  <summary>taz_cwk_file (csv file)</summary>
-  <p>default taz_crosswalk.csv
-taz to aggregated zones file. Should be located in RSM input folder</p>
-</details>
-<details class="mgra_cwk_file-" open>
-  <summary>mgra_cwk_file (csv file)</summary>
-  <p>default mgra_crosswalk.csv
-mgra to aggregated zones file. Should be located in RSM input folder</p>
-</details>
-<details class="input_files-" open>
-  <summary>input_files (csv + other files)</summary>
-  <p>list of input files to be aggregated. 
-Should include the following files
-    &ldquo;microMgraEquivMinutes.csv&rdquo;, &ldquo;microMgraTapEquivMinutes.csv&rdquo;, 
-    &ldquo;walkMgraTapEquivMinutes.csv&rdquo;, &ldquo;walkMgraEquivMinutes.csv&rdquo;, &ldquo;bikeTazLogsum.csv&rdquo;,
-    &ldquo;bikeMgraLogsum.csv&rdquo;, &ldquo;zone.term&rdquo;, &ldquo;zones.park&rdquo;, &ldquo;tap.ptype&rdquo;, &ldquo;accessam.csv&rdquo;,
-    &ldquo;ParkLocationAlts.csv&rdquo;, &ldquo;CrossBorderDestinationChoiceSoaAlternatives.csv&rdquo;,
-    &ldquo;TourDcSoaDistanceAlts.csv&rdquo;, &ldquo;DestinationChoiceAlternatives.csv&rdquo;, &ldquo;SoaTazDistAlts.csv&rdquo;,
-    &ldquo;TripMatrices.csv&rdquo;, &ldquo;transponderModelAccessibilities.csv&rdquo;, &ldquo;crossBorderTours.csv&rdquo;,
-    &ldquo;internalExternalTrips.csv&rdquo;, &ldquo;visitorTours.csv&rdquo;, &ldquo;visitorTrips.csv&rdquo;, &ldquo;householdAVTrips.csv&rdquo;,
-    &ldquo;crossBorderTrips.csv&rdquo;, &ldquo;TNCTrips.csv&rdquo;, &ldquo;airport_out.SAN.csv&rdquo;, &ldquo;airport_out.CBX.csv&rdquo;,
-    &ldquo;TNCtrips.csv&rdquo;</p>
-</details>      <h4 id="rsm.input_agg.agg_input_files--returns">Returns<a class="headerlink" href="#rsm.input_agg.agg_input_files--returns" title="Permanent link"> ¶</a></h4>
+<p>model_dir : model_dir (path_like)
+    path to full model run, default &ldquo;.&rdquo;
+rsm_dir : rsm_dir (path_like)
+    path to RSM, default &ldquo;.&rdquo;
+taz_cwk_file : taz_cwk_file (csv file)
+    default taz_crosswalk.csv
+    taz to aggregated zones file. Should be located in RSM input folder
+mgra_cwk_file : mgra_cwk_file (csv file)
+    default mgra_crosswalk.csv
+    mgra to aggregated zones file. Should be located in RSM input folder
+input_files : input_files (csv + other files)
+    list of input files to be aggregated. 
+    Should include the following files
+        &ldquo;microMgraEquivMinutes.csv&rdquo;, &ldquo;microMgraTapEquivMinutes.csv&rdquo;, 
+        &ldquo;walkMgraTapEquivMinutes.csv&rdquo;, &ldquo;walkMgraEquivMinutes.csv&rdquo;, &ldquo;bikeTazLogsum.csv&rdquo;,
+        &ldquo;bikeMgraLogsum.csv&rdquo;, &ldquo;zone.term&rdquo;, &ldquo;zones.park&rdquo;, &ldquo;tap.ptype&rdquo;, &ldquo;accessam.csv&rdquo;,
+        &ldquo;ParkLocationAlts.csv&rdquo;, &ldquo;CrossBorderDestinationChoiceSoaAlternatives.csv&rdquo;,
+        &ldquo;TourDcSoaDistanceAlts.csv&rdquo;, &ldquo;DestinationChoiceAlternatives.csv&rdquo;, &ldquo;SoaTazDistAlts.csv&rdquo;,
+        &ldquo;TripMatrices.csv&rdquo;, &ldquo;transponderModelAccessibilities.csv&rdquo;, &ldquo;crossBorderTours.csv&rdquo;,
+        &ldquo;internalExternalTrips.csv&rdquo;, &ldquo;visitorTours.csv&rdquo;, &ldquo;visitorTrips.csv&rdquo;, &ldquo;householdAVTrips.csv&rdquo;,
+        &ldquo;crossBorderTrips.csv&rdquo;, &ldquo;TNCTrips.csv&rdquo;, &ldquo;airport_out.SAN.csv&rdquo;, &ldquo;airport_out.CBX.csv&rdquo;,
+        &ldquo;TNCtrips.csv&rdquo;</p>
+<h4 id="rsm.input_agg.agg_input_files--returns">Returns<a class="headerlink" href="#rsm.input_agg.agg_input_files--returns" title="Permanent link"> ¶</a></h4>
 <p>Aggregated files in the RSM input/output/uec directory</p>
 
           <details class="quote">
@@ -2534,19 +2510,13 @@ Should include the following files
   
       <p>copies the omx transit demand matrix to rsm directory</p>
 <h4 id="rsm.translate.copy_transit_demand--parameters">Parameters<a class="headerlink" href="#rsm.translate.copy_transit_demand--parameters" title="Permanent link"> ¶</a></h4>
-
-<details class="matrix_names-" open>
-  <summary>matrix_names (list)</summary>
-  <p>omx matrix filenames to aggregate</p>
-</details>
-<details class="input_dir-" open>
-  <summary>input_dir (Path-like)</summary>
-  <p>default &ldquo;.&rdquo;</p>
-</details>
-<details class="output_dir-" open>
-  <summary>output_dir (Path-like)</summary>
-  <p>default &ldquo;.&rdquo;</p>
-</details>      <h4 id="rsm.translate.copy_transit_demand--returns">Returns<a class="headerlink" href="#rsm.translate.copy_transit_demand--returns" title="Permanent link"> ¶</a></h4>
+<p>matrix_names : matrix_names (list)
+    omx matrix filenames to aggregate
+input_dir : input_dir (Path-like) 
+    default &ldquo;.&rdquo;
+output_dir : output_dir (Path-like)
+    default &ldquo;.&rdquo;</p>
+<h4 id="rsm.translate.copy_transit_demand--returns">Returns<a class="headerlink" href="#rsm.translate.copy_transit_demand--returns" title="Permanent link"> ¶</a></h4>
 
           <details class="quote">
             <summary>Source code in <code>rsm/translate.py</code></summary>
@@ -2633,24 +2603,16 @@ Should include the following files
   
       <p>aggregates the demand matrix cores from one emme databank and loads them into another databank</p>
 <h4 id="rsm.translate.translate_emmebank_demand--parameters">Parameters<a class="headerlink" href="#rsm.translate.translate_emmebank_demand--parameters" title="Permanent link"> ¶</a></h4>
-
-<details class="input_databank-" open>
-  <summary>input_databank (Emme databank)</summary>
-  <p>Emme databank</p>
-</details>
-<details class="output_databank-" open>
-  <summary>output_databank (Emme databank)</summary>
-  <p>Emme databank</p>
-</details>
-<details class="cores_to_aggregate-" open>
-  <summary>cores_to_aggregate (list)</summary>
-  <p>matrix corenames to aggregate</p>
-</details>
-<details class="agg_zone_mapping" open>
-  <summary>agg_zone_mapping (Path-like or pandas.DataFrame)</summary>
-  <p>zone number mapping between original and aggregated zones. 
-columns: original zones as &lsquo;taz&rsquo; and aggregated zones as &lsquo;cluster_id&rsquo;</p>
-</details>      <h4 id="rsm.translate.translate_emmebank_demand--returns">Returns<a class="headerlink" href="#rsm.translate.translate_emmebank_demand--returns" title="Permanent link"> ¶</a></h4>
+<p>input_databank : input_databank (Emme databank)
+    Emme databank
+output_databank : output_databank (Emme databank)
+    Emme databank
+cores_to_aggregate : cores_to_aggregate (list)
+    matrix corenames to aggregate
+agg_zone_mapping: agg_zone_mapping (Path-like or pandas.DataFrame)
+    zone number mapping between original and aggregated zones. 
+    columns: original zones as &lsquo;taz&rsquo; and aggregated zones as &lsquo;cluster_id&rsquo;</p>
+<h4 id="rsm.translate.translate_emmebank_demand--returns">Returns<a class="headerlink" href="#rsm.translate.translate_emmebank_demand--returns" title="Permanent link"> ¶</a></h4>
 <p>None. Loads the trip matrices into emmebank.</p>
 
           <details class="quote">
@@ -2758,24 +2720,16 @@ columns: original zones as &lsquo;taz&rsquo; and aggregated zones as &lsquo;clus
   
       <p>aggregates the omx demand matrix to aggregated zone system</p>
 <h4 id="rsm.translate.translate_omx_demand--parameters">Parameters<a class="headerlink" href="#rsm.translate.translate_omx_demand--parameters" title="Permanent link"> ¶</a></h4>
-
-<details class="matrix_names-" open>
-  <summary>matrix_names (list)</summary>
-  <p>omx matrix filenames to aggregate</p>
-</details>
-<details class="agg_zone_mapping" open>
-  <summary>agg_zone_mapping (path_like or pandas.DataFrame)</summary>
-  <p>zone number mapping between original and aggregated zones. 
-columns: original zones as &lsquo;taz&rsquo; and aggregated zones as &lsquo;cluster_id&rsquo;</p>
-</details>
-<details class="input_dir-" open>
-  <summary>input_dir (path_like)</summary>
-  <p>default &ldquo;.&rdquo;</p>
-</details>
-<details class="output_dir-" open>
-  <summary>output_dir (path_like)</summary>
-  <p>default &ldquo;.&rdquo;</p>
-</details>      <h4 id="rsm.translate.translate_omx_demand--returns">Returns<a class="headerlink" href="#rsm.translate.translate_omx_demand--returns" title="Permanent link"> ¶</a></h4>
+<p>matrix_names : matrix_names (list)
+    omx matrix filenames to aggregate
+agg_zone_mapping: agg_zone_mapping (path_like or pandas.DataFrame)
+    zone number mapping between original and aggregated zones. 
+    columns: original zones as &lsquo;taz&rsquo; and aggregated zones as &lsquo;cluster_id&rsquo;
+input_dir : input_dir (path_like)
+    default &ldquo;.&rdquo;
+output_dir : output_dir (path_like) 
+    default &ldquo;.&rdquo;</p>
+<h4 id="rsm.translate.translate_omx_demand--returns">Returns<a class="headerlink" href="#rsm.translate.translate_omx_demand--returns" title="Permanent link"> ¶</a></h4>
 
           <details class="quote">
             <summary>Source code in <code>rsm/translate.py</code></summary>
@@ -2949,57 +2903,35 @@ columns: original zones as &lsquo;taz&rsquo; and aggregated zones as &lsquo;clus
   
       <p>Take an intelligent sampling of households.</p>
 <h4 id="rsm.sampler.rsm_household_sampler--parameters">Parameters<a class="headerlink" href="#rsm.sampler.rsm_household_sampler--parameters" title="Permanent link"> ¶</a></h4>
-
-<details class="input_dir-" open>
-  <summary>input_dir (path_like)</summary>
-  <p>default &ldquo;.&rdquo;</p>
-</details>
-<details class="output_dir-" open>
-  <summary>output_dir (path_like)</summary>
-  <p>default &ldquo;.&rdquo;</p>
-</details>
-<details class="prev_iter_access-" open>
-  <summary>prev_iter_access (Path-like or pandas.DataFrame)</summary>
-  <p>Accessibility in an old (default, no treatment, etc) run is given (preloaded)
-or read in from here. Give as a relative path (from <code>input_dir</code>) or an
-absolute path.</p>
-</details>
-<details class="curr_iter_access-" open>
-  <summary>curr_iter_access (Path-like or pandas.DataFrame)</summary>
-  <p>Accessibility in the latest run is given (preloaded) or read in from here.
-Give as a relative path (from <code>input_dir</code>) or an absolute path.</p>
-</details>
-<details class="study_area-" open>
-  <summary>study_area (array-like)</summary>
-  <p>Array of RSM zone (these are numbered 1 to N in the RSM) in the study area. These zones are sampled at 100%.</p>
-</details>
-<details class="input_household-" open>
-  <summary>input_household (Path-like or pandas.DataFrame)</summary>
-  <p>Complete synthetic household file.  This data will be filtered to match the
-sampling of households and written out to a new CSV file.</p>
-</details>
-<details class="input_person-" open>
-  <summary>input_person (Path-like or pandas.DataFrame)</summary>
-  <p>Complete synthetic persons file.  This data will be filtered to match the
-sampling of households and written out to a new CSV file.</p>
-</details>
-<details class="compare_access_columns-" open>
-  <summary>compare_access_columns (Collection[str])</summary>
-  <p>Column names in the accessibility file to use for comparing accessibility.
-Only changes in the values in these columns will be evaluated.</p>
-</details>
-<details class="default_sampling_rate-" open>
-  <summary>default_sampling_rate (float)</summary>
-  <p>The default sampling rate, in the range (0,1]</p>
-</details>
-<details class="lower_bound_sampling_rate-" open>
-  <summary>lower_bound_sampling_rate (float)</summary>
-  <p>Sampling rates by zone will be truncated so they are never lower than this.</p>
-</details>
-<details class="upper_bound_sampling_rate-" open>
-  <summary>upper_bound_sampling_rate (float)</summary>
-  <p>Sampling rates by zone will be truncated so they are never higher than this.</p>
-</details>      <h4 id="rsm.sampler.rsm_household_sampler--returns">Returns<a class="headerlink" href="#rsm.sampler.rsm_household_sampler--returns" title="Permanent link"> ¶</a></h4>
+<p>input_dir : input_dir (path_like)
+    default &ldquo;.&rdquo;
+output_dir : output_dir (path_like)
+    default &ldquo;.&rdquo;
+prev_iter_access : prev_iter_access (Path-like or pandas.DataFrame)
+    Accessibility in an old (default, no treatment, etc) run is given (preloaded)
+    or read in from here. Give as a relative path (from <code>input_dir</code>) or an
+    absolute path.
+curr_iter_access : curr_iter_access (Path-like or pandas.DataFrame)
+    Accessibility in the latest run is given (preloaded) or read in from here.
+    Give as a relative path (from <code>input_dir</code>) or an absolute path.
+study_area : study_area (array-like)
+    Array of RSM zone (these are numbered 1 to N in the RSM) in the study area. These zones are sampled at 100%.
+input_household : input_household (Path-like or pandas.DataFrame)
+    Complete synthetic household file.  This data will be filtered to match the
+    sampling of households and written out to a new CSV file.
+input_person : input_person (Path-like or pandas.DataFrame)
+    Complete synthetic persons file.  This data will be filtered to match the
+    sampling of households and written out to a new CSV file.
+compare_access_columns : compare_access_columns (Collection[str])
+    Column names in the accessibility file to use for comparing accessibility.
+    Only changes in the values in these columns will be evaluated.
+default_sampling_rate : default_sampling_rate (float)
+    The default sampling rate, in the range (0,1]
+lower_bound_sampling_rate : lower_bound_sampling_rate (float)
+    Sampling rates by zone will be truncated so they are never lower than this.
+upper_bound_sampling_rate : upper_bound_sampling_rate (float)
+    Sampling rates by zone will be truncated so they are never higher than this.</p>
+<h4 id="rsm.sampler.rsm_household_sampler--returns">Returns<a class="headerlink" href="#rsm.sampler.rsm_household_sampler--returns" title="Permanent link"> ¶</a></h4>
 <p>sample_households_df, sample_persons_df : sample_households_df, sample_persons_df (pandas.DataFrame)
     These are the sampled population to resimulate.  They are also written to
     the output_dir</p>
@@ -3474,60 +3406,40 @@ Only changes in the values in these columns will be evaluated.</p>
   
       <p>Assemble and evaluate RSM trip making.</p>
 <h4 id="rsm.assembler.rsm_assemble--parameters">Parameters<a class="headerlink" href="#rsm.assembler.rsm_assemble--parameters" title="Permanent link"> ¶</a></h4>
-
-<details class="orig_indiv-" open>
-  <summary>orig_indiv (path_like)</summary>
-  <p>Trips table from &ldquo;original&rdquo; model run, should be comprehensive simulation
-of all individual trips for all synthetic households.</p>
-</details>
-<details class="orig_joint-" open>
-  <summary>orig_joint (path_like)</summary>
-  <p>Joint trips table from &ldquo;original&rdquo; model run, should be comprehensive simulation
-of all joint trips for all synthetic households.</p>
-</details>
-<details class="rsm_indiv-" open>
-  <summary>rsm_indiv (path_like)</summary>
-  <p>Trips table from RSM model run, should be a simulation of all individual
-trips for potentially only a subset of all synthetic households.</p>
-</details>
-<details class="rsm_joint-" open>
-  <summary>rsm_joint (path_like)</summary>
-  <p>Trips table from RSM model run, should be a simulation of all joint
-trips for potentially only a subset of all synthetic households (the
-same sampled households as in <code>rsm_indiv</code>).</p>
-</details>
-<details class="households-" open>
-  <summary>households (path_like)</summary>
-  <p>Synthetic household file, used to get home zones for households.</p>
-</details>
-<details class="mgra_crosswalk-" open>
-  <summary>mgra_crosswalk (path_like, optional)</summary>
-  <p>Crosswalk from original MGRA to clustered zone ids.  Provide this crosswalk
-if the <code>orig_indiv</code> and <code>orig_joint</code> files reference the original MGRA system
-and those id&rsquo;s need to be converted to aggregated values before merging.</p>
-</details>
-<details class="sample_rate-" open>
-  <summary>sample_rate (float)</summary>
-  <p>Default/fixed sample rate if sampler was turned off
-this is used to scale the trips if run_assembler is 0</p>
-</details>
-<details class="run_assembler-" open>
-  <summary>run_assembler (boolean)</summary>
-  <p>Flag to indicate whether to run RSM assembler or not. 
-1 is to run assembler, 0 is to turn if off
-setting this to 0 is only an option if sampler is turned off       </p>
-</details>      <h4 id="rsm.assembler.rsm_assemble--returns">Returns<a class="headerlink" href="#rsm.assembler.rsm_assemble--returns" title="Permanent link"> ¶</a></h4>
-
-<details class="final_trips_rsm-" open>
-  <summary>final_ind_trips (pd.DataFrame)</summary>
-  <p>Assembled trip table for RSM run, filling in archived trip values for
-non-resimulated households.</p>
-</details>
-<details class="combined_trips_by_zone-" open>
-  <summary>final_jnt_trips (pd.DataFrame)</summary>
-  <p>Summary table of changes in trips by mode, by household home zone.
-Used to check whether undersampled zones have stable travel behavior.</p>
-</details>      <p>Separate tables for individual and joint trips, as required by java.</p>
+<p>orig_indiv : orig_indiv (path_like)
+    Trips table from &ldquo;original&rdquo; model run, should be comprehensive simulation
+    of all individual trips for all synthetic households.
+orig_joint : orig_joint (path_like)
+    Joint trips table from &ldquo;original&rdquo; model run, should be comprehensive simulation
+    of all joint trips for all synthetic households.
+rsm_indiv : rsm_indiv (path_like)
+    Trips table from RSM model run, should be a simulation of all individual
+    trips for potentially only a subset of all synthetic households.
+rsm_joint : rsm_joint (path_like)
+    Trips table from RSM model run, should be a simulation of all joint
+    trips for potentially only a subset of all synthetic households (the
+    same sampled households as in <code>rsm_indiv</code>).
+households : households (path_like)
+    Synthetic household file, used to get home zones for households.
+mgra_crosswalk : mgra_crosswalk (path_like, optional)
+    Crosswalk from original MGRA to clustered zone ids.  Provide this crosswalk
+    if the <code>orig_indiv</code> and <code>orig_joint</code> files reference the original MGRA system
+    and those id&rsquo;s need to be converted to aggregated values before merging.
+sample_rate : sample_rate (float)
+    Default/fixed sample rate if sampler was turned off
+    this is used to scale the trips if run_assembler is 0
+run_assembler : run_assembler (boolean)
+    Flag to indicate whether to run RSM assembler or not. 
+    1 is to run assembler, 0 is to turn if off
+    setting this to 0 is only an option if sampler is turned off       </p>
+<h4 id="rsm.assembler.rsm_assemble--returns">Returns<a class="headerlink" href="#rsm.assembler.rsm_assemble--returns" title="Permanent link"> ¶</a></h4>
+<p>final_trips_rsm : final_ind_trips (pd.DataFrame)
+    Assembled trip table for RSM run, filling in archived trip values for
+    non-resimulated households.
+combined_trips_by_zone : final_jnt_trips (pd.DataFrame)
+    Summary table of changes in trips by mode, by household home zone.
+    Used to check whether undersampled zones have stable travel behavior.</p>
+<p>Separate tables for individual and joint trips, as required by java.</p>
 
           <details class="quote">
             <summary>Source code in <code>rsm/assembler.py</code></summary>
