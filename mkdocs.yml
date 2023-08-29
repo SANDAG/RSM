@@ -45,7 +45,7 @@ plugins:
   - table-reader
 
 nav:
-  - Home: home.md
+  - Home: index.md
   - Development: development.md
   - Assessment: assessment.md
   - User Guide: userguide.md
