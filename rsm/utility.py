@@ -251,7 +251,7 @@ def scaleup_to_rsm_samplingrate(df,
     hh["taz"] = hh["taz"].map(dict_clusters)
     hh['scale_factor'] = scale_factor
     
-    if study_area_tazs:       
+    if study_area_tazs:
         hh.loc[hh['taz'].isin(study_area_tazs), 'scale_factor'] = 1
     
     df = pd.merge(df, hh, left_on='hh_id', right_on='hhid', how='left')

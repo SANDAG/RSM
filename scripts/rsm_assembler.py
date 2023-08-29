@@ -38,7 +38,17 @@ MGRA_CROSSWALK = os.path.join(rsm_dir, "input", "mgra_crosswalk.csv")
 TAZ_CROSSWALK = os.path.join(rsm_dir, "input", "taz_crosswalk.csv")
 STUDY_AREA = os.path.join(rsm_dir, "input", "study_area.csv")
 
-if os.path.exists(STUDY_AREA):
+#creating copy of individual and joint trips file
+shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_abm_"+ str(iteration) + ".csv"))
+shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_abm_"+ str(iteration) + ".csv"))
+
+ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
+ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
+RUN_ASSEMBLER = int(get_property(ABM_PROPERTIES, "run.rsm.assembler"))
+SAMPLE_RATE = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
+USE_DIFFERENTIAL_SAMPLING = int(get_property(ABM_PROPERTIES, "use.differential.sampling"))
+
+if USE_DIFFERENTIAL_SAMPLING & os.path.exists(STUDY_AREA):
     logging.info(f"Study Area file: {STUDY_AREA}")
     study_area_taz = find_rsm_zone_of_study_area(STUDY_AREA, TAZ_CROSSWALK)
     if study_area_taz is not None:
@@ -52,15 +62,6 @@ if os.path.exists(STUDY_AREA):
 
 else:
     SA_TAZ = None
-
-#creating copy of individual and joint trips file
-shutil.copy(RSM_INDIV_TRIPS, os.path.join(rsm_dir, "output", "indivTripData_abm_"+ str(iteration) + ".csv"))
-shutil.copy(RSM_JOINT_TRIPS, os.path.join(rsm_dir, "output", "jointTripData_abm_"+ str(iteration) + ".csv"))
-
-ABM_PROPERTIES_FOLDER = os.path.join(rsm_dir, "conf")
-ABM_PROPERTIES = os.path.join(ABM_PROPERTIES_FOLDER, "sandag_abm.properties")
-RUN_ASSEMBLER = int(get_property(ABM_PROPERTIES, "run.rsm.assembler"))
-SAMPLE_RATE = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
 
 #RSM Assembler
 final_ind_trips, final_jnt_trips = rsm_assemble(

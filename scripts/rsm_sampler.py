@@ -47,6 +47,7 @@ run_rsm_sampling = int(get_property(ABM_PROPERTIES, "run.rsm.sampling"))
 sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.default.sampling.rate"))
 min_sampling_rate = float(get_property(ABM_PROPERTIES, "rsm.min.sampling.rate"))
 baseline_run_dir = get_property(ABM_PROPERTIES, "rsm.baseline.run.dir")
+use_differential_sampling = int(get_property(ABM_PROPERTIES, "use.differential.sampling"))
 
 if run_rsm_sampling == 1:
     CURR_ITER_ACCESS = os.path.join(
@@ -70,7 +71,7 @@ else:
 logging.info(f"Current Iteration Accessibility File: {CURR_ITER_ACCESS}")
 logging.info(f"Previous Iteration Accessibility File: {PREV_ITER_ACCESS}")
 
-if os.path.exists(EXPILICT_AGG_TAZ):
+if use_differential_sampling & os.path.exists(EXPILICT_AGG_TAZ):
     logging.info(f"Study Area file: {EXPILICT_AGG_TAZ}")
     study_area_taz = find_rsm_zone_of_study_area(EXPILICT_AGG_TAZ, OUTPUT_TAZ_CROSSWALK)
     if study_area_taz is not None:
@@ -83,6 +84,7 @@ if os.path.exists(EXPILICT_AGG_TAZ):
         sa_taz = None
 
 else:
+    logger.info("All RSM zones will be sampled at the deafult sampling rate")
     sa_taz = None
 
 

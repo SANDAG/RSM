@@ -288,6 +288,10 @@ class ScenarioData(object):
             "rsmSamplingRate":{
                 "line": "rsm.default.sampling.rate=",
                 "type" : "float",
+                "value": None},
+            "useDifferentialSampling":{
+                "line": "use.differential.sampling=",
+                "type" : "int",
                 "value": None}
         }
 
@@ -2777,7 +2781,7 @@ class TripLists(ScenarioData):
 
         study_area_file = os.path.join(self.scenario_path, "input", "study_area.csv")
 
-        if os.path.exists(study_area_file):
+        if useDifferentialSampling & os.path.exists(study_area_file):
             df = pd.read_csv(study_area_file)
             study_area_taz = set(df['taz'])
             rsm_zone = set(rsm_zones.loc[rsm_zones['taz'].isin(study_area_taz), 'cluster_id'])

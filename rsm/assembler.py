@@ -34,7 +34,8 @@ def rsm_assemble(
     taz_crosswalk=None,
     sample_rate=0.25,
     study_area_taz=None,
-    run_assembler=1
+    run_assembler=1,
+    differential_sampling=1
 ):
     """
     Assemble and evaluate RSM trip making.
@@ -69,6 +70,7 @@ def rsm_assemble(
         this is used to scale the trips if run_assembler is 0
     study_area_rsm_zones :  list
         it is list of study area RSM zones
+    
     
     Returns
     -------
@@ -239,7 +241,7 @@ def rsm_assemble(
         final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, 
                                                       households, 
                                                       taz_crosswalk, 
-                                                      scale_factor, 
+                                                      scale_factor,
                                                       study_area_tazs=sa_rsm) 
                      
     return final_ind_trips, final_jnt_trips

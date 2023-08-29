@@ -66,6 +66,8 @@ logging.info("start logging rsm_zone_aggregator")
 logging.info("Check if the study area file exists in the RSM input folder")
 if os.path.exists(EXPILICT_AGG_TAZ):
     EXPLICIT_ZONE_AGG = create_list_study_area_taz(EXPILICT_AGG_TAZ)
+    logging.info("The input folder has a study_area file. The TAZs will be aggregated based on the study area file")
+    logging.info(EXPLICIT_ZONE_AGG)
 else:
     EXPLICIT_ZONE_AGG = []
 
