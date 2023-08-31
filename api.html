@@ -1065,8 +1065,7 @@ explicit_agg : explicit_agg (list[int or list])
     or lists of integers (groups of MGRAs that should be aggregated exactly as
     given, with no less and no more)
 explicit_col : explicit_col (str)
-    The name of the column containing the ID&rsquo;s from <code>explicit_agg</code>, usually
-    &lsquo;mgra&rsquo; or &lsquo;taz&rsquo;
+    The name of the column containing the ID&rsquo;s from <code>explicit_agg</code>, usually &lsquo;taz&rsquo;
 agg_instruction : agg_instruction (dict)
     Dictionary passed to pandas <code>agg</code> that says how to aggregate data columns.
 start_cluster_ids : start_cluster_ids (int, default 13)
@@ -1236,8 +1235,7 @@ start_cluster_ids : start_cluster_ids (int, default 13)
 <span class="normal">353</span>
 <span class="normal">354</span>
 <span class="normal">355</span>
-<span class="normal">356</span>
-<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">aggregate_zones</span><span class="p">(</span>
+<span class="normal">356</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">aggregate_zones</span><span class="p">(</span>
     <span class="n">mgra_gdf</span><span class="p">,</span>
     <span class="n">method</span><span class="o">=</span><span class="s2">&quot;kmeans&quot;</span><span class="p">,</span>
     <span class="n">n_zones</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
@@ -1271,8 +1269,7 @@ start_cluster_ids : start_cluster_ids (int, default 13)
 <span class="sd">        or lists of integers (groups of MGRAs that should be aggregated exactly as</span>
 <span class="sd">        given, with no less and no more)</span>
 <span class="sd">    explicit_col : explicit_col (str)</span>
-<span class="sd">        The name of the column containing the ID&#39;s from `explicit_agg`, usually</span>
-<span class="sd">        &#39;mgra&#39; or &#39;taz&#39;</span>
+<span class="sd">        The name of the column containing the ID&#39;s from `explicit_agg`, usually &#39;taz&#39;</span>
 <span class="sd">    agg_instruction : agg_instruction (dict)</span>
 <span class="sd">        Dictionary passed to pandas `agg` that says how to aggregate data columns.</span>
 <span class="sd">    start_cluster_ids : start_cluster_ids (int, default 13)</span>
@@ -2915,7 +2912,8 @@ curr_iter_access : curr_iter_access (Path-like or pandas.DataFrame)
     Accessibility in the latest run is given (preloaded) or read in from here.
     Give as a relative path (from <code>input_dir</code>) or an absolute path.
 study_area : study_area (array-like)
-    Array of RSM zone (these are numbered 1 to N in the RSM) in the study area. These zones are sampled at 100%.
+    Array of RSM zone (these are numbered 1 to N in the RSM) in the study area.
+    These zones are sampled at 100% if differential sampling is also turned on.
 input_household : input_household (Path-like or pandas.DataFrame)
     Complete synthetic household file.  This data will be filtered to match the
     sampling of households and written out to a new CSV file.
@@ -3147,7 +3145,8 @@ upper_bound_sampling_rate : upper_bound_sampling_rate (float)
 <span class="normal">216</span>
 <span class="normal">217</span>
 <span class="normal">218</span>
-<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">rsm_household_sampler</span><span class="p">(</span>
+<span class="normal">219</span>
+<span class="normal">220</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">rsm_household_sampler</span><span class="p">(</span>
     <span class="n">input_dir</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
     <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
     <span class="n">prev_iter_access</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -3187,7 +3186,8 @@ upper_bound_sampling_rate : upper_bound_sampling_rate (float)
 <span class="sd">        Accessibility in the latest run is given (preloaded) or read in from here.</span>
 <span class="sd">        Give as a relative path (from `input_dir`) or an absolute path.</span>
 <span class="sd">    study_area : study_area (array-like)</span>
-<span class="sd">        Array of RSM zone (these are numbered 1 to N in the RSM) in the study area. These zones are sampled at 100%.</span>
+<span class="sd">        Array of RSM zone (these are numbered 1 to N in the RSM) in the study area.</span>
+<span class="sd">        These zones are sampled at 100% if differential sampling is also turned on.</span>
 <span class="sd">    input_household : input_household (Path-like or pandas.DataFrame)</span>
 <span class="sd">        Complete synthetic household file.  This data will be filtered to match the</span>
 <span class="sd">        sampling of households and written out to a new CSV file.</span>
@@ -3280,7 +3280,7 @@ upper_bound_sampling_rate : upper_bound_sampling_rate (float)
 
         <span class="n">mgra_hh</span><span class="p">[</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_sampling_rate</span>
         <span class="k">if</span> <span class="n">study_area</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">mgra_hh</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mgra_hh</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">study_area</span><span class="p">),</span> <span class="s2">&quot;sample_rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">mgra_hh</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mgra_hh</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">study_area</span><span class="p">),</span> <span class="s2">&quot;sampling_rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="n">sample_households</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -3397,7 +3397,7 @@ upper_bound_sampling_rate : upper_bound_sampling_rate (float)
 
 
 <h2 id="rsm.assembler.rsm_assemble" class="doc doc-heading">
-          <code class="codehilite language-python"><span class="n">rsm_assemble</span><span class="p">(</span><span class="n">orig_indiv</span><span class="p">,</span> <span class="n">orig_joint</span><span class="p">,</span> <span class="n">rsm_indiv</span><span class="p">,</span> <span class="n">rsm_joint</span><span class="p">,</span> <span class="n">households</span><span class="p">,</span> <span class="n">mgra_crosswalk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">run_assembler</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
+          <code class="codehilite language-python"><span class="n">rsm_assemble</span><span class="p">(</span><span class="n">orig_indiv</span><span class="p">,</span> <span class="n">orig_joint</span><span class="p">,</span> <span class="n">rsm_indiv</span><span class="p">,</span> <span class="n">rsm_joint</span><span class="p">,</span> <span class="n">households</span><span class="p">,</span> <span class="n">mgra_crosswalk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">taz_crosswalk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">study_area_taz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_assembler</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
 
 <a href="#rsm.assembler.rsm_assemble" class="headerlink" title="Permanent link"> ¶</a></h2>
 
@@ -3431,7 +3431,12 @@ sample_rate : sample_rate (float)
 run_assembler : run_assembler (boolean)
     Flag to indicate whether to run RSM assembler or not. 
     1 is to run assembler, 0 is to turn if off
-    setting this to 0 is only an option if sampler is turned off       </p>
+    setting this to 0 is only an option if sampler is turned off     <br />
+sample_rate : float
+    default/fixed sample rate if sampler was turned off
+    this is used to scale the trips if run_assembler is 0
+study_area_rsm_zones :  list
+    it is list of study area RSM zones</p>
 <h4 id="rsm.assembler.rsm_assemble--returns">Returns<a class="headerlink" href="#rsm.assembler.rsm_assemble--returns" title="Permanent link"> ¶</a></h4>
 <p>final_trips_rsm : final_ind_trips (pd.DataFrame)
     Assembled trip table for RSM run, filling in archived trip values for
@@ -3443,8 +3448,7 @@ combined_trips_by_zone : final_jnt_trips (pd.DataFrame)
 
           <details class="quote">
             <summary>Source code in <code>rsm/assembler.py</code></summary>
-            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 26</span>
-<span class="normal"> 27</span>
+            <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 27</span>
 <span class="normal"> 28</span>
 <span class="normal"> 29</span>
 <span class="normal"> 30</span>
@@ -3645,15 +3649,39 @@ combined_trips_by_zone : final_jnt_trips (pd.DataFrame)
 <span class="normal">225</span>
 <span class="normal">226</span>
 <span class="normal">227</span>
-<span class="normal">228</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">rsm_assemble</span><span class="p">(</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">rsm_assemble</span><span class="p">(</span>
     <span class="n">orig_indiv</span><span class="p">,</span>
     <span class="n">orig_joint</span><span class="p">,</span>
     <span class="n">rsm_indiv</span><span class="p">,</span>
     <span class="n">rsm_joint</span><span class="p">,</span>
     <span class="n">households</span><span class="p">,</span>
     <span class="n">mgra_crosswalk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">taz_crosswalk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">sample_rate</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
-    <span class="n">run_assembler</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">study_area_taz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">run_assembler</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assemble and evaluate RSM trip making.</span>
@@ -3686,6 +3714,11 @@ combined_trips_by_zone : final_jnt_trips (pd.DataFrame)
 <span class="sd">        Flag to indicate whether to run RSM assembler or not. </span>
 <span class="sd">        1 is to run assembler, 0 is to turn if off</span>
 <span class="sd">        setting this to 0 is only an option if sampler is turned off       </span>
+<span class="sd">    sample_rate : float</span>
+<span class="sd">        default/fixed sample rate if sampler was turned off</span>
+<span class="sd">        this is used to scale the trips if run_assembler is 0</span>
+<span class="sd">    study_area_rsm_zones :  list</span>
+<span class="sd">        it is list of study area RSM zones</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -3716,11 +3749,17 @@ combined_trips_by_zone : final_jnt_trips (pd.DataFrame)
         <span class="n">mgra_crosswalk</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">mgra_crosswalk</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
         <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">mgra_crosswalk</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">taz_crosswalk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">taz_crosswalk</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">taz_crosswalk</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">taz_crosswalk</span><span class="p">)</span>
+
     <span class="c1"># load trip data - partial simulation of RSM model</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;reading ind_trips_rsm&quot;</span><span class="p">)</span>
     <span class="n">ind_trips_rsm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">rsm_indiv</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;reading jnt_trips_rsm&quot;</span><span class="p">)</span>
     <span class="n">jnt_trips_rsm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">rsm_joint</span><span class="p">)</span>
+
+    <span class="n">scale_factor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">sample_rate</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">run_assembler</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># load trip data - full simulation of residual/source model</span>
@@ -3832,20 +3871,28 @@ combined_trips_by_zone : final_jnt_trips (pd.DataFrame)
         <span class="c1"># trips in the final trip lists will be 100%</span>
         <span class="n">scale_factor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">sample_rate</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">study_area_taz</span><span class="p">:</span>
+            <span class="n">sa_rsm</span> <span class="o">=</span> <span class="n">study_area_taz</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sa_rsm</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="c1"># concat is slow</span>
         <span class="c1"># https://stackoverflow.com/questions/50788508/how-can-i-replicate-rows-of-a-pandas-dataframe</span>
         <span class="c1">#final_ind_trips = pd.concat([ind_trips_rsm]*scale_factor, ignore_index=True)</span>
         <span class="c1">#final_jnt_trips = pd.concat([jnt_trips_rsm]*scale_factor, ignore_index=True)</span>
 
-        <span class="n">final_ind_trips</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">ind_trips_rsm</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-            <span class="n">columns</span><span class="o">=</span><span class="n">ind_trips_rsm</span><span class="o">.</span><span class="n">columns</span>
-        <span class="p">)</span>
 
-        <span class="n">final_jnt_trips</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">jnt_trips_rsm</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-            <span class="n">columns</span><span class="o">=</span><span class="n">jnt_trips_rsm</span><span class="o">.</span><span class="n">columns</span>
-        <span class="p">)</span>        
+        <span class="n">final_ind_trips</span> <span class="o">=</span> <span class="n">scaleup_to_rsm_samplingrate</span><span class="p">(</span><span class="n">ind_trips_rsm</span><span class="p">,</span> 
+                                                      <span class="n">households</span><span class="p">,</span> 
+                                                      <span class="n">taz_crosswalk</span><span class="p">,</span> 
+                                                      <span class="n">scale_factor</span><span class="p">,</span> 
+                                                      <span class="n">study_area_tazs</span><span class="o">=</span><span class="n">sa_rsm</span><span class="p">)</span>
+
+        <span class="n">final_jnt_trips</span> <span class="o">=</span> <span class="n">scaleup_to_rsm_samplingrate</span><span class="p">(</span><span class="n">jnt_trips_rsm</span><span class="p">,</span> 
+                                                      <span class="n">households</span><span class="p">,</span> 
+                                                      <span class="n">taz_crosswalk</span><span class="p">,</span> 
+                                                      <span class="n">scale_factor</span><span class="p">,</span>
+                                                      <span class="n">study_area_tazs</span><span class="o">=</span><span class="n">sa_rsm</span><span class="p">)</span> 
 
     <span class="k">return</span> <span class="n">final_ind_trips</span><span class="p">,</span> <span class="n">final_jnt_trips</span>
 </code></pre></div></td></tr></table></div>
