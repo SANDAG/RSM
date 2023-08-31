@@ -1,11 +1,10 @@
 ## RSM Configuration
-
-Different scenario runs with varying configurations were done during the RSM development to then select a final set of configuration parameters to move forward with the overall assessment of RSM. 
-
-TODO: Include table with different configurations and corresponding run time. 
+The team conducted tests using different combinations for the RSM parameters, including the number of RSM zones (1000, 2000), default sampling rates (15%, 25%, 100%), enabling or disabling the intelligent sampler, and choosing the number of global iterations (2 or 3), among other factors. The most significant influence of the number of RSM zones was observed on the runtime of the highway assignment process. Since the highway assignment runtime was already low with 1000 RSM zones, there was no motivation to explore lower RSM zone number. Altering the sampling rate had a greater impact on the runtime of the demand model (CT-RAMP) compared to changing the number of RSM zones. These test runs exhibited varying runtimes depending on the specific configuration. Key metrics at the regional level were analyzed across these different test runs to comprehend the trade-off between improved runtime for RSM and achieving RSM results that are similar to ABM. Based on this, the team collectively determined that for the MVP (Minimum Viable Product) version of the RSM, the "optimal" configuration would be to use 2000 RSM zones, a 25% default sampling rate, the intelligent sampler turned off, and 2 global iterations and this RSM configuration was used to move forward with the overall assessment of the RSM.  
 
 ## Calibration
 Aggregating the ABM zones to RSM zones, distorts the walk trips share coming out of the model. With the model configuration (Rapid Zones, Global Iterations, Sample Rate, etc.) for RSM as identified above, tour mode choice calibration was performed to match the RSM mode share to ABM2+ mode share, primarily to match the walk trips. A calibration constant was applied to the tour mode choice UEC to School, Maintenance, Discretionary tour purpose. The mode share for Work and University purpsoe were reasonable, therefore the calibration wasn't applied to those purposes. 
+
+RSM specific constants were added to the Tour Mode Choice UEC (TourModeChoice.xls) to some of the tour purposes. The Walk mode share for the `Maintenance` and `Discretionary` purposes was first adjusted by calibrating and applying n RSM specific constant row to the UEC. Furthermore, in cases where the tour involved escorting for Maintenance or Discretionary purposes, an additional calibration constant was introduced to further adjust the walk mode share for such escort tours. Similarly, a differeent set of constants were added to calibrate the `School` tour purpose. There was no need to calibrate mode choice for any other tour purpose as those were reasonable from RSM. 
 
 Note that a minor calibration will be required for RSM when number of rapid zones are changed.
 
@@ -105,15 +104,3 @@ TODO: Add outcome screenshot
 
 TODO: Add some text to explain how this test was performed using the study area parameter
 TODO: Add outcome screenshot
-
-
-## Use Cases and Key Limitations
-Based on set of tests done as part of this project, RSM performs well for regional scale roadway projects (e.g., auto operating costs and mileage fee, TNC costs and wait times etc.) and regional scale transit projects (transit fare, headway changes etc.). RSM also performed well for land-use change policies. Lastly, RSM was also tested for local roadway changes (e.g., managed lanes conversion) and local transit changes (e.g., new BRT line), and the results indicate that those policies are reasonably represented by RSM as well. 
-
-Here are some of the current limitations of RSM:
-
-- The scope of the RSM is “passenger” travel. Policies and/or infrastructure that primarily impact commercial travel (e.g., truck lanes) will not be well represented.
-- Minor re-calibration of the mode choice was necessary to match observed walk trips. Large changes to the number of zones will likely require recalibration.
-- The spatial aggregation reduces the RSM’s ability to represent to simulate infrastructure and/or policies that act at small scales (e.g., pedestrian infrastructure).
-- Policies related to the adoption of automated vehicles cannot be currently represented. RSM currently skips running the Household AV Allocation module.
-- While the RSM has been tested, the testing has not been extensive. More extensive testing is likely to surface additional issues. Additional testing will be required to evaluate if RSM can be a viable tool for other policies that interests SANDAG.
