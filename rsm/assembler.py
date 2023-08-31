@@ -35,7 +35,6 @@ def rsm_assemble(
     sample_rate=0.25,
     study_area_taz=None,
     run_assembler=1,
-    differential_sampling=1
 ):
     """
     Assemble and evaluate RSM trip making.
