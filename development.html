@@ -746,22 +746,22 @@
 <tbody>
 <tr>
 <td>microMgraEquivMinutes.csv</td>
-<td>walkTime, dist, mmTime, mmCost, mtTime,<br> mtCost, mmGenTime, mtGenTime, minTime</td>
+<td>walkTime, dist, mmTime, mmCost, mtTime, mtCost, mmGenTime, mtGenTime, minTime</td>
 <td>Mapped MGRA to RSM zones and aggregated the columns by taking mean.</td>
 </tr>
 <tr>
 <td>microMgraTapEquivMinutes.csv</td>
-<td>walkTime, dist, mmTime, mmCost, mtTime,<br>       mtCost, mmGenTime, mtGenTime, minTime</td>
+<td>walkTime, dist, mmTime, mmCost, mtTime, mtCost, mmGenTime, mtGenTime, minTime</td>
 <td>Mapped MGRA to RSM zones and aggregated the columns by taking mean.</td>
 </tr>
 <tr>
 <td>walkMgraTapEquivMinutes.csv</td>
-<td>boardingPerceived, boardingActual,alightingPerceived,<br>alightingActual,boardingGain,alightingGain</td>
+<td>boardingPerceived, boardingActual, alightingPerceived, alightingActual, boardingGain, alightingGain</td>
 <td>Mapped MGRA to RSM zones and aggregated the columns by taking mean.</td>
 </tr>
 <tr>
 <td>walkMgraEquivMinutes.csv</td>
-<td>percieved,actual, gain</td>
+<td>percieved, actual, gain</td>
 <td>Mapped MGRA to RSM zones and aggregated the columns by taking mean.</td>
 </tr>
 <tr>
@@ -801,8 +801,8 @@
 </tr>
 <tr>
 <td>CrossBorderDestinationChoiceSoaAlternatives.csv</td>
-<td>Mapping RSM zones to MGRA</td>
 <td></td>
+<td>Mapping MGRA to RSM Zones</td>
 </tr>
 <tr>
 <td>TourDcSoaDistanceAlts.csv</td>
@@ -821,7 +821,7 @@
 </tr>
 <tr>
 <td>TripMatrices.csv</td>
-<td>CVM_&lt;<time_period>&gt;:LT, CVM_&lt;<time_period>&gt;:IT, CVM_&lt;<time_period>&gt;:MT, CVM_&lt;<time_period>&gt;:HT,<br>CVM_&lt;<time_period>&gt;:LNT, CVM_&lt;<time_period>&gt;:INT, CVM_&lt;<time_period>&gt;:MNT, CVM_&lt;<time_period>&gt;:HNT<br>where TIME PERIOD = EA, AM, MD, PM, EV</td>
+<td>CVM_ XX:LT, CVM_ XX:IT, CVM_ XX:MT, CVM_ XX:HT,<br>CVM_XX:LNT, CVM_XX:INT, CVM_XX:MNT, CVM_XX:HNT<br>where XX = EA, AM, MD, PM, EV</td>
 <td>Mapped TAZ to RSM zones and aggregated the columns by taking the sum.</td>
 </tr>
 <tr>
@@ -870,7 +870,7 @@
 <td>Mapped MGRA/TAZ to RSM zones</td>
 </tr>
 <tr>
-<td>TRIP_&lt;<SECTOR_TYPE>&gt;_&lt;<TIME_PERIOD>&gt;.CSV<br>where SECTOR_TYPE = FA, GO, IN, RE, SV, TH, WH<br>TIME_PERIOD = OE, AM, MD, PM, OL</td>
+<td>TRIP_ST_XX.CSV<br>where ST (Sector Type) = FA, GO, IN, RE, SV, TH, WH; XX (Time Period) = OE, AM, MD, PM, OL</td>
 <td></td>
 <td>Mapped TAZ to RSM zones</td>
 </tr>
@@ -888,21 +888,19 @@
 </li>
 <li>
 <p><strong>Household Sampling</strong>:</p>
-<ul>
+</li>
 <li>If accessibility data is missing (first iteration) or if the RSM sampler is turned off, a default sampling rate is applied to all RSM zones, with optional 100% sampling in the study area.</li>
-<li>If accessibility data is available and the RSM sampler is turned on, the function calculates differences in accessibility metrics between the current and previous iterations. The sampling rates are determined based on these differences and are adjusted to be within specified bounds. The RSM zones of the study area are sampled at a 100% sampling rate if the differential sampling indicator is turned on.</li>
-</ul>
+<li>
+<p>If accessibility data is available and the RSM sampler is turned on, the function calculates differences in accessibility metrics between the current and previous iterations. The sampling rates are determined based on these differences and are adjusted to be within specified bounds. The RSM zones of the study area are sampled at a 100% sampling rate if the differential sampling indicator is turned on.</p>
 </li>
 <li>
 <p><strong>Households and Persons Selection</strong>: The function selects households based on the calculated sampling rates. It also selects persons associated with the sampled households.</p>
 </li>
 <li>
 <p><strong>Output</strong>:</p>
-<ul>
+</li>
 <li>The selected households and persons are written to output CSV files in the specified output directory.</li>
 <li>The function also computes and logs the total sampling rate, representing the proportion of selected households relative to the total number of households.</li>
-</ul>
-</li>
 </ol>
 <p>Note that in the current RSM deployment, sampler is set to use 25% default sampling rate. The intelligent sampler needs further testing to be used to sample households using the accessibility change.</p>
 <h4 id="intelligent-assembler">Intelligent Assembler<a class="headerlink" href="#intelligent-assembler" title="Permanent link"> ¶</a></h4>
