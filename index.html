@@ -423,6 +423,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#use-cases-and-key-limitations" class="md-nav__link">
+    Use Cases and Key Limitations
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -559,6 +566,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#use-cases-and-key-limitations" class="md-nav__link">
+    Use Cases and Key Limitations
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -587,6 +601,16 @@
 </ul>
 <p>The computational time of ABM2+, and the likely computational time of the successor to ABM2+ (ABM3), hinders SANDAG&rsquo;s ability to carry out certain analyses in a timely manner. For example, if an analyst wants to explore 10 different roadway pricing schemes for a select corridor, a month of computation time would be required.</p>
 <p>SANDAG requires a tool capable of quickly approximating the outcomes of ABM2+. Therefore, a tool was built for this purpose, referred to henceforth as the Rapid Strategic Model (RSM). The primary objective of the RSM was to enhance the speed of the resident passenger component within the broader modeling system and produce results that closely aligned with ABM2+ for policy planning requirements. </p>
+<h2 id="use-cases-and-key-limitations">Use Cases and Key Limitations<a class="headerlink" href="#use-cases-and-key-limitations" title="Permanent link"> ¶</a></h2>
+<p>Based on set of tests done as part of this project, RSM performs well for regional scale roadway projects (e.g., auto operating costs and mileage fee, TNC costs and wait times etc.) and regional scale transit projects (transit fare, headway changes etc.). RSM also performed well for land-use change policies. Lastly, RSM was also tested for local roadway changes (e.g., managed lanes conversion) and local transit changes (e.g., new BRT line), and the results indicate that those policies are reasonably represented by RSM as well. </p>
+<p>Here are some of the current limitations of RSM:</p>
+<ul>
+<li>The scope of the RSM is “passenger” travel. Policies and/or infrastructure that primarily impact commercial travel (e.g., truck lanes) will not be well represented.</li>
+<li>Minor re-calibration of the mode choice was necessary to match observed walk trips. Large changes to the number of zones will likely require recalibration.</li>
+<li>The spatial aggregation reduces the RSM’s ability to represent to simulate infrastructure and/or policies that act at small scales (e.g., pedestrian infrastructure).</li>
+<li>Policies related to the adoption of automated vehicles cannot be currently represented. RSM currently skips running the Household AV Allocation module.</li>
+<li>While the RSM has been tested, the testing has not been extensive. More extensive testing is likely to surface additional issues. Additional testing will be required to evaluate if RSM can be a viable tool for other policies that interests SANDAG.</li>
+</ul>
 
 
 
