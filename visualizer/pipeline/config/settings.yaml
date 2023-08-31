@@ -1,0 +1,85 @@
+extract:
+- filepath: C:\projects\SimWrapper\Ashish_test\visualizer\simwrapper\data\external\rsm_before_calibration\report
+  test_size: null
+  data:
+  - households.csv
+  - individualTrips.csv
+  - jointTrips.csv
+  - transit_onoff.csv
+  - internalExternalTrips.csv
+  - airportCBXTrips.csv
+  - airportSANTrips.csv
+  - commercialVehicleTrips.csv
+  - crossBorderTrips.csv
+  - externalInternalTrips.csv
+  - externalExternalTrips.csv
+  - truckTrips.csv
+  - visitorTrips.csv
+  - hwyload_*.csv
+  - hwyTcad.csv
+- filepath: C:\projects\SimWrapper\Ashish_test\visualizer\simwrapper\data\external\rsm_before_calibration\input
+  test_size: null
+  data:
+  - mgra_crosswalk.csv
+  - households_orig.csv
+transform:
+  processor: config/processor.csv
+  summarizer: config/expressions.csv
+  steps:
+  - name: step_0
+    process: true
+  - name: step_1
+    concat:
+    - table_name: trips
+      include:
+      - individualTrips
+      - jointTrips
+      - internalExternalTrips
+      - airportCBXTrips
+      - airportSANTrips
+      - commercialVehicleTrips
+      - crossBorderTrips
+      - externalInternalTrips
+      - externalExternalTrips
+      - truckTrips
+      - visitorTrips
+    - table_name: highway_load
+      include:
+      - hwyload_*
+    merge:
+    - table_name: households_orig
+      include:
+      - households_orig
+      - mgra_crosswalk
+      merge_cols:
+      - - mgra
+      - - MGRA
+      merge_type: left
+    - table_name: households
+      include:
+      - households
+      - mgra_crosswalk
+      merge_cols:
+      - - homeMGRA
+      - - MGRA
+      merge_type: left
+    process: true
+  - name: step_2
+    merge:
+    - table_name: network
+      include:
+      - highway_network
+      - highway_load
+      merge_cols:
+      - - ID
+        - timePeriod
+      - - ID1
+        - timePeriod
+      merge_type: left
+    process: true
+  - name: step_3
+    summarize: true
+    process: true
+load:
+  outdir: C:\projects\SimWrapper\Ashish_test\visualizer\simwrapper\data\processed\rsm_before_calibration\
+  empty_fill: 0

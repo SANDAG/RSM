@@ -33,13 +33,15 @@ def translate_omx_demand(
     
     Parameters
     ----------
-    matrix_names : list
+    matrix_names : matrix_names (list)
         omx matrix filenames to aggregate
-    agg_zone_mapping: Path-like or pandas.DataFrame
+    agg_zone_mapping: agg_zone_mapping (path_like or pandas.DataFrame)
         zone number mapping between original and aggregated zones. 
         columns: original zones as 'taz' and aggregated zones as 'cluster_id'
-    input_dir : Path-like, default "."
-    output_dir : Path-like, default "."
+    input_dir : input_dir (path_like)
+        default "."
+    output_dir : output_dir (path_like) 
+        default "."
     
     Returns
     -------
@@ -94,17 +96,20 @@ def translate_emmebank_demand(
     
     Parameters
     ----------
-    input_databank : Emme databank
-    output_databank : Emme databank
-    cores_to_aggregate : list
+    input_databank : input_databank (Emme databank)
+        Emme databank
+    output_databank : output_databank (Emme databank)
+        Emme databank
+    cores_to_aggregate : cores_to_aggregate (list)
         matrix corenames to aggregate
-    agg_zone_mapping: Path-like or pandas.DataFrame
+    agg_zone_mapping: agg_zone_mapping (Path-like or pandas.DataFrame)
         zone number mapping between original and aggregated zones. 
         columns: original zones as 'taz' and aggregated zones as 'cluster_id'
     
     Returns
     -------
     None. Loads the trip matrices into emmebank.
+    
     """
     
     agg_zone_mapping_df = pd.read_csv(os.path.join(agg_zone_mapping))
@@ -133,10 +138,12 @@ def copy_transit_demand(
     
     Parameters
     ----------
-    matrix_names : list
+    matrix_names : matrix_names (list)
         omx matrix filenames to aggregate
-    input_dir : Path-like, default "."
-    output_dir : Path-like, default "."
+    input_dir : input_dir (Path-like) 
+        default "."
+    output_dir : output_dir (Path-like)
+        default "."
     
     Returns
     -------

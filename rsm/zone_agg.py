@@ -213,26 +213,26 @@ def aggregate_zones(
 
     Parameters
     ----------
-    mgra_gdf : GeoDataFrame
+    mgra_gdf : mgra_gdf (GeoDataFrame)
         Geometry and attibutes of MGRAs
-    method : {'kmeans', 'agglom', 'agglom_adj'}
-    n_zones : int
-    random_state : RandomState or int
-    cluster_factors : dict
-    cluster_factors_onehot : dict
-    use_xy : bool or float
+    method : method (array)
+        default {'kmeans', 'agglom', 'agglom_adj'}
+    n_zones : n_zones (int)
+    random_state : random_state (RandomState or int)
+    cluster_factors : cluster_factors (dict)
+    cluster_factors_onehot : cluster_factors_onehot (dict)
+    use_xy : use_xy (bool or float)
         Use X and Y coordinates as a cluster factor, use a float to scale the
         x-y coordinates from the CRS if needed.
-    explicit_agg : list[int or list]
+    explicit_agg : explicit_agg (list[int or list])
         A list containing integers (individual MGRAs that should not be aggregated)
         or lists of integers (groups of MGRAs that should be aggregated exactly as
         given, with no less and no more)
-    explicit_col : str
-        The name of the column containing the ID's from `explicit_agg`, usually
-        'taz'
-    agg_instruction : dict
+    explicit_col : explicit_col (str)
+        The name of the column containing the ID's from `explicit_agg`, usually 'taz'
+    agg_instruction : agg_instruction (dict)
         Dictionary passed to pandas `agg` that says how to aggregate data columns.
-    start_cluster_ids : int, default 13
+    start_cluster_ids : start_cluster_ids (int, default 13)
         Cluster id's start at this value.  Can be 1, but typically SANDAG has the
         smallest id's reserved for external zones, so starting at a greater value
         is typical.
