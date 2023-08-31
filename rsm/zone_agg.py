@@ -229,8 +229,7 @@ def aggregate_zones(
         or lists of integers (groups of MGRAs that should be aggregated exactly as
         given, with no less and no more)
     explicit_col : explicit_col (str)
-        The name of the column containing the ID's from `explicit_agg`, usually
-        'mgra' or 'taz'
+        The name of the column containing the ID's from `explicit_agg`, usually 'taz'
     agg_instruction : agg_instruction (dict)
         Dictionary passed to pandas `agg` that says how to aggregate data columns.
     start_cluster_ids : start_cluster_ids (int, default 13)

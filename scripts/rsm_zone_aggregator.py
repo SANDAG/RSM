@@ -47,7 +47,8 @@ FULL_ABM_AM_HIGHWAY_SKIM = os.path.join(full_model_dir, "output", "traffic_skims
 FULL_ABM_TRIP_DIR = os.path.join(full_model_dir, "output")
 FULL_ABM_SYNTH_HOUSHOLDS = os.path.join(full_model_dir, "input", "households.csv")
 FULL_ABM_SYNTH_PERSONS = os.path.join(full_model_dir, "input", "persons.csv")
-EXPLICIT_ZONE_AGG = []
+EXPILICT_AGG_TAZ = os.path.join(rsm_main_dir, "input", "study_area.csv")
+
 
 #output files
 RSM_ABM_PROPERTIES = os.path.join(rsm_main_dir, "conf", "sandag_abm.properties")
@@ -59,6 +60,16 @@ logging_start(
     filename=os.path.join(rsm_main_dir, "logFiles", "rsm-logging.log"), level=logging.INFO
 )
 logging.info("start logging rsm_zone_aggregator")
+
+
+# prepare list of MGRA that should not be aggregated or grouped together 
+logging.info("Check if the study area file exists in the RSM input folder")
+if os.path.exists(EXPILICT_AGG_TAZ):
+    EXPLICIT_ZONE_AGG = create_list_study_area_taz(EXPILICT_AGG_TAZ)
+    logging.info("The input folder has a study_area file. The TAZs will be aggregated based on the study area file")
+    logging.info(EXPLICIT_ZONE_AGG)
+else:
+    EXPLICIT_ZONE_AGG = []
 
 #
 #   Zone Aggregation

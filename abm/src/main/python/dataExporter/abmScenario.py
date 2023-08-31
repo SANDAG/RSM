@@ -284,6 +284,14 @@ class ScenarioData(object):
             "year": {
                 "line": "scenarioYear=",
                 "type": "int",
+                "value": None},
+            "rsmSamplingRate":{
+                "line": "rsm.default.sampling.rate=",
+                "type" : "float",
+                "value": None},
+            "useDifferentialSampling":{
+                "line": "use.differential.sampling=",
+                "type" : "int",
                 "value": None}
         }
 
@@ -637,7 +645,7 @@ class LandUse(ScenarioData):
                      "adultschenrl",
                      "ech_dist",
                      "hch_dist",
-                     "pseudomsa",
+                     #"pseudomsa",
                      "parkarea",
                      "hstallsoth",
                      "hstallssam",
@@ -649,7 +657,7 @@ class LandUse(ScenarioData):
                      "mstallsoth",
                      "mstallssam",
                      "mparkcost",
-                     "zip09",
+                     #"zip09",
                      "parkactive",
                      "openspaceparkpreserve",
                      "beachactive",
@@ -657,9 +665,9 @@ class LandUse(ScenarioData):
                      "truckregiontype",
                      "district27",
                      "milestocoast",
-                     "acres",
-                     "effective_acres",
-                     "land_acres",
+                     #"acres",
+                     #"effective_acres",
+                     #"land_acres",
                      "MicroAccessTime",
                      "remoteAVParking",
                      "refueling_stations",
@@ -2756,8 +2764,32 @@ class TripLists(ScenarioData):
             dtype={"hh_id": "int32",
                    "transponder": "bool"})
 
+        input_hh = pd.read_csv(
+            os.path.join(self.scenario_path, "input", "households.csv"),
+            usecols=["hhid",
+                     "taz"],
+            dtype={"hhid": "int64",
+                    "taz": "int64"})
+
+        rsm_zones = pd.read_csv(
+            os.path.join(self.scenario_path, "input", "taz_crosswalk.csv"))
+
+        dict_clusters = dict(zip(rsm_zones["taz"], rsm_zones["cluster_id"]))
+
+        input_hh["taz"] = input_hh["taz"].map(dict_clusters)
+        input_hh['scale_factor'] = 1/self.properties["rsmSamplingRate"]
+
+        study_area_file = os.path.join(self.scenario_path, "input", "study_area.csv")
+
+        if useDifferentialSampling & os.path.exists(study_area_file):
+            df = pd.read_csv(study_area_file)
+            study_area_taz = set(df['taz'])
+            rsm_zone = set(rsm_zones.loc[rsm_zones['taz'].isin(study_area_taz), 'cluster_id'])
+            input_hh.loc[input_hh['taz'].isin(rsm_zone), 'scale_factor'] = 1
+
         # if household has a transponder then all trips can use it
         trips = trips.merge(hh, left_on="hhID", right_on="hh_id")
+        trips = trips.merge(input_hh, left_on="hhID", right_on="hhid", how="left")
 
         # apply exhaustive field mappings where applicable
         mappings = {
@@ -2832,10 +2864,12 @@ class TripLists(ScenarioData):
                    1 / self.properties["nonPooledTNCPassengers"],
                    1 / self.properties["pooledTNCPassengers"]]
 
+        sampling_rate = self.properties["rsmSamplingRate"]
         trips["weightTrip"] = pd.Series(
-            np.select(conditions, choices, default=1) / self.properties["sampleRate"],
+            np.select(conditions, choices, default=1), #/ (sampling_rate*sampling_rate),
             dtype="float32")
-        trips["weightPersonTrip"] = 1 / self.properties["sampleRate"]
+        trips["weightTrip"] = trips["weightTrip"]*trips['scale_factor']
+        trips["weightPersonTrip"] = trips['scale_factor'] #1 / (sampling_rate*sampling_rate)
         trips["weightPersonTrip"] = trips["weightPersonTrip"].astype("float32")
 
         # rename columns to standard/generic ABM naming conventions

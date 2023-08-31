@@ -47,7 +47,8 @@ def rsm_household_sampler(
         Accessibility in the latest run is given (preloaded) or read in from here.
         Give as a relative path (from `input_dir`) or an absolute path.
     study_area : study_area (array-like)
-        Array of RSM zone (these are numbered 1 to N in the RSM) in the study area. These zones are sampled at 100%.
+        Array of RSM zone (these are numbered 1 to N in the RSM) in the study area.
+        These zones are sampled at 100% if differential sampling is also turned on.
     input_household : input_household (Path-like or pandas.DataFrame)
         Complete synthetic household file.  This data will be filtered to match the
         sampling of households and written out to a new CSV file.
@@ -140,7 +141,7 @@ def rsm_household_sampler(
 
         mgra_hh["sampling_rate"] = default_sampling_rate
         if study_area is not None:
-            mgra_hh.loc[mgra_hh.index.isin(study_area), "sample_rate"] = 1
+            mgra_hh.loc[mgra_hh.index.isin(study_area), "sampling_rate"] = 1
 
         sample_households = []
 

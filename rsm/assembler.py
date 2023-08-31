@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import numpy as np
 import pandas as pd
+from rsm.utility import *
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +31,10 @@ def rsm_assemble(
     rsm_joint,
     households,
     mgra_crosswalk=None,
+    taz_crosswalk=None,
     sample_rate=0.25,
-    run_assembler=1
+    study_area_taz=None,
+    run_assembler=1,
 ):
     """
     Assemble and evaluate RSM trip making.
@@ -64,6 +67,11 @@ def rsm_assemble(
         Flag to indicate whether to run RSM assembler or not. 
         1 is to run assembler, 0 is to turn if off
         setting this to 0 is only an option if sampler is turned off       
+    sample_rate : float
+        default/fixed sample rate if sampler was turned off
+        this is used to scale the trips if run_assembler is 0
+    study_area_rsm_zones :  list
+        it is list of study area RSM zones
     
     Returns
     -------
@@ -94,11 +102,17 @@ def rsm_assemble(
         mgra_crosswalk = Path(mgra_crosswalk).expanduser()
         assert os.path.isfile(mgra_crosswalk)
 
+    if taz_crosswalk is not None:
+        taz_crosswalk = Path(taz_crosswalk).expanduser()
+        assert os.path.isfile(taz_crosswalk)
+
     # load trip data - partial simulation of RSM model
     logger.info("reading ind_trips_rsm")
     ind_trips_rsm = pd.read_csv(rsm_indiv)
     logger.info("reading jnt_trips_rsm")
     jnt_trips_rsm = pd.read_csv(rsm_joint)
+
+    scale_factor = int(1.0/sample_rate)
 
     if run_assembler == 1:
         # load trip data - full simulation of residual/source model
@@ -209,20 +223,28 @@ def rsm_assemble(
         # then scale the trips in the trip list using the fixed sample rate 
         # trips in the final trip lists will be 100%
         scale_factor = int(1.0/sample_rate)
-        
+
+        if study_area_taz:
+            sa_rsm = study_area_taz
+        else:
+            sa_rsm = None
+
         # concat is slow
         # https://stackoverflow.com/questions/50788508/how-can-i-replicate-rows-of-a-pandas-dataframe
         #final_ind_trips = pd.concat([ind_trips_rsm]*scale_factor, ignore_index=True)
         #final_jnt_trips = pd.concat([jnt_trips_rsm]*scale_factor, ignore_index=True)
-        
-        final_ind_trips = pd.DataFrame(
-            np.repeat(ind_trips_rsm.values, scale_factor, axis=0),
-            columns=ind_trips_rsm.columns
-        )
-        
-        final_jnt_trips = pd.DataFrame(
-            np.repeat(jnt_trips_rsm.values, scale_factor, axis=0),
-            columns=jnt_trips_rsm.columns
-        )        
-       
+
+
+        final_ind_trips = scaleup_to_rsm_samplingrate(ind_trips_rsm, 
+                                                      households, 
+                                                      taz_crosswalk, 
+                                                      scale_factor, 
+                                                      study_area_tazs=sa_rsm)
+
+        final_jnt_trips = scaleup_to_rsm_samplingrate(jnt_trips_rsm, 
+                                                      households, 
+                                                      taz_crosswalk, 
+                                                      scale_factor,
+                                                      study_area_tazs=sa_rsm) 
+                     
     return final_ind_trips, final_jnt_trips
