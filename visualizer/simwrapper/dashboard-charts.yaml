@@ -1,0 +1,105 @@
+header:
+  tab: "RSM Charts"
+  title: "SANDAG RSM VISUALIZATION"
+  description: "RSM Visualization Dashboard"
+
+layout:      
+    mode_summary:  
+    - type: "bar"
+      title: "Mode Share"
+      description: "Share of Trips by Mode"
+      props:
+        dataset: "data/processed/all_runs/trip_mode_summary.csv"
+        x: "tripMode"
+        columns: ["donor_model","rsm_base","rsm_scen"]
+        xAxisName: "Mode"
+        yAxisName: "Percent of Trips"
+
+    vmt_by_class:  
+    - type: "bar"
+      title: "VMT by Class"
+      description: "Total VMT by Link Class"
+      props:
+        dataset: "data/processed/all_runs/vmt_summary.csv"
+        x: "class"
+        columns: ["donor_model","rsm_base","rsm_scen"]
+        xAxisName: "Class"
+        yAxisName: "VMT"
+
+    vmt_total:  
+    - type: "bar"
+      title: "Total VMT "
+      description: "Total VMT including Intrazonal VMT"
+      props:
+        dataset: "data/processed/all_runs/vmt_total_summary.csv"
+        x: "type"
+        columns: ["donor_model","rsm_base","rsm_scen"]
+        xAxisName: "type"
+        yAxisName: "VMT"
+
+    transit_boardings donor_model:
+    - type: "bar"
+      title: "Transit Boardings donor model"
+      description: "Transit Boardings by Mode and Period"
+      props:
+        dataset: "data/processed/donor_model/transit_summary.csv"
+        x: ["MODE"]
+        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
+        yAxisTitle: "Percent of Trips"
+        xAxisTitle: "Transit Mode"         
+
+    transit_boardings rsm baseline:
+    - type: "bar"
+      title: "Transit Boardings RSM Baseline"
+      description: "Transit Boardings by Mode and Period"
+      props:
+        dataset: "data/processed/rsm_base/transit_summary.csv"
+        x: ["MODE"]
+        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
+        yAxisTitle: "Percent of Trips"
+        xAxisTitle: "Transit Mode"  
+
+    transit_boardings rsm scenario:
+    - type: "bar"
+      title: "Transit Boardings RSM Scenario"
+      description: "Transit Boardings by Mode and Period"
+      props:
+        dataset: "data/processed/rsm_scen/transit_summary.csv"
+        x: ["MODE"]
+        columns: ["PCT_EA","PCT_AM","PCT_MD","PCT_PM","PCT_EV"]
+        yAxisTitle: "Percent of Trips"
+        xAxisTitle: "Transit Mode"  
+
+
+    trip purpose by TOD donor model:
+    - title: "Trip Purpose by TOD donor Model"
+      type: heatmap
+      props:
+        dataset: "data/processed/donor_model/trip_tod_purpose_summary.csv"
+        y: tripPurposeDestination
+        columns: ['EA','AM','MD','PM','EV']
+        xAxisTitle: "Activity Type"
+        yAxisTitle: "Time of Day"
+        flipAxes: true
+
+    trip purpose by TOD rsm baseline:
+    - title: "Trip Purpose by TOD RSM Baseline"
+      type: heatmap
+      props:
+        dataset: "data/processed/rsm_base/trip_tod_purpose_summary.csv"
+        y: tripPurposeDestination
+        columns: ['EA','AM','MD','PM','EV']
+        xAxisTitle: "Activity Type"
+        yAxisTitle: "Time of Day"
+        flipAxes: true
+
+    trip purpose by TOD new rsm:
+    - title: "Trip Purpose by TOD RSM Scenario"
+      type: heatmap
+      props:
+        dataset: "data/processed/rsm_scen/trip_tod_purpose_summary.csv"
+        y: tripPurposeDestination
+        columns: ['EA','AM','MD','PM','EV']
+        xAxisTitle: "Activity Type"
+        yAxisTitle: "Time of Day"
+        flipAxes: true

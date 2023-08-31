@@ -1,0 +1,24 @@
+Description,Out Table,Out Col,In Table,Filter,In Col,Func,Group
+#,,,,,,,
+Mode Share,trip_mode_summary,num_trips,trips,,weightTrip,sum,tripMode
+Intrazonal summary,intrazonal_distance_by_mode_summary,distance,trips,originMGRA == destinationMGRA,distanceDrive,sum,tripMode
+Number of transit boardings,transit_summary,EA,transit_onoff,TOD=='EA',BOARDINGS,sum,MODE
+Number of transit boardings,transit_summary,AM,transit_onoff,TOD=='AM',BOARDINGS,sum,MODE
+Number of transit boardings,transit_summary,MD,transit_onoff,TOD=='MD',BOARDINGS,sum,MODE
+Number of transit boardings,transit_summary,PM,transit_onoff,TOD=='PM',BOARDINGS,sum,MODE
+Number of transit boardings,transit_summary,EV,transit_onoff,TOD=='EV',BOARDINGS,sum,MODE
+Trips by TOD and Purpose,trip_tod_purpose_summary,EA,trips,departTimeFiveTod == 'EA',weightTrip,sum,tripPurposeDestination
+Trips by TOD and Purpose,trip_tod_purpose_summary,AM,trips,departTimeFiveTod == 'AM',weightTrip,sum,tripPurposeDestination
+Trips by TOD and Purpose,trip_tod_purpose_summary,MD,trips,departTimeFiveTod == 'MD',weightTrip,sum,tripPurposeDestination
+Trips by TOD and Purpose,trip_tod_purpose_summary,PM,trips,departTimeFiveTod == 'PM',weightTrip,sum,tripPurposeDestination
+Trips by TOD and Purpose,trip_tod_purpose_summary,EV,trips,departTimeFiveTod == 'EV',weightTrip,sum,tripPurposeDestination
+Trips by Origin and Destination,trip_od_summary,flows,trips,,weightTrip,sum,"originMGRA,destinationMGRA"
+Zero Car Households,zero_car_households_summary,household_numbers,households,autos == 0,hhId,count,cluster_id
+household by MGRA,households_sample_mgra_summary,sampled_households,households,,hhId,count,cluster_id
+household sample by MGRA,households_mgra_summary,original_households,households_orig,,hhid,count,cluster_id
+Network Summaries,network_summary,vmt_total,network,ifc_desc == 'Freeway',vmt_total,sum,ID
+Network Summaries,network_summary,flow_total,network,ifc_desc == 'Freeway',flow_total,sum,ID
+Network Summaries,network_summary,voc,network,ifc_desc == 'Freeway',voc,sum,ID
+VMT by Class,vmt_summary,vmt_total,network,,vmt_total,sum,ifc_desc
+VMT Auto by Class,vmt_summary,vmt_auto,network,,vmt_auto,sum,ifc_desc
+VMT Truck by Class,vmt_summary,vmt_truck,network,,vmt_truck,sum,ifc_desc

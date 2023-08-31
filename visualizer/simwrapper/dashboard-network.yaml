@@ -1,0 +1,49 @@
+header:
+  tab: "RSM Network "
+  title: "SANDAG RSM VISUALIZATION"
+  description: "RSM Visualization Dashboard"
+
+
+
+layout:
+  RSM Baseline:
+    - title: 'Network Summaries'
+      description: 'Network Measures Comparison for RSM Baseline'
+      type: links
+      height: 8
+      props:
+        network: 'data/external/shapefile/hwyload.geojson'
+        projection: EPSG:4269
+        zoom: 9
+        showDifferences: true
+        datasets:
+          csvFile: 'data/processed/rsm_base/network_summary.csv'
+          csvBase: 'data/processed/donor_model/network_summary.csv'
+        display:
+          color:
+            dataset: csvFile
+            columnName: flow_total
+            colorRamp:
+              ramp: Viridis
+              steps: 9
+
+  RSM Scenario:
+    - title: 'Network Summaries'
+      description: 'Network Measures Comparison for RSM Scenario'
+      type: links
+      height: 8
+      props:
+        network: 'data/external/shapefile/hwyload.geojson'
+        projection: EPSG:4269
+        zoom: 9
+        showDifferences: true
+        datasets:
+          csvFile: 'data/processed/rsm_scen/network_summary.csv'
+          csvBase: 'data/processed/donor_model/network_summary.csv'
+        display:
+          color:
+            dataset: csvFile
+            columnName: flow_total
+            colorRamp:
+              ramp: Viridis
+              steps: 9
