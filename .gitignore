@@ -1,11 +1,14 @@
-sandag_rsm/__pycache__
+rsm/__pycache__
 **/__pycache__
 .idea
 .ipynb_checkpoints
-sandag_rsm.egg-info
+rsm.egg-info
 _version.py
 .DS_Store
 test/data/*
 notebooks/**/*.omx
 visualizer/simwrapper/data/processed/pipeline.log
 visualizer/simwrapper/data/external
+*.pyc
+sandag_rsm.egg-info/*
+site/*

@@ -1,7 +1,7 @@
 # Using an environment name other than "base" is not recommended!
 # Read https://github.com/mamba-org/micromamba-docker#multiple-environments
 # if you must use a different environment name.
-name: base
+name: python_rsm
 channels:
   - conda-forge
 dependencies:
@@ -10,12 +10,16 @@ dependencies:
   - numpy>=1.19
   - geopandas
   - git
+  - git-lfs
   - jupyter
   - libpysal
   - networkx
   - notebook
+  - openmatrix
   - pandas
   - plotly
+  - pyarrow
   - pyproj
   - requests=2.25.1
   - scikit-learn
+  - tabulate
