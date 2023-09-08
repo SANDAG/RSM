@@ -102,5 +102,5 @@ The removal of the toll on SR-125 (The South Bay Expressway) was tested in both 
 
 #### Rapid 637 BRT
 
-TODO: Add some text to explain how this test was performed using the study area parameter
-TODO: Add outcome screenshot
+Tests were conducted that added the planned Rapid 637 line from North Park to the Naval Facilities to the base year network. Without the study area definition there were around 3,000 boardings from the RSM, but the addition of a study area resulted in a value much closer to the one produced by ABM2+.
+![](images\assessment\Boarding_comparison_Rapid_637_BRT.PNG)
