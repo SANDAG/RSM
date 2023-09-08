@@ -36,19 +36,19 @@ For each test, a few key metrics from ABM2+ No Action, ABM2+ Action, RSM No Acti
 
 #### Auto Operating Cost - 50% Increase
 
-![](images\assessment\elasticity_CMPR_AOC_plus_50%.PNG)
+![](images\assessment\elasticity_CMPR_AOC_plus_50pct.PNG)
 
 
 
 #### Auto Operating Cost - 50% Decrease
 
-![](images\assessment\elasticity_CMPR_AOC_minus_50%.PNG)
+![](images\assessment\elasticity_CMPR_AOC_minus_50pct.PNG)
 
 
 
 #### Ride Hailing Cost - 50% decrease
 
-![](images\assessment\elasticity_CMPR_RHC_minus_50%.PNG)
+![](images\assessment\elasticity_CMPR_RHC_minus_50pct.PNG)
 
 
 
@@ -56,7 +56,7 @@ For each test, a few key metrics from ABM2+ No Action, ABM2+ Action, RSM No Acti
 
 In SANDAG model, the AV adoption is analyzed by capturing the zero occupancy vehicle movement as simulated in the Household AV Allocation module. For RSM, this AV allocation module is skipped, which is why RSM is not a viable tool for evaluating policies related to automated vehicles. 
 
-![](images\assessment\elasticity_comparison_AV_100%.PNG)
+![](images\assessment\elasticity_comparison_AV_100pct.PNG)
 
 
 
