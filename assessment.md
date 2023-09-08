@@ -78,11 +78,6 @@ RSM and ABM2+ shows similar sensitivities for the two tested scenarios with land
 
 ### Regional Transit Changes
 
-#### Transit Fare
-
-TODO: Add some text to explain how this test was performed using the study area parameter
-TODO: Add outcome screenshot
-
 #### Transit Frequency
 
 The RSM and ABM generally match on changes in regional metrics when the transit frequency is globally doubled.
