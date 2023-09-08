@@ -85,16 +85,16 @@ TODO: Add outcome screenshot
 
 #### Transit Frequency
 
-TODO: Add some text to explain how this test was performed using the study area parameter
-TODO: Add outcome screenshot
+The RSM and ABM generally match on changes in regional metrics when the transit frequency is globally doubled.
+![](images\assessment\elasticity_comparison_TransitFrequencyIncrease.PNG)
 
 
 ### Local Highway Changes
 
-#### Managed Lane Conversion
+#### Toll Removal
 
-TODO: Add some text to explain how this test was performed using the study area parameter
-TODO: Add outcome screenshot
+The removal of the toll on SR-125 (The South Bay Expressway) was tested in both ABM and RSM. In both models, volumes on SR-125 increased and volumes on I-805 at the same point decreased.
+![](images\assessment\elasticity_comparison_SR125TollRemoval.PNG)
 
 
 
