@@ -34,13 +34,13 @@ For each test, a few key metrics from ABM2+ No Action, ABM2+ Action, RSM No Acti
 
 ### Regional Highway Changes
 
-####Auto Operating Cost - 50% Increase
+#### Auto Operating Cost - 50% Increase
 
 ![](images\assessment\elasticity_CMPR_AOC_plus_50%.PNG)
 
 
 
-####Auto Operating Cost - 50% Decrease
+#### Auto Operating Cost - 50% Decrease
 
 ![](images\assessment\elasticity_CMPR_AOC_minus_50%.PNG)
 
