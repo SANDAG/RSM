@@ -36,13 +36,13 @@ For each test, a few key metrics from ABM2+ No Action, ABM2+ Action, RSM No Acti
 
 ####Auto Operating Cost - 50% Increase
 
-![](images\assessment\elasticity_aoc_plus_50%.PNG)
+![](images\assessment\elasticity_CMPR_AOC_plus_50%.PNG)
 
 
 
 ####Auto Operating Cost - 50% Decrease
 
-![](images\assessment\elasticity_aoc_minus_50%.PNG)
+![](images\assessment\elasticity_CMPR_AOC_minus_50%.PNG)
 
 
 
