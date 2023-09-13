@@ -90,9 +90,7 @@ The sampler function follows these primary steps:
 
 3. **Households and Persons Selection**: The function selects households based on the calculated sampling rates. It also selects persons associated with the sampled households.
 
-4. **Output**:
- - The selected households and persons are written to output CSV files in the specified output directory.
- - The function also computes and logs the total sampling rate, representing the proportion of selected households relative to the total number of households.
+4. **Output**: The selected households and persons are written to output CSV files in the specified output directory. The function also computes and logs the total sampling rate, representing the proportion of selected households relative to the total number of households.
 
 Note that in the current RSM deployment, sampler is set to use 25% default sampling rate. The intelligent sampler needs further testing to be used to sample households using the accessibility change.
 
