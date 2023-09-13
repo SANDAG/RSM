@@ -103,6 +103,8 @@ For crashes encountered in CT-RAMP, review the event log as usual. However, if i
     * Maps MGRAs to aggregated zones
 - Cluster.zone.centroid.file
     * Latitude and longitude coordinates of aggregated zone centroids
+- use.differential.sampling
+    * If set to 1, study area zones will be sampled at 100%. If set to 0, every zone will be sampled at the deafult sampling rate.
 
 #### New Files
 1. study_area.csv:
